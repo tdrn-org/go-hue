@@ -1,0 +1,6 @@
+package: hueapi
+generate:
+  models: true
+  client: true
+  std-http-server: true
+output: hueapi.gen.go
