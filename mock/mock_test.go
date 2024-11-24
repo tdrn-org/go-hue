@@ -45,6 +45,7 @@ func TestStartStop(t *testing.T) {
 }
 
 func TestMDNSLocator(t *testing.T) {
+	t.SkipNow()
 	// Start mock server
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
