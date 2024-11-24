@@ -69,7 +69,7 @@ func (client *localBridgeClient) verifyBridgeCertificate(rawCerts [][]byte, veri
 	}
 	bridgeId := bridgeCert.Subject.CommonName
 	if client.certificateBridgeId != "" && !strings.EqualFold(client.certificateBridgeId, bridgeId) {
-		return fmt.Errorf("received bridge id (%s) does not match expected bride id (%s)", bridgeId, client.certificateBridgeId)
+		return fmt.Errorf("received bridge id (%s) does not match expected bridge id (%s)", bridgeId, client.certificateBridgeId)
 	}
 	client.certificateBridgeId = bridgeId
 	roots := x509.NewCertPool()
