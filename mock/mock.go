@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-//go:generate openssl req -x509 -newkey rsa:4096 -keyout mock.gen.key -out mock.gen.crt -sha256 -days 365 -nodes -subj "/CN=0123456789ABCDEF"
-
 package mock
 
 import (
@@ -170,14 +168,8 @@ func (mock *mockServer) listenAndServe() {
 	mock.logger.Info().Msg("http server stopped")
 }
 
-//go:embed mock.gen.crt
-var mockCertificatePEMBytes []byte
-
-//go:embed mock.gen.key
-var mockKeyPEMBytes []byte
-
 func (mock *mockServer) getServerCertificate(chi *tls.ClientHelloInfo) (*tls.Certificate, error) {
-	certificate, err := tls.X509KeyPair(mockCertificatePEMBytes, mockKeyPEMBytes)
+	certificate, err := tls.X509KeyPair(mockCertificatePEM(), mockKeyPEM())
 	return &certificate, err
 }
 
