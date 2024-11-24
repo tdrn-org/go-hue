@@ -46,7 +46,15 @@ type BridgeServer interface {
 }
 
 func Start() BridgeServer {
-	httpListener, err := net.Listen("tcp", "localhost:0")
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		panic(err)
+	}
+	bridgeInterface, err := determineBridgeInterface(ifaces)
+	if err != nil {
+		panic(err)
+	}
+	httpListener, err := net.Listen("tcp", ":0")
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +66,7 @@ func Start() BridgeServer {
 		logger:            &logger,
 	}
 	mock.httpServer = mock.setupHttpServer()
-	mDNSService, err := mock.setupMDNSService()
+	mDNSService, err := mock.setupMDNSService(bridgeInterface)
 	if err != nil {
 		panic(err)
 	}
@@ -70,6 +78,33 @@ func Start() BridgeServer {
 		panic(err)
 	}
 	return mock
+}
+
+func determineBridgeInterface(ifaces []net.Interface) (string, error) {
+	var bridgeInterface net.Interface
+	for _, iface := range ifaces {
+		if (iface.Flags & net.FlagRunning) != net.FlagRunning {
+			continue
+		}
+		if (iface.Flags & (net.FlagLoopback | net.FlagMulticast)) == (net.FlagLoopback | net.FlagMulticast) {
+			bridgeInterface = iface
+			break
+		}
+	}
+	if bridgeInterface.Name == "" {
+		for _, iface := range ifaces {
+			if (iface.Flags & net.FlagRunning) != net.FlagRunning {
+				continue
+			}
+			if (iface.Flags & net.FlagMulticast) == net.FlagMulticast {
+				bridgeInterface = iface
+			}
+		}
+	}
+	if bridgeInterface.Name == "" {
+		return "", fmt.Errorf("no multicast interface available")
+	}
+	return bridgeInterface.Name, nil
 }
 
 type mockServer struct {
@@ -190,28 +225,10 @@ func (mock *mockServer) announce(ctx context.Context) {
 	mock.logger.Info().Msg("mDNS responder stopped")
 }
 
-func (mock *mockServer) lookupLoopbackInterfaces() ([]string, error) {
-	names := make([]string, 0)
-	ifaces, err := net.Interfaces()
-	if err != nil {
-		return nil, fmt.Errorf("failed to enumerate interfaces (cause: %w)", err)
-	}
-	for _, iface := range ifaces {
-		if (iface.Flags & (net.FlagLoopback | net.FlagRunning)) == (net.FlagLoopback | net.FlagRunning) {
-			names = append(names, iface.Name)
-		}
-	}
-	return names, nil
-}
-
-func (mock *mockServer) setupMDNSService() (*dnssd.Service, error) {
+func (mock *mockServer) setupMDNSService(iface string) (*dnssd.Service, error) {
 	_, port, err := mock.AddressParts()
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode mock address (cause: %w)", err)
-	}
-	ifaces, err := mock.lookupLoopbackInterfaces()
-	if err != nil {
-		return nil, fmt.Errorf("failed to determine service interfaces (cause: %w)", err)
 	}
 	config := dnssd.Config{
 		Name:   "Mock Bridge - " + mock.Address(),
@@ -219,7 +236,7 @@ func (mock *mockServer) setupMDNSService() (*dnssd.Service, error) {
 		Host:   "localhost",
 		Text:   map[string]string{"bridgeid": mockBridgeId},
 		Port:   port,
-		Ifaces: ifaces,
+		Ifaces: []string{iface},
 	}
 	service, err := dnssd.NewService(config)
 	if err != nil {
