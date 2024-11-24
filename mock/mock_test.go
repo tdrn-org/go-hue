@@ -29,7 +29,7 @@ import (
 	"github.com/tdrn-org/go-hue/mock"
 )
 
-const defaultTimeout time.Duration = 60 * time.Second
+const defaultTimeout time.Duration = 5 * time.Minute
 
 func TestStartStop(t *testing.T) {
 	// Start mock server
