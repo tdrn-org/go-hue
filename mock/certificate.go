@@ -58,7 +58,7 @@ func init() {
 	now := time.Now()
 	template := &x509.Certificate{
 		SerialNumber:          big.NewInt(1),
-		Subject:               pkix.Name{CommonName: mockBridgeId},
+		Subject:               pkix.Name{CommonName: MockBridgeId},
 		NotBefore:             now,
 		NotAfter:              now.AddDate(0, 0, 1),
 		KeyUsage:              x509.KeyUsageCertSign,

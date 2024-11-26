@@ -24,7 +24,6 @@ import (
 
 	"github.com/brutella/dnssd"
 	"github.com/rs/zerolog"
-	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-log"
 )
 
@@ -117,8 +116,8 @@ func (locator *MdnsBridgeLocator) Lookup(bridgeId string, timeout time.Duration)
 	return bridge, nil
 }
 
-func (locator *MdnsBridgeLocator) NewClient(bridge *Bridge, headers map[string]string, timeout time.Duration) hueapi.ClientInterface {
-	return newLocalBridgeClient(bridge, headers, timeout)
+func (locator *MdnsBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, timeout)
 }
 
 func (locator *MdnsBridgeLocator) queryAndValidateBridgeConfig(entry *dnssd.BrowseEntry, timeout time.Duration) (string, *bridgeConfig, error) {

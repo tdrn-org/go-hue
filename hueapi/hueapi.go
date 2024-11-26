@@ -25,3 +25,5 @@ import (
 
 //go:embed openhue.gen.yaml
 var OpenHueApiSpecYaml []byte
+
+const ApplicationKeyHeader = "hue-application-key"

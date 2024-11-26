@@ -17,7 +17,6 @@
 package hue
 
 import (
-	"context"
 	"crypto/tls"
 	"crypto/x509"
 	_ "embed"
@@ -30,10 +29,6 @@ import (
 	"github.com/tdrn-org/go-hue/hueapi"
 )
 
-//go:embed hueCA.pem
-var hueCACertRaw []byte
-var hueCACert *x509.Certificate
-
 func queryAndValidateBridgeConfig(address string, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
 	client := newLocalBridgeHttpClient(bridgeId, timeout)
 	apiUrl := fmt.Sprintf("https://%s/api/0/config", address)
@@ -42,18 +37,18 @@ func queryAndValidateBridgeConfig(address string, bridgeId string, timeout time.
 	if err != nil {
 		return nil, err
 	}
-	if client.certificateBridgeId == "" {
+	if client.CertificateBridgeId == "" {
 		return nil, fmt.Errorf("failed to receive bridge id from '%s'", address)
 	}
-	if !strings.EqualFold(client.certificateBridgeId, config.BridgeId) {
-		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", client.certificateBridgeId, address, config.BridgeId)
+	if !strings.EqualFold(client.CertificateBridgeId, config.BridgeId) {
+		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", client.CertificateBridgeId, address, config.BridgeId)
 	}
 	return config, nil
 }
 
 type localBridgeClient struct {
 	http.Client
-	certificateBridgeId string
+	CertificateBridgeId string
 }
 
 func (client *localBridgeClient) verifyBridgeCertificate(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
@@ -65,10 +60,10 @@ func (client *localBridgeClient) verifyBridgeCertificate(rawCerts [][]byte, veri
 		return fmt.Errorf("failed to parse bridge certificate (cause: %w)", err)
 	}
 	bridgeId := bridgeCert.Subject.CommonName
-	if client.certificateBridgeId != "" && !strings.EqualFold(client.certificateBridgeId, bridgeId) {
-		return fmt.Errorf("received bridge id (%s) does not match expected bridge id (%s)", bridgeId, client.certificateBridgeId)
+	if client.CertificateBridgeId != "" && !strings.EqualFold(client.CertificateBridgeId, bridgeId) {
+		return fmt.Errorf("received bridge id (%s) does not match expected bridge id (%s)", bridgeId, client.CertificateBridgeId)
 	}
-	client.certificateBridgeId = bridgeId
+	client.CertificateBridgeId = bridgeId
 	roots := x509.NewCertPool()
 	roots.AddCert(hueCACert)
 	roots.AddCert(bridgeCert)
@@ -82,7 +77,7 @@ func (client *localBridgeClient) verifyBridgeCertificate(rawCerts [][]byte, veri
 func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBridgeClient {
 	client := &localBridgeClient{
 		Client:              http.Client{Timeout: timeout},
-		certificateBridgeId: strings.ToLower(bridgeId),
+		CertificateBridgeId: strings.ToLower(bridgeId),
 	}
 	client.Timeout = timeout
 	tlsClientconfig := &tls.Config{
@@ -96,21 +91,25 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 	return client
 }
 
-func newLocalBridgeClient(bridge *Bridge, headers map[string]string, timeout time.Duration) hueapi.ClientInterface {
+func newLocalBridgeHueClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
 	server := "https://" + bridge.Address
-	httpClient := newLocalBridgeHttpClient(bridge.BridgeId, timeout)
-	addHeaders := func(context context.Context, request *http.Request) error {
-		for key, value := range headers {
-			request.Header.Add(key, value)
-		}
+	httpClientOpt := func(c *hueapi.Client) error {
+		c.Client = newLocalBridgeHttpClient(bridge.BridgeId, timeout)
 		return nil
 	}
-	return &hueapi.Client{
-		Server:         server,
-		Client:         httpClient,
-		RequestEditors: []hueapi.RequestEditorFn{addHeaders},
+	hueapiClient, err := hueapi.NewClientWithResponses(server, httpClientOpt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
+	return &bridgeClient{
+		Target: bridge,
+		Hueapi: hueapiClient,
+	}, nil
 }
+
+//go:embed hueCA.pem
+var hueCACertRaw []byte
+var hueCACert *x509.Certificate
 
 func init() {
 	hueCACert = initDecodeCert(hueCACertRaw)

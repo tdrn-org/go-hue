@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-log"
 )
 
@@ -66,6 +65,6 @@ func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Durati
 	return bridge, nil
 }
 
-func (locator *AddressBridgeLocator) NewClient(bridge *Bridge, headers map[string]string, timeout time.Duration) hueapi.ClientInterface {
-	return newLocalBridgeClient(bridge, headers, timeout)
+func (locator *AddressBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, timeout)
 }

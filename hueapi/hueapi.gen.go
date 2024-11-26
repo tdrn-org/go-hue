@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/oapi-codegen/runtime"
+	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
 const (
@@ -13311,4 +13312,6904 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("PUT "+options.BaseURL+"/clip/v2/resource/zone/{zoneId}", wrapper.UpdateZone)
 
 	return m
+}
+
+type ConflictJSONResponse ErrorResponse
+
+type ForbiddenJSONResponse ErrorResponse
+
+type InsufficientStorageJSONResponse ErrorResponse
+
+type InternalServerErrorJSONResponse ErrorResponse
+
+type MethodNotAllowedJSONResponse ErrorResponse
+
+type NotAcceptableJSONResponse ErrorResponse
+
+type NotFoundJSONResponse ErrorResponse
+
+type ServiceUnavailableJSONResponse ErrorResponse
+
+type TooManyRequestsJSONResponse ErrorResponse
+
+type UnauthorizedJSONResponse ErrorResponse
+
+type AuthenticateRequestObject struct {
+	Body *AuthenticateJSONRequestBody
+}
+
+type AuthenticateResponseObject interface {
+	VisitAuthenticateResponse(w http.ResponseWriter) error
+}
+
+type Authenticate200JSONResponse Response
+
+func (response Authenticate200JSONResponse) VisitAuthenticateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type Authenticate401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response Authenticate401JSONResponse) VisitAuthenticateResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResourcesRequestObject struct {
+}
+
+type GetResourcesResponseObject interface {
+	VisitGetResourcesResponse(w http.ResponseWriter) error
+}
+
+type GetResources200JSONResponse struct {
+	Data   *[]ResourceGet `json:"data,omitempty"`
+	Errors *[]Error       `json:"errors,omitempty"`
+}
+
+func (response GetResources200JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetResources401JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetResources403JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetResources404JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetResources405JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetResources406JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetResources409JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetResources429JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetResources500JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetResources503JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetResources507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetResources507JSONResponse) VisitGetResourcesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgesRequestObject struct {
+}
+
+type GetBridgesResponseObject interface {
+	VisitGetBridgesResponse(w http.ResponseWriter) error
+}
+
+type GetBridges200JSONResponse struct {
+	Data   *[]BridgeGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetBridges200JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetBridges401JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetBridges403JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetBridges404JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetBridges405JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetBridges406JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetBridges409JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetBridges429JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetBridges500JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetBridges503JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridges507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetBridges507JSONResponse) VisitGetBridgesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeRequestObject struct {
+	BridgeId string `json:"bridgeId"`
+}
+
+type GetBridgeResponseObject interface {
+	VisitGetBridgeResponse(w http.ResponseWriter) error
+}
+
+type GetBridge200JSONResponse struct {
+	Data   *[]BridgeGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetBridge200JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetBridge401JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetBridge403JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetBridge404JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetBridge405JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetBridge406JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetBridge409JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetBridge429JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetBridge500JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetBridge503JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridge507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetBridge507JSONResponse) VisitGetBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridgeRequestObject struct {
+	BridgeId string `json:"bridgeId"`
+	Body     *UpdateBridgeJSONRequestBody
+}
+
+type UpdateBridgeResponseObject interface {
+	VisitUpdateBridgeResponse(w http.ResponseWriter) error
+}
+
+type UpdateBridge200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateBridge200JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateBridge401JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateBridge403JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateBridge404JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateBridge405JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateBridge406JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateBridge409JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateBridge429JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateBridge500JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateBridge503JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateBridge507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateBridge507JSONResponse) VisitUpdateBridgeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomesRequestObject struct {
+}
+
+type GetBridgeHomesResponseObject interface {
+	VisitGetBridgeHomesResponse(w http.ResponseWriter) error
+}
+
+type GetBridgeHomes200JSONResponse struct {
+	Data   *[]BridgeHomeGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetBridgeHomes200JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetBridgeHomes401JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetBridgeHomes403JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetBridgeHomes404JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetBridgeHomes405JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetBridgeHomes406JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetBridgeHomes409JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetBridgeHomes429JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetBridgeHomes500JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetBridgeHomes503JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomes507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetBridgeHomes507JSONResponse) VisitGetBridgeHomesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHomeRequestObject struct {
+	BridgeHomeId string `json:"bridgeHomeId"`
+}
+
+type GetBridgeHomeResponseObject interface {
+	VisitGetBridgeHomeResponse(w http.ResponseWriter) error
+}
+
+type GetBridgeHome200JSONResponse struct {
+	Data   *[]BridgeHomeGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetBridgeHome200JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetBridgeHome401JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetBridgeHome403JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetBridgeHome404JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetBridgeHome405JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetBridgeHome406JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetBridgeHome409JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetBridgeHome429JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetBridgeHome500JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetBridgeHome503JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetBridgeHome507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetBridgeHome507JSONResponse) VisitGetBridgeHomeResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicesRequestObject struct {
+}
+
+type GetDevicesResponseObject interface {
+	VisitGetDevicesResponse(w http.ResponseWriter) error
+}
+
+type GetDevices200JSONResponse struct {
+	Data   *[]DeviceGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetDevices200JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetDevices401JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetDevices403JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetDevices404JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetDevices405JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetDevices406JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetDevices409JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetDevices429JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetDevices500JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetDevices503JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevices507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetDevices507JSONResponse) VisitGetDevicesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDeviceRequestObject struct {
+	DeviceId string `json:"deviceId"`
+}
+
+type DeleteDeviceResponseObject interface {
+	VisitDeleteDeviceResponse(w http.ResponseWriter) error
+}
+
+type DeleteDevice200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response DeleteDevice200JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteDevice401JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteDevice403JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteDevice404JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response DeleteDevice405JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response DeleteDevice406JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice409JSONResponse struct{ ConflictJSONResponse }
+
+func (response DeleteDevice409JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response DeleteDevice429JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response DeleteDevice500JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response DeleteDevice503JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteDevice507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response DeleteDevice507JSONResponse) VisitDeleteDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDeviceRequestObject struct {
+	DeviceId string `json:"deviceId"`
+}
+
+type GetDeviceResponseObject interface {
+	VisitGetDeviceResponse(w http.ResponseWriter) error
+}
+
+type GetDevice200JSONResponse struct {
+	Data   *[]DeviceGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetDevice200JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetDevice401JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetDevice403JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetDevice404JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetDevice405JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetDevice406JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetDevice409JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetDevice429JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetDevice500JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetDevice503JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevice507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetDevice507JSONResponse) VisitGetDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDeviceRequestObject struct {
+	DeviceId string `json:"deviceId"`
+	Body     *UpdateDeviceJSONRequestBody
+}
+
+type UpdateDeviceResponseObject interface {
+	VisitUpdateDeviceResponse(w http.ResponseWriter) error
+}
+
+type UpdateDevice200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateDevice200JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateDevice401JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateDevice403JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateDevice404JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateDevice405JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateDevice406JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateDevice409JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateDevice429JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateDevice500JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateDevice503JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateDevice507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateDevice507JSONResponse) VisitUpdateDeviceResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowersRequestObject struct {
+}
+
+type GetDevicePowersResponseObject interface {
+	VisitGetDevicePowersResponse(w http.ResponseWriter) error
+}
+
+type GetDevicePowers200JSONResponse struct {
+	Data   *[]DevicePowerGet `json:"data,omitempty"`
+	Errors *[]Error          `json:"errors,omitempty"`
+}
+
+func (response GetDevicePowers200JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetDevicePowers401JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetDevicePowers403JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetDevicePowers404JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetDevicePowers405JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetDevicePowers406JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetDevicePowers409JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetDevicePowers429JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetDevicePowers500JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetDevicePowers503JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowers507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetDevicePowers507JSONResponse) VisitGetDevicePowersResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePowerRequestObject struct {
+	DeviceId string `json:"deviceId"`
+}
+
+type GetDevicePowerResponseObject interface {
+	VisitGetDevicePowerResponse(w http.ResponseWriter) error
+}
+
+type GetDevicePower200JSONResponse struct {
+	Data   *[]DevicePowerGet `json:"data,omitempty"`
+	Errors *[]Error          `json:"errors,omitempty"`
+}
+
+func (response GetDevicePower200JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetDevicePower401JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetDevicePower403JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetDevicePower404JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetDevicePower405JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetDevicePower406JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetDevicePower409JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetDevicePower429JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetDevicePower500JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetDevicePower503JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetDevicePower507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetDevicePower507JSONResponse) VisitGetDevicePowerResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLightsRequestObject struct {
+}
+
+type GetGroupedLightsResponseObject interface {
+	VisitGetGroupedLightsResponse(w http.ResponseWriter) error
+}
+
+type GetGroupedLights200JSONResponse struct {
+	Data   *[]GroupedLightGet `json:"data,omitempty"`
+	Errors *[]Error           `json:"errors,omitempty"`
+}
+
+func (response GetGroupedLights200JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetGroupedLights401JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetGroupedLights403JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetGroupedLights404JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetGroupedLights405JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetGroupedLights406JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetGroupedLights409JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetGroupedLights429JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetGroupedLights500JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetGroupedLights503JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLights507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetGroupedLights507JSONResponse) VisitGetGroupedLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLightRequestObject struct {
+	GroupedLightId string `json:"groupedLightId"`
+}
+
+type GetGroupedLightResponseObject interface {
+	VisitGetGroupedLightResponse(w http.ResponseWriter) error
+}
+
+type GetGroupedLight200JSONResponse struct {
+	Data   *[]GroupedLightGet `json:"data,omitempty"`
+	Errors *[]Error           `json:"errors,omitempty"`
+}
+
+func (response GetGroupedLight200JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetGroupedLight401JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetGroupedLight403JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetGroupedLight404JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetGroupedLight405JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetGroupedLight406JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetGroupedLight409JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetGroupedLight429JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetGroupedLight500JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetGroupedLight503JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetGroupedLight507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetGroupedLight507JSONResponse) VisitGetGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLightRequestObject struct {
+	GroupedLightId string `json:"groupedLightId"`
+	Body           *UpdateGroupedLightJSONRequestBody
+}
+
+type UpdateGroupedLightResponseObject interface {
+	VisitUpdateGroupedLightResponse(w http.ResponseWriter) error
+}
+
+type UpdateGroupedLight200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateGroupedLight200JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateGroupedLight401JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateGroupedLight403JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateGroupedLight404JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateGroupedLight405JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateGroupedLight406JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateGroupedLight409JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateGroupedLight429JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateGroupedLight500JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateGroupedLight503JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateGroupedLight507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateGroupedLight507JSONResponse) VisitUpdateGroupedLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightsRequestObject struct {
+}
+
+type GetLightsResponseObject interface {
+	VisitGetLightsResponse(w http.ResponseWriter) error
+}
+
+type GetLights200JSONResponse struct {
+	Data   *[]LightGet `json:"data,omitempty"`
+	Errors *[]Error    `json:"errors,omitempty"`
+}
+
+func (response GetLights200JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetLights401JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetLights403JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetLights404JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetLights405JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetLights406JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetLights409JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetLights429JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetLights500JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetLights503JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLights507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetLights507JSONResponse) VisitGetLightsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightRequestObject struct {
+	LightId string `json:"lightId"`
+}
+
+type GetLightResponseObject interface {
+	VisitGetLightResponse(w http.ResponseWriter) error
+}
+
+type GetLight200JSONResponse struct {
+	Data   *[]LightGet `json:"data,omitempty"`
+	Errors *[]Error    `json:"errors,omitempty"`
+}
+
+func (response GetLight200JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetLight401JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetLight403JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetLight404JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetLight405JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetLight406JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetLight409JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetLight429JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetLight500JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetLight503JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLight507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetLight507JSONResponse) VisitGetLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightRequestObject struct {
+	LightId string `json:"lightId"`
+	Body    *UpdateLightJSONRequestBody
+}
+
+type UpdateLightResponseObject interface {
+	VisitUpdateLightResponse(w http.ResponseWriter) error
+}
+
+type UpdateLight200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateLight200JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateLight401JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateLight403JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateLight404JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateLight405JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateLight406JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateLight409JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateLight429JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateLight500JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateLight503JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLight507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateLight507JSONResponse) VisitUpdateLightResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevelsRequestObject struct {
+}
+
+type GetLightLevelsResponseObject interface {
+	VisitGetLightLevelsResponse(w http.ResponseWriter) error
+}
+
+type GetLightLevels200JSONResponse struct {
+	Data   *[]LightLevelGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetLightLevels200JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetLightLevels401JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetLightLevels403JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetLightLevels404JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetLightLevels405JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetLightLevels406JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetLightLevels409JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetLightLevels429JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetLightLevels500JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetLightLevels503JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevels507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetLightLevels507JSONResponse) VisitGetLightLevelsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevelRequestObject struct {
+	LightId string `json:"lightId"`
+}
+
+type GetLightLevelResponseObject interface {
+	VisitGetLightLevelResponse(w http.ResponseWriter) error
+}
+
+type GetLightLevel200JSONResponse struct {
+	Data   *[]LightLevelGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetLightLevel200JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetLightLevel401JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetLightLevel403JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetLightLevel404JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetLightLevel405JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetLightLevel406JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetLightLevel409JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetLightLevel429JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetLightLevel500JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetLightLevel503JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetLightLevel507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetLightLevel507JSONResponse) VisitGetLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevelRequestObject struct {
+	LightId string `json:"lightId"`
+	Body    *UpdateLightLevelJSONRequestBody
+}
+
+type UpdateLightLevelResponseObject interface {
+	VisitUpdateLightLevelResponse(w http.ResponseWriter) error
+}
+
+type UpdateLightLevel200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateLightLevel200JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateLightLevel401JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateLightLevel403JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateLightLevel404JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateLightLevel405JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateLightLevel406JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateLightLevel409JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateLightLevel429JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateLightLevel500JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateLightLevel503JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateLightLevel507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateLightLevel507JSONResponse) VisitUpdateLightLevelResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensorsRequestObject struct {
+}
+
+type GetMotionSensorsResponseObject interface {
+	VisitGetMotionSensorsResponse(w http.ResponseWriter) error
+}
+
+type GetMotionSensors200JSONResponse struct {
+	Data   *[]MotionGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetMotionSensors200JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetMotionSensors401JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetMotionSensors403JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetMotionSensors404JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetMotionSensors405JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetMotionSensors406JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetMotionSensors409JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetMotionSensors429JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetMotionSensors500JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetMotionSensors503JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensors507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetMotionSensors507JSONResponse) VisitGetMotionSensorsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensorRequestObject struct {
+	MotionId string `json:"motionId"`
+}
+
+type GetMotionSensorResponseObject interface {
+	VisitGetMotionSensorResponse(w http.ResponseWriter) error
+}
+
+type GetMotionSensor200JSONResponse struct {
+	Data   *[]MotionGet `json:"data,omitempty"`
+	Errors *[]Error     `json:"errors,omitempty"`
+}
+
+func (response GetMotionSensor200JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetMotionSensor401JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetMotionSensor403JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetMotionSensor404JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetMotionSensor405JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetMotionSensor406JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetMotionSensor409JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetMotionSensor429JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetMotionSensor500JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetMotionSensor503JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetMotionSensor507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetMotionSensor507JSONResponse) VisitGetMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensorRequestObject struct {
+	MotionId string `json:"motionId"`
+	Body     *UpdateMotionSensorJSONRequestBody
+}
+
+type UpdateMotionSensorResponseObject interface {
+	VisitUpdateMotionSensorResponse(w http.ResponseWriter) error
+}
+
+type UpdateMotionSensor200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateMotionSensor200JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateMotionSensor401JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateMotionSensor403JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateMotionSensor404JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateMotionSensor405JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateMotionSensor406JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateMotionSensor409JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateMotionSensor429JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateMotionSensor500JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateMotionSensor503JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateMotionSensor507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateMotionSensor507JSONResponse) VisitUpdateMotionSensorResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoomsRequestObject struct {
+}
+
+type GetRoomsResponseObject interface {
+	VisitGetRoomsResponse(w http.ResponseWriter) error
+}
+
+type GetRooms200JSONResponse struct {
+	Data   *[]RoomGet `json:"data,omitempty"`
+	Errors *[]Error   `json:"errors,omitempty"`
+}
+
+func (response GetRooms200JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetRooms401JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetRooms403JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetRooms404JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetRooms405JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetRooms406JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetRooms409JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetRooms429JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetRooms500JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetRooms503JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRooms507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetRooms507JSONResponse) VisitGetRoomsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoomRequestObject struct {
+	Body *CreateRoomJSONRequestBody
+}
+
+type CreateRoomResponseObject interface {
+	VisitCreateRoomResponse(w http.ResponseWriter) error
+}
+
+type CreateRoom200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response CreateRoom200JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response CreateRoom401JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response CreateRoom403JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response CreateRoom404JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response CreateRoom405JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response CreateRoom406JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom409JSONResponse struct{ ConflictJSONResponse }
+
+func (response CreateRoom409JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response CreateRoom429JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response CreateRoom500JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response CreateRoom503JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateRoom507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response CreateRoom507JSONResponse) VisitCreateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoomRequestObject struct {
+	RoomId string `json:"roomId"`
+}
+
+type DeleteRoomResponseObject interface {
+	VisitDeleteRoomResponse(w http.ResponseWriter) error
+}
+
+type DeleteRoom200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response DeleteRoom200JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteRoom401JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteRoom403JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteRoom404JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response DeleteRoom405JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response DeleteRoom406JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom409JSONResponse struct{ ConflictJSONResponse }
+
+func (response DeleteRoom409JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response DeleteRoom429JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response DeleteRoom500JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response DeleteRoom503JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteRoom507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response DeleteRoom507JSONResponse) VisitDeleteRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoomRequestObject struct {
+	RoomId string `json:"roomId"`
+}
+
+type GetRoomResponseObject interface {
+	VisitGetRoomResponse(w http.ResponseWriter) error
+}
+
+type GetRoom200JSONResponse struct {
+	Data   *[]RoomGet `json:"data,omitempty"`
+	Errors *[]Error   `json:"errors,omitempty"`
+}
+
+func (response GetRoom200JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetRoom401JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetRoom403JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetRoom404JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetRoom405JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetRoom406JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetRoom409JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetRoom429JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetRoom500JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetRoom503JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetRoom507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetRoom507JSONResponse) VisitGetRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoomRequestObject struct {
+	RoomId string `json:"roomId"`
+	Body   *UpdateRoomJSONRequestBody
+}
+
+type UpdateRoomResponseObject interface {
+	VisitUpdateRoomResponse(w http.ResponseWriter) error
+}
+
+type UpdateRoom200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateRoom200JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateRoom401JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateRoom403JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateRoom404JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateRoom405JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateRoom406JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateRoom409JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateRoom429JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateRoom500JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateRoom503JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateRoom507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateRoom507JSONResponse) VisitUpdateRoomResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenesRequestObject struct {
+}
+
+type GetScenesResponseObject interface {
+	VisitGetScenesResponse(w http.ResponseWriter) error
+}
+
+type GetScenes200JSONResponse struct {
+	Data   *[]SceneGet `json:"data,omitempty"`
+	Errors *[]Error    `json:"errors,omitempty"`
+}
+
+func (response GetScenes200JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetScenes401JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetScenes403JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetScenes404JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetScenes405JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetScenes406JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetScenes409JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetScenes429JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetScenes500JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetScenes503JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScenes507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetScenes507JSONResponse) VisitGetScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSceneRequestObject struct {
+	Body *CreateSceneJSONRequestBody
+}
+
+type CreateSceneResponseObject interface {
+	VisitCreateSceneResponse(w http.ResponseWriter) error
+}
+
+type CreateScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response CreateScene200JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response CreateScene401JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response CreateScene403JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response CreateScene404JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response CreateScene405JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response CreateScene406JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response CreateScene409JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response CreateScene429JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response CreateScene500JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response CreateScene503JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response CreateScene507JSONResponse) VisitCreateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+}
+
+type DeleteSceneResponseObject interface {
+	VisitDeleteSceneResponse(w http.ResponseWriter) error
+}
+
+type DeleteScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response DeleteScene200JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteScene401JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteScene403JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteScene404JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response DeleteScene405JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response DeleteScene406JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response DeleteScene409JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response DeleteScene429JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response DeleteScene500JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response DeleteScene503JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response DeleteScene507JSONResponse) VisitDeleteSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+}
+
+type GetSceneResponseObject interface {
+	VisitGetSceneResponse(w http.ResponseWriter) error
+}
+
+type GetScene200JSONResponse struct {
+	Data   *[]SceneGet `json:"data,omitempty"`
+	Errors *[]Error    `json:"errors,omitempty"`
+}
+
+func (response GetScene200JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetScene401JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetScene403JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetScene404JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetScene405JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetScene406JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetScene409JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetScene429JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetScene500JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetScene503JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetScene507JSONResponse) VisitGetSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+	Body    *UpdateSceneJSONRequestBody
+}
+
+type UpdateSceneResponseObject interface {
+	VisitUpdateSceneResponse(w http.ResponseWriter) error
+}
+
+type UpdateScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateScene200JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateScene401JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateScene403JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateScene404JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateScene405JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateScene406JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateScene409JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateScene429JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateScene500JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateScene503JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateScene507JSONResponse) VisitUpdateSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenesRequestObject struct {
+}
+
+type GetSmartScenesResponseObject interface {
+	VisitGetSmartScenesResponse(w http.ResponseWriter) error
+}
+
+type GetSmartScenes200JSONResponse struct {
+	Data   *[]SmartSceneGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetSmartScenes200JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetSmartScenes401JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetSmartScenes403JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetSmartScenes404JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetSmartScenes405JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetSmartScenes406JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetSmartScenes409JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetSmartScenes429JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetSmartScenes500JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetSmartScenes503JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScenes507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetSmartScenes507JSONResponse) VisitGetSmartScenesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartSceneRequestObject struct {
+	Body *CreateSmartSceneJSONRequestBody
+}
+
+type CreateSmartSceneResponseObject interface {
+	VisitCreateSmartSceneResponse(w http.ResponseWriter) error
+}
+
+type CreateSmartScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response CreateSmartScene200JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response CreateSmartScene401JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response CreateSmartScene403JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response CreateSmartScene404JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response CreateSmartScene405JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response CreateSmartScene406JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response CreateSmartScene409JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response CreateSmartScene429JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response CreateSmartScene500JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response CreateSmartScene503JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateSmartScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response CreateSmartScene507JSONResponse) VisitCreateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+}
+
+type DeleteSmartSceneResponseObject interface {
+	VisitDeleteSmartSceneResponse(w http.ResponseWriter) error
+}
+
+type DeleteSmartScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response DeleteSmartScene200JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteSmartScene401JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteSmartScene403JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteSmartScene404JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response DeleteSmartScene405JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response DeleteSmartScene406JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response DeleteSmartScene409JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response DeleteSmartScene429JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response DeleteSmartScene500JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response DeleteSmartScene503JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteSmartScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response DeleteSmartScene507JSONResponse) VisitDeleteSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+}
+
+type GetSmartSceneResponseObject interface {
+	VisitGetSmartSceneResponse(w http.ResponseWriter) error
+}
+
+type GetSmartScene200JSONResponse struct {
+	Data   *[]SmartSceneGet `json:"data,omitempty"`
+	Errors *[]Error         `json:"errors,omitempty"`
+}
+
+func (response GetSmartScene200JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetSmartScene401JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetSmartScene403JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetSmartScene404JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetSmartScene405JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetSmartScene406JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetSmartScene409JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetSmartScene429JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetSmartScene500JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetSmartScene503JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetSmartScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetSmartScene507JSONResponse) VisitGetSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartSceneRequestObject struct {
+	SceneId string `json:"sceneId"`
+	Body    *UpdateSmartSceneJSONRequestBody
+}
+
+type UpdateSmartSceneResponseObject interface {
+	VisitUpdateSmartSceneResponse(w http.ResponseWriter) error
+}
+
+type UpdateSmartScene200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateSmartScene200JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateSmartScene401JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateSmartScene403JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateSmartScene404JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateSmartScene405JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateSmartScene406JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateSmartScene409JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateSmartScene429JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateSmartScene500JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateSmartScene503JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateSmartScene507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateSmartScene507JSONResponse) VisitUpdateSmartSceneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperaturesRequestObject struct {
+}
+
+type GetTemperaturesResponseObject interface {
+	VisitGetTemperaturesResponse(w http.ResponseWriter) error
+}
+
+type GetTemperatures200JSONResponse struct {
+	Data   *[]TemperatureGet `json:"data,omitempty"`
+	Errors *[]Error          `json:"errors,omitempty"`
+}
+
+func (response GetTemperatures200JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetTemperatures401JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetTemperatures403JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetTemperatures404JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetTemperatures405JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetTemperatures406JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetTemperatures409JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetTemperatures429JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetTemperatures500JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetTemperatures503JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatures507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetTemperatures507JSONResponse) VisitGetTemperaturesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperatureRequestObject struct {
+	TemperatureId string `json:"temperatureId"`
+}
+
+type GetTemperatureResponseObject interface {
+	VisitGetTemperatureResponse(w http.ResponseWriter) error
+}
+
+type GetTemperature200JSONResponse struct {
+	Data   *[]TemperatureGet `json:"data,omitempty"`
+	Errors *[]Error          `json:"errors,omitempty"`
+}
+
+func (response GetTemperature200JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetTemperature401JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetTemperature403JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetTemperature404JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetTemperature405JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetTemperature406JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetTemperature409JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetTemperature429JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetTemperature500JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetTemperature503JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetTemperature507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetTemperature507JSONResponse) VisitGetTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperatureRequestObject struct {
+	TemperatureId string `json:"temperatureId"`
+	Body          *UpdateTemperatureJSONRequestBody
+}
+
+type UpdateTemperatureResponseObject interface {
+	VisitUpdateTemperatureResponse(w http.ResponseWriter) error
+}
+
+type UpdateTemperature200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateTemperature200JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateTemperature401JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateTemperature403JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateTemperature404JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateTemperature405JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateTemperature406JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateTemperature409JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateTemperature429JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateTemperature500JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateTemperature503JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateTemperature507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateTemperature507JSONResponse) VisitUpdateTemperatureResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZonesRequestObject struct {
+}
+
+type GetZonesResponseObject interface {
+	VisitGetZonesResponse(w http.ResponseWriter) error
+}
+
+type GetZones200JSONResponse struct {
+	Data   *[]RoomGet `json:"data,omitempty"`
+	Errors *[]Error   `json:"errors,omitempty"`
+}
+
+func (response GetZones200JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetZones401JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetZones403JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetZones404JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetZones405JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetZones406JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetZones409JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetZones429JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetZones500JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetZones503JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZones507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetZones507JSONResponse) VisitGetZonesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZoneRequestObject struct {
+	Body *CreateZoneJSONRequestBody
+}
+
+type CreateZoneResponseObject interface {
+	VisitCreateZoneResponse(w http.ResponseWriter) error
+}
+
+type CreateZone200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response CreateZone200JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response CreateZone401JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response CreateZone403JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response CreateZone404JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response CreateZone405JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response CreateZone406JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone409JSONResponse struct{ ConflictJSONResponse }
+
+func (response CreateZone409JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response CreateZone429JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response CreateZone500JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response CreateZone503JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type CreateZone507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response CreateZone507JSONResponse) VisitCreateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZoneRequestObject struct {
+	ZoneId string `json:"zoneId"`
+}
+
+type DeleteZoneResponseObject interface {
+	VisitDeleteZoneResponse(w http.ResponseWriter) error
+}
+
+type DeleteZone200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response DeleteZone200JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteZone401JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteZone403JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteZone404JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response DeleteZone405JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response DeleteZone406JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone409JSONResponse struct{ ConflictJSONResponse }
+
+func (response DeleteZone409JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response DeleteZone429JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response DeleteZone500JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response DeleteZone503JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteZone507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response DeleteZone507JSONResponse) VisitDeleteZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZoneRequestObject struct {
+	ZoneId string `json:"zoneId"`
+}
+
+type GetZoneResponseObject interface {
+	VisitGetZoneResponse(w http.ResponseWriter) error
+}
+
+type GetZone200JSONResponse struct {
+	Data   *[]RoomGet `json:"data,omitempty"`
+	Errors *[]Error   `json:"errors,omitempty"`
+}
+
+func (response GetZone200JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetZone401JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetZone403JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetZone404JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response GetZone405JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response GetZone406JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone409JSONResponse struct{ ConflictJSONResponse }
+
+func (response GetZone409JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response GetZone429JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response GetZone500JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response GetZone503JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetZone507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response GetZone507JSONResponse) VisitGetZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZoneRequestObject struct {
+	ZoneId string `json:"zoneId"`
+	Body   *UpdateZoneJSONRequestBody
+}
+
+type UpdateZoneResponseObject interface {
+	VisitUpdateZoneResponse(w http.ResponseWriter) error
+}
+
+type UpdateZone200JSONResponse struct {
+	Data   *[]ResourceIdentifier `json:"data,omitempty"`
+	Errors *[]Error              `json:"errors,omitempty"`
+}
+
+func (response UpdateZone200JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateZone401JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateZone403JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response UpdateZone404JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone405JSONResponse struct{ MethodNotAllowedJSONResponse }
+
+func (response UpdateZone405JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(405)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone406JSONResponse struct{ NotAcceptableJSONResponse }
+
+func (response UpdateZone406JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(406)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone409JSONResponse struct{ ConflictJSONResponse }
+
+func (response UpdateZone409JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone429JSONResponse struct{ TooManyRequestsJSONResponse }
+
+func (response UpdateZone429JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone500JSONResponse struct {
+	InternalServerErrorJSONResponse
+}
+
+func (response UpdateZone500JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone503JSONResponse struct{ ServiceUnavailableJSONResponse }
+
+func (response UpdateZone503JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type UpdateZone507JSONResponse struct {
+	InsufficientStorageJSONResponse
+}
+
+func (response UpdateZone507JSONResponse) VisitUpdateZoneResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(507)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+// StrictServerInterface represents all server handlers.
+type StrictServerInterface interface {
+	// Authenticate
+	// (POST /api)
+	Authenticate(ctx context.Context, request AuthenticateRequestObject) (AuthenticateResponseObject, error)
+	// List resources
+	// (GET /clip/v2/resource)
+	GetResources(ctx context.Context, request GetResourcesRequestObject) (GetResourcesResponseObject, error)
+	// List bridges
+	// (GET /clip/v2/resource/bridge)
+	GetBridges(ctx context.Context, request GetBridgesRequestObject) (GetBridgesResponseObject, error)
+	// Get bridge
+	// (GET /clip/v2/resource/bridge/{bridgeId})
+	GetBridge(ctx context.Context, request GetBridgeRequestObject) (GetBridgeResponseObject, error)
+	// Update bridge
+	// (PUT /clip/v2/resource/bridge/{bridgeId})
+	UpdateBridge(ctx context.Context, request UpdateBridgeRequestObject) (UpdateBridgeResponseObject, error)
+	// List bridge homes.
+	// (GET /clip/v2/resource/bridge_home)
+	GetBridgeHomes(ctx context.Context, request GetBridgeHomesRequestObject) (GetBridgeHomesResponseObject, error)
+	// Get bridge home.
+	// (GET /clip/v2/resource/bridge_home/{bridgeHomeId})
+	GetBridgeHome(ctx context.Context, request GetBridgeHomeRequestObject) (GetBridgeHomeResponseObject, error)
+	// List devices
+	// (GET /clip/v2/resource/device)
+	GetDevices(ctx context.Context, request GetDevicesRequestObject) (GetDevicesResponseObject, error)
+	// Delete Device
+	// (DELETE /clip/v2/resource/device/{deviceId})
+	DeleteDevice(ctx context.Context, request DeleteDeviceRequestObject) (DeleteDeviceResponseObject, error)
+	// Get device
+	// (GET /clip/v2/resource/device/{deviceId})
+	GetDevice(ctx context.Context, request GetDeviceRequestObject) (GetDeviceResponseObject, error)
+	// Update device
+	// (PUT /clip/v2/resource/device/{deviceId})
+	UpdateDevice(ctx context.Context, request UpdateDeviceRequestObject) (UpdateDeviceResponseObject, error)
+	// List device powers
+	// (GET /clip/v2/resource/device_power)
+	GetDevicePowers(ctx context.Context, request GetDevicePowersRequestObject) (GetDevicePowersResponseObject, error)
+	// Get device power
+	// (GET /clip/v2/resource/device_power/{deviceId})
+	GetDevicePower(ctx context.Context, request GetDevicePowerRequestObject) (GetDevicePowerResponseObject, error)
+	// List grouped lights
+	// (GET /clip/v2/resource/grouped_light)
+	GetGroupedLights(ctx context.Context, request GetGroupedLightsRequestObject) (GetGroupedLightsResponseObject, error)
+	// Get grouped light
+	// (GET /clip/v2/resource/grouped_light/{groupedLightId})
+	GetGroupedLight(ctx context.Context, request GetGroupedLightRequestObject) (GetGroupedLightResponseObject, error)
+	// Update grouped light
+	// (PUT /clip/v2/resource/grouped_light/{groupedLightId})
+	UpdateGroupedLight(ctx context.Context, request UpdateGroupedLightRequestObject) (UpdateGroupedLightResponseObject, error)
+	// List lights.
+	// (GET /clip/v2/resource/light)
+	GetLights(ctx context.Context, request GetLightsRequestObject) (GetLightsResponseObject, error)
+	// Get light
+	// (GET /clip/v2/resource/light/{lightId})
+	GetLight(ctx context.Context, request GetLightRequestObject) (GetLightResponseObject, error)
+	// Update light
+	// (PUT /clip/v2/resource/light/{lightId})
+	UpdateLight(ctx context.Context, request UpdateLightRequestObject) (UpdateLightResponseObject, error)
+	// List light levels.
+	// (GET /clip/v2/resource/light_level)
+	GetLightLevels(ctx context.Context, request GetLightLevelsRequestObject) (GetLightLevelsResponseObject, error)
+	// Get light
+	// (GET /clip/v2/resource/light_level/{lightId})
+	GetLightLevel(ctx context.Context, request GetLightLevelRequestObject) (GetLightLevelResponseObject, error)
+	// Update light
+	// (PUT /clip/v2/resource/light_level/{lightId})
+	UpdateLightLevel(ctx context.Context, request UpdateLightLevelRequestObject) (UpdateLightLevelResponseObject, error)
+	// List motion sensors.
+	// (GET /clip/v2/resource/motion)
+	GetMotionSensors(ctx context.Context, request GetMotionSensorsRequestObject) (GetMotionSensorsResponseObject, error)
+	// Get motion sensor.
+	// (GET /clip/v2/resource/motion/{motionId})
+	GetMotionSensor(ctx context.Context, request GetMotionSensorRequestObject) (GetMotionSensorResponseObject, error)
+	// Update Motion Sensor
+	// (PUT /clip/v2/resource/motion/{motionId})
+	UpdateMotionSensor(ctx context.Context, request UpdateMotionSensorRequestObject) (UpdateMotionSensorResponseObject, error)
+	// List rooms
+	// (GET /clip/v2/resource/room)
+	GetRooms(ctx context.Context, request GetRoomsRequestObject) (GetRoomsResponseObject, error)
+	// Create room
+	// (POST /clip/v2/resource/room)
+	CreateRoom(ctx context.Context, request CreateRoomRequestObject) (CreateRoomResponseObject, error)
+	// Delete room
+	// (DELETE /clip/v2/resource/room/{roomId})
+	DeleteRoom(ctx context.Context, request DeleteRoomRequestObject) (DeleteRoomResponseObject, error)
+	// Get room.
+	// (GET /clip/v2/resource/room/{roomId})
+	GetRoom(ctx context.Context, request GetRoomRequestObject) (GetRoomResponseObject, error)
+	// Update room
+	// (PUT /clip/v2/resource/room/{roomId})
+	UpdateRoom(ctx context.Context, request UpdateRoomRequestObject) (UpdateRoomResponseObject, error)
+	// List scenes
+	// (GET /clip/v2/resource/scene)
+	GetScenes(ctx context.Context, request GetScenesRequestObject) (GetScenesResponseObject, error)
+	// Create a new scene
+	// (POST /clip/v2/resource/scene)
+	CreateScene(ctx context.Context, request CreateSceneRequestObject) (CreateSceneResponseObject, error)
+	// Delete a scene
+	// (DELETE /clip/v2/resource/scene/{sceneId})
+	DeleteScene(ctx context.Context, request DeleteSceneRequestObject) (DeleteSceneResponseObject, error)
+	// Get a scene
+	// (GET /clip/v2/resource/scene/{sceneId})
+	GetScene(ctx context.Context, request GetSceneRequestObject) (GetSceneResponseObject, error)
+	// Update a scene
+	// (PUT /clip/v2/resource/scene/{sceneId})
+	UpdateScene(ctx context.Context, request UpdateSceneRequestObject) (UpdateSceneResponseObject, error)
+	// List smart scenes
+	// (GET /clip/v2/resource/smart_scene)
+	GetSmartScenes(ctx context.Context, request GetSmartScenesRequestObject) (GetSmartScenesResponseObject, error)
+	// Create a new smart scene
+	// (POST /clip/v2/resource/smart_scene)
+	CreateSmartScene(ctx context.Context, request CreateSmartSceneRequestObject) (CreateSmartSceneResponseObject, error)
+	// Delete a smart scene
+	// (DELETE /clip/v2/resource/smart_scene/{sceneId})
+	DeleteSmartScene(ctx context.Context, request DeleteSmartSceneRequestObject) (DeleteSmartSceneResponseObject, error)
+	// Get a smart scene
+	// (GET /clip/v2/resource/smart_scene/{sceneId})
+	GetSmartScene(ctx context.Context, request GetSmartSceneRequestObject) (GetSmartSceneResponseObject, error)
+	// Update a smart scene
+	// (PUT /clip/v2/resource/smart_scene/{sceneId})
+	UpdateSmartScene(ctx context.Context, request UpdateSmartSceneRequestObject) (UpdateSmartSceneResponseObject, error)
+	// List temperatures
+	// (GET /clip/v2/resource/temperature)
+	GetTemperatures(ctx context.Context, request GetTemperaturesRequestObject) (GetTemperaturesResponseObject, error)
+	// Get temperature sensor information
+	// (GET /clip/v2/resource/temperature/{temperatureId})
+	GetTemperature(ctx context.Context, request GetTemperatureRequestObject) (GetTemperatureResponseObject, error)
+	// Update temperature sensor
+	// (PUT /clip/v2/resource/temperature/{temperatureId})
+	UpdateTemperature(ctx context.Context, request UpdateTemperatureRequestObject) (UpdateTemperatureResponseObject, error)
+	// List zones
+	// (GET /clip/v2/resource/zone)
+	GetZones(ctx context.Context, request GetZonesRequestObject) (GetZonesResponseObject, error)
+	// Create zone
+	// (POST /clip/v2/resource/zone)
+	CreateZone(ctx context.Context, request CreateZoneRequestObject) (CreateZoneResponseObject, error)
+	// Delete Zone
+	// (DELETE /clip/v2/resource/zone/{zoneId})
+	DeleteZone(ctx context.Context, request DeleteZoneRequestObject) (DeleteZoneResponseObject, error)
+	// Get Zone.
+	// (GET /clip/v2/resource/zone/{zoneId})
+	GetZone(ctx context.Context, request GetZoneRequestObject) (GetZoneResponseObject, error)
+	// Update Zone
+	// (PUT /clip/v2/resource/zone/{zoneId})
+	UpdateZone(ctx context.Context, request UpdateZoneRequestObject) (UpdateZoneResponseObject, error)
+}
+
+type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
+type StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
+
+type StrictHTTPServerOptions struct {
+	RequestErrorHandlerFunc  func(w http.ResponseWriter, r *http.Request, err error)
+	ResponseErrorHandlerFunc func(w http.ResponseWriter, r *http.Request, err error)
+}
+
+func NewStrictHandler(ssi StrictServerInterface, middlewares []StrictMiddlewareFunc) ServerInterface {
+	return &strictHandler{ssi: ssi, middlewares: middlewares, options: StrictHTTPServerOptions{
+		RequestErrorHandlerFunc: func(w http.ResponseWriter, r *http.Request, err error) {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		},
+		ResponseErrorHandlerFunc: func(w http.ResponseWriter, r *http.Request, err error) {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		},
+	}}
+}
+
+func NewStrictHandlerWithOptions(ssi StrictServerInterface, middlewares []StrictMiddlewareFunc, options StrictHTTPServerOptions) ServerInterface {
+	return &strictHandler{ssi: ssi, middlewares: middlewares, options: options}
+}
+
+type strictHandler struct {
+	ssi         StrictServerInterface
+	middlewares []StrictMiddlewareFunc
+	options     StrictHTTPServerOptions
+}
+
+// Authenticate operation middleware
+func (sh *strictHandler) Authenticate(w http.ResponseWriter, r *http.Request) {
+	var request AuthenticateRequestObject
+
+	var body AuthenticateJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.Authenticate(ctx, request.(AuthenticateRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "Authenticate")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(AuthenticateResponseObject); ok {
+		if err := validResponse.VisitAuthenticateResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetResources operation middleware
+func (sh *strictHandler) GetResources(w http.ResponseWriter, r *http.Request) {
+	var request GetResourcesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetResources(ctx, request.(GetResourcesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetResources")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetResourcesResponseObject); ok {
+		if err := validResponse.VisitGetResourcesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetBridges operation middleware
+func (sh *strictHandler) GetBridges(w http.ResponseWriter, r *http.Request) {
+	var request GetBridgesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetBridges(ctx, request.(GetBridgesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetBridges")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetBridgesResponseObject); ok {
+		if err := validResponse.VisitGetBridgesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetBridge operation middleware
+func (sh *strictHandler) GetBridge(w http.ResponseWriter, r *http.Request, bridgeId string) {
+	var request GetBridgeRequestObject
+
+	request.BridgeId = bridgeId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetBridge(ctx, request.(GetBridgeRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetBridge")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetBridgeResponseObject); ok {
+		if err := validResponse.VisitGetBridgeResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateBridge operation middleware
+func (sh *strictHandler) UpdateBridge(w http.ResponseWriter, r *http.Request, bridgeId string) {
+	var request UpdateBridgeRequestObject
+
+	request.BridgeId = bridgeId
+
+	var body UpdateBridgeJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateBridge(ctx, request.(UpdateBridgeRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateBridge")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateBridgeResponseObject); ok {
+		if err := validResponse.VisitUpdateBridgeResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetBridgeHomes operation middleware
+func (sh *strictHandler) GetBridgeHomes(w http.ResponseWriter, r *http.Request) {
+	var request GetBridgeHomesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetBridgeHomes(ctx, request.(GetBridgeHomesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetBridgeHomes")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetBridgeHomesResponseObject); ok {
+		if err := validResponse.VisitGetBridgeHomesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetBridgeHome operation middleware
+func (sh *strictHandler) GetBridgeHome(w http.ResponseWriter, r *http.Request, bridgeHomeId string) {
+	var request GetBridgeHomeRequestObject
+
+	request.BridgeHomeId = bridgeHomeId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetBridgeHome(ctx, request.(GetBridgeHomeRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetBridgeHome")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetBridgeHomeResponseObject); ok {
+		if err := validResponse.VisitGetBridgeHomeResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetDevices operation middleware
+func (sh *strictHandler) GetDevices(w http.ResponseWriter, r *http.Request) {
+	var request GetDevicesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetDevices(ctx, request.(GetDevicesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetDevices")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetDevicesResponseObject); ok {
+		if err := validResponse.VisitGetDevicesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteDevice operation middleware
+func (sh *strictHandler) DeleteDevice(w http.ResponseWriter, r *http.Request, deviceId string) {
+	var request DeleteDeviceRequestObject
+
+	request.DeviceId = deviceId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteDevice(ctx, request.(DeleteDeviceRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteDevice")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteDeviceResponseObject); ok {
+		if err := validResponse.VisitDeleteDeviceResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetDevice operation middleware
+func (sh *strictHandler) GetDevice(w http.ResponseWriter, r *http.Request, deviceId string) {
+	var request GetDeviceRequestObject
+
+	request.DeviceId = deviceId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetDevice(ctx, request.(GetDeviceRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetDevice")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetDeviceResponseObject); ok {
+		if err := validResponse.VisitGetDeviceResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateDevice operation middleware
+func (sh *strictHandler) UpdateDevice(w http.ResponseWriter, r *http.Request, deviceId string) {
+	var request UpdateDeviceRequestObject
+
+	request.DeviceId = deviceId
+
+	var body UpdateDeviceJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateDevice(ctx, request.(UpdateDeviceRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateDevice")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateDeviceResponseObject); ok {
+		if err := validResponse.VisitUpdateDeviceResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetDevicePowers operation middleware
+func (sh *strictHandler) GetDevicePowers(w http.ResponseWriter, r *http.Request) {
+	var request GetDevicePowersRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetDevicePowers(ctx, request.(GetDevicePowersRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetDevicePowers")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetDevicePowersResponseObject); ok {
+		if err := validResponse.VisitGetDevicePowersResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetDevicePower operation middleware
+func (sh *strictHandler) GetDevicePower(w http.ResponseWriter, r *http.Request, deviceId string) {
+	var request GetDevicePowerRequestObject
+
+	request.DeviceId = deviceId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetDevicePower(ctx, request.(GetDevicePowerRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetDevicePower")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetDevicePowerResponseObject); ok {
+		if err := validResponse.VisitGetDevicePowerResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetGroupedLights operation middleware
+func (sh *strictHandler) GetGroupedLights(w http.ResponseWriter, r *http.Request) {
+	var request GetGroupedLightsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetGroupedLights(ctx, request.(GetGroupedLightsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetGroupedLights")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetGroupedLightsResponseObject); ok {
+		if err := validResponse.VisitGetGroupedLightsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetGroupedLight operation middleware
+func (sh *strictHandler) GetGroupedLight(w http.ResponseWriter, r *http.Request, groupedLightId string) {
+	var request GetGroupedLightRequestObject
+
+	request.GroupedLightId = groupedLightId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetGroupedLight(ctx, request.(GetGroupedLightRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetGroupedLight")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetGroupedLightResponseObject); ok {
+		if err := validResponse.VisitGetGroupedLightResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateGroupedLight operation middleware
+func (sh *strictHandler) UpdateGroupedLight(w http.ResponseWriter, r *http.Request, groupedLightId string) {
+	var request UpdateGroupedLightRequestObject
+
+	request.GroupedLightId = groupedLightId
+
+	var body UpdateGroupedLightJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateGroupedLight(ctx, request.(UpdateGroupedLightRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateGroupedLight")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateGroupedLightResponseObject); ok {
+		if err := validResponse.VisitUpdateGroupedLightResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetLights operation middleware
+func (sh *strictHandler) GetLights(w http.ResponseWriter, r *http.Request) {
+	var request GetLightsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetLights(ctx, request.(GetLightsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetLights")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetLightsResponseObject); ok {
+		if err := validResponse.VisitGetLightsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetLight operation middleware
+func (sh *strictHandler) GetLight(w http.ResponseWriter, r *http.Request, lightId string) {
+	var request GetLightRequestObject
+
+	request.LightId = lightId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetLight(ctx, request.(GetLightRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetLight")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetLightResponseObject); ok {
+		if err := validResponse.VisitGetLightResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateLight operation middleware
+func (sh *strictHandler) UpdateLight(w http.ResponseWriter, r *http.Request, lightId string) {
+	var request UpdateLightRequestObject
+
+	request.LightId = lightId
+
+	var body UpdateLightJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateLight(ctx, request.(UpdateLightRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateLight")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateLightResponseObject); ok {
+		if err := validResponse.VisitUpdateLightResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetLightLevels operation middleware
+func (sh *strictHandler) GetLightLevels(w http.ResponseWriter, r *http.Request) {
+	var request GetLightLevelsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetLightLevels(ctx, request.(GetLightLevelsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetLightLevels")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetLightLevelsResponseObject); ok {
+		if err := validResponse.VisitGetLightLevelsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetLightLevel operation middleware
+func (sh *strictHandler) GetLightLevel(w http.ResponseWriter, r *http.Request, lightId string) {
+	var request GetLightLevelRequestObject
+
+	request.LightId = lightId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetLightLevel(ctx, request.(GetLightLevelRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetLightLevel")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetLightLevelResponseObject); ok {
+		if err := validResponse.VisitGetLightLevelResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateLightLevel operation middleware
+func (sh *strictHandler) UpdateLightLevel(w http.ResponseWriter, r *http.Request, lightId string) {
+	var request UpdateLightLevelRequestObject
+
+	request.LightId = lightId
+
+	var body UpdateLightLevelJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateLightLevel(ctx, request.(UpdateLightLevelRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateLightLevel")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateLightLevelResponseObject); ok {
+		if err := validResponse.VisitUpdateLightLevelResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetMotionSensors operation middleware
+func (sh *strictHandler) GetMotionSensors(w http.ResponseWriter, r *http.Request) {
+	var request GetMotionSensorsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetMotionSensors(ctx, request.(GetMotionSensorsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetMotionSensors")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetMotionSensorsResponseObject); ok {
+		if err := validResponse.VisitGetMotionSensorsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetMotionSensor operation middleware
+func (sh *strictHandler) GetMotionSensor(w http.ResponseWriter, r *http.Request, motionId string) {
+	var request GetMotionSensorRequestObject
+
+	request.MotionId = motionId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetMotionSensor(ctx, request.(GetMotionSensorRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetMotionSensor")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetMotionSensorResponseObject); ok {
+		if err := validResponse.VisitGetMotionSensorResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateMotionSensor operation middleware
+func (sh *strictHandler) UpdateMotionSensor(w http.ResponseWriter, r *http.Request, motionId string) {
+	var request UpdateMotionSensorRequestObject
+
+	request.MotionId = motionId
+
+	var body UpdateMotionSensorJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateMotionSensor(ctx, request.(UpdateMotionSensorRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateMotionSensor")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateMotionSensorResponseObject); ok {
+		if err := validResponse.VisitUpdateMotionSensorResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetRooms operation middleware
+func (sh *strictHandler) GetRooms(w http.ResponseWriter, r *http.Request) {
+	var request GetRoomsRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetRooms(ctx, request.(GetRoomsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetRooms")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetRoomsResponseObject); ok {
+		if err := validResponse.VisitGetRoomsResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateRoom operation middleware
+func (sh *strictHandler) CreateRoom(w http.ResponseWriter, r *http.Request) {
+	var request CreateRoomRequestObject
+
+	var body CreateRoomJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateRoom(ctx, request.(CreateRoomRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateRoom")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateRoomResponseObject); ok {
+		if err := validResponse.VisitCreateRoomResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteRoom operation middleware
+func (sh *strictHandler) DeleteRoom(w http.ResponseWriter, r *http.Request, roomId string) {
+	var request DeleteRoomRequestObject
+
+	request.RoomId = roomId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteRoom(ctx, request.(DeleteRoomRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteRoom")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteRoomResponseObject); ok {
+		if err := validResponse.VisitDeleteRoomResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetRoom operation middleware
+func (sh *strictHandler) GetRoom(w http.ResponseWriter, r *http.Request, roomId string) {
+	var request GetRoomRequestObject
+
+	request.RoomId = roomId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetRoom(ctx, request.(GetRoomRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetRoom")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetRoomResponseObject); ok {
+		if err := validResponse.VisitGetRoomResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateRoom operation middleware
+func (sh *strictHandler) UpdateRoom(w http.ResponseWriter, r *http.Request, roomId string) {
+	var request UpdateRoomRequestObject
+
+	request.RoomId = roomId
+
+	var body UpdateRoomJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateRoom(ctx, request.(UpdateRoomRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateRoom")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateRoomResponseObject); ok {
+		if err := validResponse.VisitUpdateRoomResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetScenes operation middleware
+func (sh *strictHandler) GetScenes(w http.ResponseWriter, r *http.Request) {
+	var request GetScenesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetScenes(ctx, request.(GetScenesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetScenes")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetScenesResponseObject); ok {
+		if err := validResponse.VisitGetScenesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateScene operation middleware
+func (sh *strictHandler) CreateScene(w http.ResponseWriter, r *http.Request) {
+	var request CreateSceneRequestObject
+
+	var body CreateSceneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateScene(ctx, request.(CreateSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateSceneResponseObject); ok {
+		if err := validResponse.VisitCreateSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteScene operation middleware
+func (sh *strictHandler) DeleteScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request DeleteSceneRequestObject
+
+	request.SceneId = sceneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteScene(ctx, request.(DeleteSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteSceneResponseObject); ok {
+		if err := validResponse.VisitDeleteSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetScene operation middleware
+func (sh *strictHandler) GetScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request GetSceneRequestObject
+
+	request.SceneId = sceneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetScene(ctx, request.(GetSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetSceneResponseObject); ok {
+		if err := validResponse.VisitGetSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateScene operation middleware
+func (sh *strictHandler) UpdateScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request UpdateSceneRequestObject
+
+	request.SceneId = sceneId
+
+	var body UpdateSceneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateScene(ctx, request.(UpdateSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateSceneResponseObject); ok {
+		if err := validResponse.VisitUpdateSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetSmartScenes operation middleware
+func (sh *strictHandler) GetSmartScenes(w http.ResponseWriter, r *http.Request) {
+	var request GetSmartScenesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetSmartScenes(ctx, request.(GetSmartScenesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetSmartScenes")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetSmartScenesResponseObject); ok {
+		if err := validResponse.VisitGetSmartScenesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateSmartScene operation middleware
+func (sh *strictHandler) CreateSmartScene(w http.ResponseWriter, r *http.Request) {
+	var request CreateSmartSceneRequestObject
+
+	var body CreateSmartSceneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateSmartScene(ctx, request.(CreateSmartSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateSmartScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateSmartSceneResponseObject); ok {
+		if err := validResponse.VisitCreateSmartSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteSmartScene operation middleware
+func (sh *strictHandler) DeleteSmartScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request DeleteSmartSceneRequestObject
+
+	request.SceneId = sceneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteSmartScene(ctx, request.(DeleteSmartSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteSmartScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteSmartSceneResponseObject); ok {
+		if err := validResponse.VisitDeleteSmartSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetSmartScene operation middleware
+func (sh *strictHandler) GetSmartScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request GetSmartSceneRequestObject
+
+	request.SceneId = sceneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetSmartScene(ctx, request.(GetSmartSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetSmartScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetSmartSceneResponseObject); ok {
+		if err := validResponse.VisitGetSmartSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateSmartScene operation middleware
+func (sh *strictHandler) UpdateSmartScene(w http.ResponseWriter, r *http.Request, sceneId string) {
+	var request UpdateSmartSceneRequestObject
+
+	request.SceneId = sceneId
+
+	var body UpdateSmartSceneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateSmartScene(ctx, request.(UpdateSmartSceneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateSmartScene")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateSmartSceneResponseObject); ok {
+		if err := validResponse.VisitUpdateSmartSceneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetTemperatures operation middleware
+func (sh *strictHandler) GetTemperatures(w http.ResponseWriter, r *http.Request) {
+	var request GetTemperaturesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetTemperatures(ctx, request.(GetTemperaturesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetTemperatures")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetTemperaturesResponseObject); ok {
+		if err := validResponse.VisitGetTemperaturesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetTemperature operation middleware
+func (sh *strictHandler) GetTemperature(w http.ResponseWriter, r *http.Request, temperatureId string) {
+	var request GetTemperatureRequestObject
+
+	request.TemperatureId = temperatureId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetTemperature(ctx, request.(GetTemperatureRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetTemperature")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetTemperatureResponseObject); ok {
+		if err := validResponse.VisitGetTemperatureResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateTemperature operation middleware
+func (sh *strictHandler) UpdateTemperature(w http.ResponseWriter, r *http.Request, temperatureId string) {
+	var request UpdateTemperatureRequestObject
+
+	request.TemperatureId = temperatureId
+
+	var body UpdateTemperatureJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateTemperature(ctx, request.(UpdateTemperatureRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateTemperature")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateTemperatureResponseObject); ok {
+		if err := validResponse.VisitUpdateTemperatureResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetZones operation middleware
+func (sh *strictHandler) GetZones(w http.ResponseWriter, r *http.Request) {
+	var request GetZonesRequestObject
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetZones(ctx, request.(GetZonesRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetZones")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetZonesResponseObject); ok {
+		if err := validResponse.VisitGetZonesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// CreateZone operation middleware
+func (sh *strictHandler) CreateZone(w http.ResponseWriter, r *http.Request) {
+	var request CreateZoneRequestObject
+
+	var body CreateZoneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.CreateZone(ctx, request.(CreateZoneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CreateZone")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(CreateZoneResponseObject); ok {
+		if err := validResponse.VisitCreateZoneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteZone operation middleware
+func (sh *strictHandler) DeleteZone(w http.ResponseWriter, r *http.Request, zoneId string) {
+	var request DeleteZoneRequestObject
+
+	request.ZoneId = zoneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteZone(ctx, request.(DeleteZoneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteZone")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteZoneResponseObject); ok {
+		if err := validResponse.VisitDeleteZoneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetZone operation middleware
+func (sh *strictHandler) GetZone(w http.ResponseWriter, r *http.Request, zoneId string) {
+	var request GetZoneRequestObject
+
+	request.ZoneId = zoneId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetZone(ctx, request.(GetZoneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetZone")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetZoneResponseObject); ok {
+		if err := validResponse.VisitGetZoneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateZone operation middleware
+func (sh *strictHandler) UpdateZone(w http.ResponseWriter, r *http.Request, zoneId string) {
+	var request UpdateZoneRequestObject
+
+	request.ZoneId = zoneId
+
+	var body UpdateZoneJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateZone(ctx, request.(UpdateZoneRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateZone")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(UpdateZoneResponseObject); ok {
+		if err := validResponse.VisitUpdateZoneResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
 }

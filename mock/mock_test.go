@@ -22,14 +22,11 @@ package mock_test
 import (
 	_ "embed"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/mock"
 )
-
-const defaultTimeout time.Duration = 5 * time.Minute
 
 func TestStartStop(t *testing.T) {
 	// Start mock server
@@ -50,7 +47,7 @@ func TestMDNSLocator(t *testing.T) {
 	// Actual test
 	locator := hue.NewMDNSBridgeLocator()
 	locator.Limit = 2
-	bridges, err := locator.Query(defaultTimeout)
+	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
 	require.True(t, len(bridges) > 0)
 }
@@ -64,7 +61,7 @@ func TestCloudLocator(t *testing.T) {
 	locator := hue.NewCloudBridgeLocator()
 	locator.DiscoveryEndpointUrl = bridgeMock.BaseURL() + "/discovery"
 	locator.InsecureSkipVerify = true
-	bridges, err := locator.Query(defaultTimeout)
+	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
 }
@@ -76,7 +73,7 @@ func TestAddressLocator(t *testing.T) {
 	defer bridgeMock.Shutdown()
 	// Actual test
 	locator := hue.NewAddressBridgeLocator(bridgeMock.Address())
-	bridges, err := locator.Query(defaultTimeout)
+	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
 }

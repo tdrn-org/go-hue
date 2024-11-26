@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-log"
 )
 
@@ -96,8 +95,8 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 	return nil, ErrBridgeNotAvailable
 }
 
-func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, headers map[string]string, timeout time.Duration) hueapi.ClientInterface {
-	return newLocalBridgeClient(bridge, headers, timeout)
+func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, timeout)
 }
 
 func (locator *CloudBridgeLocator) queryDiscoveryEndpoint(timeout time.Duration) ([]cloudDiscoveryEndpointResponseEntry, error) {
