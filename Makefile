@@ -35,7 +35,7 @@ lint: vet staticcheck
 
 .PHONE: test
 test:
-	go test $(GOTAGS) -v -covermode=atomic -coverprofile=coverage.out ./...
+	go test $(GOTAGS) -v -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
 
 .PHONE: check
 check: generate test lint
