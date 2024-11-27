@@ -95,6 +95,43 @@ func TestClient(t *testing.T) {
 	testDeleteDevice(t, client)
 	testGetDevice(t, client)
 	testUpdateDevice(t, client)
+	testGetDevicePowers(t, client)
+	testGetDevicePower(t, client)
+	testGetGroupedLights(t, client)
+	testGetGroupedLight(t, client)
+	testUpdateGroupedLight(t, client)
+	testGetLights(t, client)
+	testGetLight(t, client)
+	testUpdateLight(t, client)
+	testGetLightLevels(t, client)
+	testGetLightLevel(t, client)
+	testUpdateLightLevel(t, client)
+	testGetMotionSensors(t, client)
+	testGetMotionSensor(t, client)
+	testUpdateMotionSensor(t, client)
+	testGetRooms(t, client)
+	testCreateRoom(t, client)
+	testDeleteRoom(t, client)
+	testGetRoom(t, client)
+	testUpdateRoom(t, client)
+	testGetScenes(t, client)
+	testCreateScene(t, client)
+	testDeleteScene(t, client)
+	testGetScene(t, client)
+	testUpdateScene(t, client)
+	testGetSmartScenes(t, client)
+	testCreateSmartScene(t, client)
+	testDeleteSmartScene(t, client)
+	testGetSmartScene(t, client)
+	testUpdateSmartScene(t, client)
+	testGetTemperatures(t, client)
+	testGetTemperature(t, client)
+	testUpdateTemperature(t, client)
+	testGetZones(t, client)
+	testCreateZone(t, client)
+	testDeleteZone(t, client)
+	testGetZone(t, client)
+	testUpdateZone(t, client)
 }
 
 func testGetResourcesForbidden(t *testing.T, client hue.BridgeClient) {
@@ -169,6 +206,241 @@ func testGetDevice(t *testing.T, client hue.BridgeClient) {
 func testUpdateDevice(t *testing.T, client hue.BridgeClient) {
 	body := hueapi.UpdateDeviceJSONRequestBody{}
 	response, err := client.UpdateDevice("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetDevicePowers(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetDevicePowers()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetDevicePower(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetDevicePower("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetGroupedLights(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetGroupedLights()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetGroupedLight(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetGroupedLight("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateGroupedLight(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateGroupedLightJSONRequestBody{}
+	response, err := client.UpdateGroupedLight("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetLights(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetLights()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetLight(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetLight("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateLight(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateLightJSONRequestBody{}
+	response, err := client.UpdateLight("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetLightLevels(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetLightLevels()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetLightLevel(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetLightLevel("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateLightLevel(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateLightLevelJSONRequestBody{}
+	response, err := client.UpdateLightLevel("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetMotionSensors(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetMotionSensors()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetMotionSensor(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetMotionSensor("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateMotionSensor(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateMotionSensorJSONRequestBody{}
+	response, err := client.UpdateMotionSensor("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetRooms(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetRooms()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testCreateRoom(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.CreateRoomJSONRequestBody{}
+	response, err := client.CreateRoom(body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testDeleteRoom(t *testing.T, client hue.BridgeClient) {
+	response, err := client.DeleteRoom("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetRoom(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetRoom("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateRoom(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateRoomJSONRequestBody{}
+	response, err := client.UpdateRoom("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetScenes(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetScenes()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testCreateScene(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.CreateSceneJSONRequestBody{}
+	response, err := client.CreateScene(body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testDeleteScene(t *testing.T, client hue.BridgeClient) {
+	response, err := client.DeleteScene("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetScene(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetScene("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateScene(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateSceneJSONRequestBody{}
+	response, err := client.UpdateScene("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetSmartScenes(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetSmartScenes()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testCreateSmartScene(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.CreateSmartSceneJSONRequestBody{}
+	response, err := client.CreateSmartScene(body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testDeleteSmartScene(t *testing.T, client hue.BridgeClient) {
+	response, err := client.DeleteSmartScene("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetSmartScene(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetSmartScene("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateSmartScene(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateSmartSceneJSONRequestBody{}
+	response, err := client.UpdateSmartScene("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetTemperatures(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetTemperatures()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetTemperature(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetTemperature("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateTemperature(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateTemperatureJSONRequestBody{}
+	response, err := client.UpdateTemperature("1", body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetZones(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetZones()
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testCreateZone(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.CreateZoneJSONRequestBody{}
+	response, err := client.CreateZone(body)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testDeleteZone(t *testing.T, client hue.BridgeClient) {
+	response, err := client.DeleteZone("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testGetZone(t *testing.T, client hue.BridgeClient) {
+	response, err := client.GetZone("1")
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func testUpdateZone(t *testing.T, client hue.BridgeClient) {
+	body := hueapi.UpdateZoneJSONRequestBody{}
+	response, err := client.UpdateZone("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }

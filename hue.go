@@ -159,6 +159,43 @@ type BridgeClient interface {
 	DeleteDevice(deviceId string) (*hueapi.DeleteDeviceResponse, error)
 	GetDevice(deviceId string) (*hueapi.GetDeviceResponse, error)
 	UpdateDevice(deviceId string, body hueapi.UpdateDeviceJSONRequestBody) (*hueapi.UpdateDeviceResponse, error)
+	GetDevicePowers() (*hueapi.GetDevicePowersResponse, error)
+	GetDevicePower(deviceId string) (*hueapi.GetDevicePowerResponse, error)
+	GetGroupedLights() (*hueapi.GetGroupedLightsResponse, error)
+	GetGroupedLight(groupedLightId string) (*hueapi.GetGroupedLightResponse, error)
+	UpdateGroupedLight(groupedLightId string, body hueapi.UpdateGroupedLightJSONRequestBody) (*hueapi.UpdateGroupedLightResponse, error)
+	GetLights() (*hueapi.GetLightsResponse, error)
+	GetLight(lightId string) (*hueapi.GetLightResponse, error)
+	UpdateLight(lightId string, body hueapi.UpdateLightJSONRequestBody) (*hueapi.UpdateLightResponse, error)
+	GetLightLevels() (*hueapi.GetLightLevelsResponse, error)
+	GetLightLevel(lightId string) (*hueapi.GetLightLevelResponse, error)
+	UpdateLightLevel(lightId string, body hueapi.UpdateLightLevelJSONRequestBody) (*hueapi.UpdateLightLevelResponse, error)
+	GetMotionSensors() (*hueapi.GetMotionSensorsResponse, error)
+	GetMotionSensor(motionId string) (*hueapi.GetMotionSensorResponse, error)
+	UpdateMotionSensor(motionId string, body hueapi.UpdateMotionSensorJSONRequestBody) (*hueapi.UpdateMotionSensorResponse, error)
+	GetRooms() (*hueapi.GetRoomsResponse, error)
+	CreateRoom(body hueapi.CreateRoomJSONRequestBody) (*hueapi.CreateRoomResponse, error)
+	DeleteRoom(roomId string) (*hueapi.DeleteRoomResponse, error)
+	GetRoom(roomId string) (*hueapi.GetRoomResponse, error)
+	UpdateRoom(roomId string, body hueapi.UpdateRoomJSONRequestBody) (*hueapi.UpdateRoomResponse, error)
+	GetScenes() (*hueapi.GetScenesResponse, error)
+	CreateScene(body hueapi.CreateSceneJSONRequestBody) (*hueapi.CreateSceneResponse, error)
+	DeleteScene(sceneId string) (*hueapi.DeleteSceneResponse, error)
+	GetScene(sceneId string) (*hueapi.GetSceneResponse, error)
+	UpdateScene(sceneId string, body hueapi.UpdateSceneJSONRequestBody) (*hueapi.UpdateSceneResponse, error)
+	GetSmartScenes() (*hueapi.GetSmartScenesResponse, error)
+	CreateSmartScene(body hueapi.CreateSmartSceneJSONRequestBody) (*hueapi.CreateSmartSceneResponse, error)
+	DeleteSmartScene(sceneId string) (*hueapi.DeleteSmartSceneResponse, error)
+	GetSmartScene(sceneId string) (*hueapi.GetSmartSceneResponse, error)
+	UpdateSmartScene(sceneId string, body hueapi.UpdateSmartSceneJSONRequestBody) (*hueapi.UpdateSmartSceneResponse, error)
+	GetTemperatures() (*hueapi.GetTemperaturesResponse, error)
+	GetTemperature(temperatureId string) (*hueapi.GetTemperatureResponse, error)
+	UpdateTemperature(temperatureId string, body hueapi.UpdateTemperatureJSONRequestBody) (*hueapi.UpdateTemperatureResponse, error)
+	GetZones() (*hueapi.GetZonesResponse, error)
+	CreateZone(body hueapi.CreateZoneJSONRequestBody) (*hueapi.CreateZoneResponse, error)
+	DeleteZone(zoneId string) (*hueapi.DeleteZoneResponse, error)
+	GetZone(zoneId string) (*hueapi.GetZoneResponse, error)
+	UpdateZone(zoneId string, body hueapi.UpdateZoneJSONRequestBody) (*hueapi.UpdateZoneResponse, error)
 }
 
 type bridgeClient struct {
@@ -273,6 +310,302 @@ func (client *bridgeClient) GetDevice(deviceId string) (*hueapi.GetDeviceRespons
 
 func (client *bridgeClient) UpdateDevice(deviceId string, body hueapi.UpdateDeviceJSONRequestBody) (*hueapi.UpdateDeviceResponse, error) {
 	response, err := client.Hueapi.UpdateDeviceWithResponse(context.Background(), deviceId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetDevicePowers() (*hueapi.GetDevicePowersResponse, error) {
+	response, err := client.Hueapi.GetDevicePowersWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetDevicePower(deviceId string) (*hueapi.GetDevicePowerResponse, error) {
+	response, err := client.Hueapi.GetDevicePowerWithResponse(context.Background(), deviceId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetGroupedLights() (*hueapi.GetGroupedLightsResponse, error) {
+	response, err := client.Hueapi.GetGroupedLightsWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetGroupedLight(groupedLightId string) (*hueapi.GetGroupedLightResponse, error) {
+	response, err := client.Hueapi.GetGroupedLightWithResponse(context.Background(), groupedLightId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateGroupedLight(groupedLightId string, body hueapi.UpdateGroupedLightJSONRequestBody) (*hueapi.UpdateGroupedLightResponse, error) {
+	response, err := client.Hueapi.UpdateGroupedLightWithResponse(context.Background(), groupedLightId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetLights() (*hueapi.GetLightsResponse, error) {
+	response, err := client.Hueapi.GetLightsWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetLight(lightId string) (*hueapi.GetLightResponse, error) {
+	response, err := client.Hueapi.GetLightWithResponse(context.Background(), lightId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateLight(lightId string, body hueapi.UpdateLightJSONRequestBody) (*hueapi.UpdateLightResponse, error) {
+	response, err := client.Hueapi.UpdateLightWithResponse(context.Background(), lightId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetLightLevels() (*hueapi.GetLightLevelsResponse, error) {
+	response, err := client.Hueapi.GetLightLevelsWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetLightLevel(lightId string) (*hueapi.GetLightLevelResponse, error) {
+	response, err := client.Hueapi.GetLightLevelWithResponse(context.Background(), lightId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateLightLevel(lightId string, body hueapi.UpdateLightLevelJSONRequestBody) (*hueapi.UpdateLightLevelResponse, error) {
+	response, err := client.Hueapi.UpdateLightLevelWithResponse(context.Background(), lightId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetMotionSensors() (*hueapi.GetMotionSensorsResponse, error) {
+	response, err := client.Hueapi.GetMotionSensorsWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetMotionSensor(motionId string) (*hueapi.GetMotionSensorResponse, error) {
+	response, err := client.Hueapi.GetMotionSensorWithResponse(context.Background(), motionId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateMotionSensor(motionId string, body hueapi.UpdateMotionSensorJSONRequestBody) (*hueapi.UpdateMotionSensorResponse, error) {
+	response, err := client.Hueapi.UpdateMotionSensorWithResponse(context.Background(), motionId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetRooms() (*hueapi.GetRoomsResponse, error) {
+	response, err := client.Hueapi.GetRoomsWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) CreateRoom(body hueapi.CreateRoomJSONRequestBody) (*hueapi.CreateRoomResponse, error) {
+	response, err := client.Hueapi.CreateRoomWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) DeleteRoom(roomId string) (*hueapi.DeleteRoomResponse, error) {
+	response, err := client.Hueapi.DeleteRoomWithResponse(context.Background(), roomId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetRoom(roomId string) (*hueapi.GetRoomResponse, error) {
+	response, err := client.Hueapi.GetRoomWithResponse(context.Background(), roomId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateRoom(roomId string, body hueapi.UpdateRoomJSONRequestBody) (*hueapi.UpdateRoomResponse, error) {
+	response, err := client.Hueapi.UpdateRoomWithResponse(context.Background(), roomId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetScenes() (*hueapi.GetScenesResponse, error) {
+	response, err := client.Hueapi.GetScenesWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) CreateScene(body hueapi.CreateSceneJSONRequestBody) (*hueapi.CreateSceneResponse, error) {
+	response, err := client.Hueapi.CreateSceneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) DeleteScene(sceneId string) (*hueapi.DeleteSceneResponse, error) {
+	response, err := client.Hueapi.DeleteSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetScene(sceneId string) (*hueapi.GetSceneResponse, error) {
+	response, err := client.Hueapi.GetSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateScene(sceneId string, body hueapi.UpdateSceneJSONRequestBody) (*hueapi.UpdateSceneResponse, error) {
+	response, err := client.Hueapi.UpdateSceneWithResponse(context.Background(), sceneId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetSmartScenes() (*hueapi.GetSmartScenesResponse, error) {
+	response, err := client.Hueapi.GetSmartScenesWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) CreateSmartScene(body hueapi.CreateSmartSceneJSONRequestBody) (*hueapi.CreateSmartSceneResponse, error) {
+	response, err := client.Hueapi.CreateSmartSceneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) DeleteSmartScene(sceneId string) (*hueapi.DeleteSmartSceneResponse, error) {
+	response, err := client.Hueapi.DeleteSmartSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetSmartScene(sceneId string) (*hueapi.GetSmartSceneResponse, error) {
+	response, err := client.Hueapi.GetSmartSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateSmartScene(sceneId string, body hueapi.UpdateSmartSceneJSONRequestBody) (*hueapi.UpdateSmartSceneResponse, error) {
+	response, err := client.Hueapi.UpdateSmartSceneWithResponse(context.Background(), sceneId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetTemperatures() (*hueapi.GetTemperaturesResponse, error) {
+	response, err := client.Hueapi.GetTemperaturesWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetTemperature(temperatureId string) (*hueapi.GetTemperatureResponse, error) {
+	response, err := client.Hueapi.GetTemperatureWithResponse(context.Background(), temperatureId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateTemperature(temperatureId string, body hueapi.UpdateTemperatureJSONRequestBody) (*hueapi.UpdateTemperatureResponse, error) {
+	response, err := client.Hueapi.UpdateTemperatureWithResponse(context.Background(), temperatureId, body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetZones() (*hueapi.GetZonesResponse, error) {
+	response, err := client.Hueapi.GetZonesWithResponse(context.Background(), client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) CreateZone(body hueapi.CreateZoneJSONRequestBody) (*hueapi.CreateZoneResponse, error) {
+	response, err := client.Hueapi.CreateZoneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) DeleteZone(zoneId string) (*hueapi.DeleteZoneResponse, error) {
+	response, err := client.Hueapi.DeleteZoneWithResponse(context.Background(), zoneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) GetZone(zoneId string) (*hueapi.GetZoneResponse, error) {
+	response, err := client.Hueapi.GetZoneWithResponse(context.Background(), zoneId, client.Target.authenticatorFn)
+	if err != nil {
+		return nil, bridgeClientWrapSystemError(err)
+	}
+	return response, bridgeClientApiError(response.HTTPResponse)
+}
+
+func (client *bridgeClient) UpdateZone(zoneId string, body hueapi.UpdateZoneJSONRequestBody) (*hueapi.UpdateZoneResponse, error) {
+	response, err := client.Hueapi.UpdateZoneWithResponse(context.Background(), zoneId, body, client.Target.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
