@@ -92,7 +92,7 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 }
 
 func newLocalBridgeHueClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	server := "https://" + bridge.Address
+	server := "https://" + bridge.address
 	httpClientOpt := func(c *hueapi.Client) error {
 		c.Client = newLocalBridgeHttpClient(bridge.BridgeId, timeout)
 		return nil

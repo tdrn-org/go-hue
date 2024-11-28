@@ -25,6 +25,9 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
+// NewCloudBridgeLocator creates a new [BridgeLocator] for discovering bridges accross the Hue clouds discovery endpoint.
+//
+// Only bridges registered in the cloud are locatable via this [BridgeLocator].
 func NewCloudBridgeLocator() *CloudBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", cloudBridgeLocatorName).Logger()
 	return &CloudBridgeLocator{

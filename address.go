@@ -23,6 +23,7 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
+// NewAddressBridgeLocator creates a new [BridgeLocator] for accessing a bridge with a well-known address.
 func NewAddressBridgeLocator(address string) *AddressBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
 	return &AddressBridgeLocator{

@@ -27,6 +27,7 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
+// NewMDNSBridgeLocator creates a new [BridgeLocator] for discovering bridges via Multicast DNS (mDNS).
 func NewMDNSBridgeLocator() *MdnsBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", mdnsBridgeLocatorName).Logger()
 	return &MdnsBridgeLocator{

@@ -26,6 +26,7 @@ import (
 	"github.com/tdrn-org/go-hue/hueapi"
 )
 
+// Data contains a Bridge's state as returned by the different Get*s API calls.
 type Data struct {
 	GetResources *struct {
 		Data   *[]hueapi.ResourceGet `json:"data,omitempty"`

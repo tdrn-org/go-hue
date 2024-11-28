@@ -36,18 +36,33 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
+// Bridge id of the Bridge provided by the mock server.
 const MockBridgeId = "0123456789ABCDEF"
+
+// User name used by the Bridge provided by the mock server.
 const MockBridgeUsername = "MockBridgeUsername"
+
+// Client key used by the Bridge provided by the mock server.
 const MockBridgeClientkey = "MockBridgeClientkey"
 
+// BridgeServer interface used to interact with the mock server.
 type BridgeServer interface {
+	// Address gets the address the mock server is listening on.
 	Address() string
+	// AddressParts gets the different parts (IP and port) of the mock server's address.
 	AddressParts() (net.IP, int, error)
+	// BaseURL gets the base URL wich can be used to build up the API URLs.
 	BaseURL() string
+	// Ping checks whether the mock server is up and running.
 	Ping() error
+	// Shutdown terminates the mock server gracefully.
 	Shutdown()
 }
 
+// Start starts a new mock server instance.
+//
+// The mock server listens on all interfaces and on a dynamic port.
+// Use the [BridgeServer.Address] function to determine the actual address.
 func Start() BridgeServer {
 	ifaces, err := net.Interfaces()
 	if err != nil {

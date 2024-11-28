@@ -32,30 +32,52 @@ import (
 	"github.com/tdrn-org/go-hue/hueapi"
 )
 
+// ErrBridgeNotAvailable indicates a previously located bridge is currently not accessible.
 var ErrBridgeNotAvailable = errors.New("bridge not available")
+
+// ErrBridgeClientFailure indicates a system error while invoking the bridge client.
 var ErrBridgeClientFailure = errors.New("bridge client call failure")
+
+// ErrHueAPIForbidden indicates a restricted API has been called without a valid authentication.
 var ErrHueAPIForbidden = errors.New("api access denied")
+
+// ErrHueAPIFailure indicates an API has failed with an API error.
 var ErrHueAPIFailure = errors.New("api failure")
 
+// DefaultTimeout defines a suitable default for timeout related functions.
 const DefaulTimeout time.Duration = 60 * time.Second
 
+// Bridge contains the general bridge attributes as well the [BridgeLocator] instance used to locate this bridge.
 type Bridge struct {
-	Locator          BridgeLocator
-	Name             string
-	SoftwareVersion  string
-	ApiVersion       string
-	HardwareAddress  net.HardwareAddr
-	BridgeId         string
+	// Locator refers to the [BridgeLocator] instance used to identify this bridge.
+	Locator BridgeLocator
+	// Name contains the name of the bridge.
+	Name string
+	// SoftwareVersion contains the version of the bridge SW.
+	SoftwareVersion string
+	// ApiVersion contains the version of the bridge API.
+	ApiVersion string
+	// HardwareAddress contains the Hardware (MAC) address of the bridge.
+	HardwareAddress net.HardwareAddr
+	// BridgeId contains the id of the bridge.
+	BridgeId string
+	// ReplacesBridgeId contains optionally the id of the bridge replaced by this one.
 	ReplacesBridgeId string
-	ModelId          string
-	Address          string
-	authenticatorFn  hueapi.RequestEditorFn
+	// ModelId contains the id of the bridge model.
+	ModelId         string
+	address         string
+	authenticatorFn hueapi.RequestEditorFn
 }
 
+// NewClient creates a new [BridgeClient] suitable for access the bridge services.
 func (bridge *Bridge) NewClient(timeout time.Duration) (BridgeClient, error) {
 	return bridge.Locator.NewClient(bridge, timeout)
 }
 
+// UpdateAuthentication sets or updates the authentication information required to access the bridge services.
+//
+// For local bridges only the userName is required as created via a [BridgeClient.Authenticate] call.
+// For remote bridges also a valid bearer token is required.
 func (bridge *Bridge) UpdateAuthentication(userName string, bearerToken string) {
 	if bearerToken != "" {
 		bridge.authenticatorFn = func(ctx context.Context, req *http.Request) error {
@@ -71,14 +93,24 @@ func (bridge *Bridge) UpdateAuthentication(userName string, bearerToken string) 
 	}
 }
 
+// String gets bridge signature string.
 func (bridge *Bridge) String() string {
-	return fmt.Sprintf("%s:%s (Name: '%s', SW: %s, API: %s, MAC: %s, Address: %s)", bridge.Locator.Name(), bridge.BridgeId, bridge.Name, bridge.SoftwareVersion, bridge.ApiVersion, bridge.HardwareAddress.String(), bridge.Address)
+	return fmt.Sprintf("%s:%s (Name: '%s', SW: %s, API: %s, MAC: %s, Address: %s)", bridge.Locator.Name(), bridge.BridgeId, bridge.Name, bridge.SoftwareVersion, bridge.ApiVersion, bridge.HardwareAddress.String(), bridge.address)
 }
 
+// BridgeLocator provides the necessary functions to identify and access bridge instances.
 type BridgeLocator interface {
+	// Name gets the name of the locator.
 	Name() string
+	// Query locates all accessible bridges.
+	//
+	// An empty collection is returned, in case no bridge could be located.
 	Query(timeout time.Duration) ([]*Bridge, error)
+	// Lookup locates the bridge for the given bridge id.
+	//
+	// An error is returned in case the bridge is not available.
 	Lookup(bridgeId string, timeout time.Duration) (*Bridge, error)
+	// NewClient create a new [BridgeClient] for accessing the given bridge's services.
 	NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error)
 }
 
@@ -107,7 +139,7 @@ func (config *bridgeConfig) newBridge(locator BridgeLocator, address string) (*B
 		BridgeId:         config.BridgeId,
 		ReplacesBridgeId: config.ReplacesBridgeId,
 		ModelId:          config.ModelId,
-		Address:          address,
+		address:          address,
 		authenticatorFn:  func(ctx context.Context, req *http.Request) error { return nil },
 	}, nil
 }
@@ -146,55 +178,105 @@ func newDefaultClient(timeout time.Duration, skipVerify bool) *http.Client {
 	}
 }
 
+// BridgeClient provides the Hue API functions provided by a bridge.
 type BridgeClient interface {
+	// Bridge get the bridge instance this client accesses.
 	Bridge() *Bridge
+	// Authenticate API call.
 	Authenticate(request hueapi.AuthenticateJSONRequestBody) (*hueapi.AuthenticateResponse, error)
+	// GetResources API call.
 	GetResources() (*hueapi.GetResourcesResponse, error)
+	// GetBridges API call.
 	GetBridges() (*hueapi.GetBridgesResponse, error)
+	// GetBridge API call.
 	GetBridge(bridgeId string) (*hueapi.GetBridgeResponse, error)
+	// UpdateBridge API call.
 	UpdateBridge(bridgeId string, body hueapi.UpdateBridgeJSONRequestBody) (*hueapi.UpdateBridgeResponse, error)
+	// GetBridgeHomes API call.
 	GetBridgeHomes() (*hueapi.GetBridgeHomesResponse, error)
+	// GetBridgeHome API call.
 	GetBridgeHome(bridgeHomeId string) (*hueapi.GetBridgeHomeResponse, error)
+	// GetDevices API call.
 	GetDevices() (*hueapi.GetDevicesResponse, error)
+	// DeleteDevice API call.
 	DeleteDevice(deviceId string) (*hueapi.DeleteDeviceResponse, error)
+	// GetDevice API call.
 	GetDevice(deviceId string) (*hueapi.GetDeviceResponse, error)
+	// UpdateDevice API call.
 	UpdateDevice(deviceId string, body hueapi.UpdateDeviceJSONRequestBody) (*hueapi.UpdateDeviceResponse, error)
+	// GetDevicePowers API call.
 	GetDevicePowers() (*hueapi.GetDevicePowersResponse, error)
+	// GetDevicePower API call.
 	GetDevicePower(deviceId string) (*hueapi.GetDevicePowerResponse, error)
+	// GetGroupedLights API call.
 	GetGroupedLights() (*hueapi.GetGroupedLightsResponse, error)
+	// GetGroupedLight API call.
 	GetGroupedLight(groupedLightId string) (*hueapi.GetGroupedLightResponse, error)
+	// UpdateGroupedLight API call.
 	UpdateGroupedLight(groupedLightId string, body hueapi.UpdateGroupedLightJSONRequestBody) (*hueapi.UpdateGroupedLightResponse, error)
+	// GetLights API call.
 	GetLights() (*hueapi.GetLightsResponse, error)
+	// GetLight API call.
 	GetLight(lightId string) (*hueapi.GetLightResponse, error)
+	// UpdateLight API call.
 	UpdateLight(lightId string, body hueapi.UpdateLightJSONRequestBody) (*hueapi.UpdateLightResponse, error)
+	// GetLightLevels API call.
 	GetLightLevels() (*hueapi.GetLightLevelsResponse, error)
+	// GetLightLevel API call.
 	GetLightLevel(lightId string) (*hueapi.GetLightLevelResponse, error)
+	// UpdateLightLevel API call.
 	UpdateLightLevel(lightId string, body hueapi.UpdateLightLevelJSONRequestBody) (*hueapi.UpdateLightLevelResponse, error)
+	// GetMotionSensors API call.
 	GetMotionSensors() (*hueapi.GetMotionSensorsResponse, error)
+	// GetMotionSensor API call.
 	GetMotionSensor(motionId string) (*hueapi.GetMotionSensorResponse, error)
+	// UpdateMotionSensor API call.
 	UpdateMotionSensor(motionId string, body hueapi.UpdateMotionSensorJSONRequestBody) (*hueapi.UpdateMotionSensorResponse, error)
+	// GetRooms API call.
 	GetRooms() (*hueapi.GetRoomsResponse, error)
+	// CreateRoom API call.
 	CreateRoom(body hueapi.CreateRoomJSONRequestBody) (*hueapi.CreateRoomResponse, error)
+	// DeleteRoom API call.
 	DeleteRoom(roomId string) (*hueapi.DeleteRoomResponse, error)
+	// GetRoom API call.
 	GetRoom(roomId string) (*hueapi.GetRoomResponse, error)
+	// UpdateRoom API call.
 	UpdateRoom(roomId string, body hueapi.UpdateRoomJSONRequestBody) (*hueapi.UpdateRoomResponse, error)
+	// GetScenes API call.
 	GetScenes() (*hueapi.GetScenesResponse, error)
+	// CreateScene API call.
 	CreateScene(body hueapi.CreateSceneJSONRequestBody) (*hueapi.CreateSceneResponse, error)
+	// DeleteScene API call.
 	DeleteScene(sceneId string) (*hueapi.DeleteSceneResponse, error)
+	// GetScene API call.
 	GetScene(sceneId string) (*hueapi.GetSceneResponse, error)
+	// UpdateScene API call.
 	UpdateScene(sceneId string, body hueapi.UpdateSceneJSONRequestBody) (*hueapi.UpdateSceneResponse, error)
+	// GetSmartScenes API call.
 	GetSmartScenes() (*hueapi.GetSmartScenesResponse, error)
+	// CreateSmartScene API call.
 	CreateSmartScene(body hueapi.CreateSmartSceneJSONRequestBody) (*hueapi.CreateSmartSceneResponse, error)
+	// DeleteSmartScene API call.
 	DeleteSmartScene(sceneId string) (*hueapi.DeleteSmartSceneResponse, error)
+	// GetSmartScene API call.
 	GetSmartScene(sceneId string) (*hueapi.GetSmartSceneResponse, error)
+	// UpdateSmartScene API call.
 	UpdateSmartScene(sceneId string, body hueapi.UpdateSmartSceneJSONRequestBody) (*hueapi.UpdateSmartSceneResponse, error)
+	// GetTemperatures API call.
 	GetTemperatures() (*hueapi.GetTemperaturesResponse, error)
+	// GetTemperature API call.
 	GetTemperature(temperatureId string) (*hueapi.GetTemperatureResponse, error)
+	// UpdateTemperature API call.
 	UpdateTemperature(temperatureId string, body hueapi.UpdateTemperatureJSONRequestBody) (*hueapi.UpdateTemperatureResponse, error)
+	// GetZones API call.
 	GetZones() (*hueapi.GetZonesResponse, error)
+	// CreateZone API call.
 	CreateZone(body hueapi.CreateZoneJSONRequestBody) (*hueapi.CreateZoneResponse, error)
+	// DeleteZone API call.
 	DeleteZone(zoneId string) (*hueapi.DeleteZoneResponse, error)
+	// GetZone API call.
 	GetZone(zoneId string) (*hueapi.GetZoneResponse, error)
+	// UpdateZone API call.
 	UpdateZone(zoneId string, body hueapi.UpdateZoneJSONRequestBody) (*hueapi.UpdateZoneResponse, error)
 }
 
