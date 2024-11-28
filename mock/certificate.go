@@ -1,3 +1,6 @@
+//go:build huemocks
+// +build huemocks
+
 /*
  * Copyright 2024 Holger de Carne
  *
@@ -23,6 +26,7 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
+	"log"
 	"math/big"
 	"time"
 )
@@ -50,10 +54,11 @@ func mockKeyPEM() []byte {
 	return pem.EncodeToMemory(block)
 }
 
+// Generate self-signed certificate as used by a Hue bridge (CN = <bridge id>).
 func init() {
 	key, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	now := time.Now()
 	template := &x509.Certificate{
@@ -68,11 +73,11 @@ func init() {
 	}
 	certificateBytes, err := x509.CreateCertificate(rand.Reader, template, template, &key.PublicKey, key)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	certificate, err := x509.ParseCertificate(certificateBytes)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	mockCertificate = certificate
 	mockKey = key

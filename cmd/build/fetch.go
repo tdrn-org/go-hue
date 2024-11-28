@@ -26,6 +26,7 @@ import (
 	"os"
 )
 
+// Used via go:generate to fetch remote files during build.
 func main() {
 	rsp, err := http.Get(os.Args[1])
 	if err != nil {

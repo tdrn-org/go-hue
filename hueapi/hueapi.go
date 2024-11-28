@@ -23,7 +23,10 @@ import (
 	_ "embed"
 )
 
+// The openhue-api spec used to generate this code.
+//
 //go:embed openhue.gen.yaml
 var OpenHueApiSpecYaml []byte
 
+// The Hue API authentication header key.
 const ApplicationKeyHeader = "hue-application-key"
