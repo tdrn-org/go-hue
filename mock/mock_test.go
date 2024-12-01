@@ -59,7 +59,7 @@ func TestCloudLocator(t *testing.T) {
 	defer bridgeMock.Shutdown()
 	// Actual test
 	locator := hue.NewCloudBridgeLocator()
-	locator.DiscoveryEndpointUrl = bridgeMock.BaseURL() + "/discovery"
+	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("discovery")
 	locator.InsecureSkipVerify = true
 	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)

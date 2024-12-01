@@ -46,7 +46,7 @@ func TestCloudBridgeLocator(t *testing.T) {
 	// Actual test
 	locator := hue.NewCloudBridgeLocator()
 	require.Equal(t, "cloud", locator.Name())
-	locator.DiscoveryEndpointUrl = bridgeMock.BaseURL() + "/discovery"
+	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("/discovery")
 	locator.InsecureSkipVerify = true
 	testBridgeLocator(t, locator)
 }

@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"net/url"
 	"runtime"
 	"strings"
 	"time"
@@ -151,8 +152,8 @@ func (config *bridgeConfig) newBridge(locator BridgeLocator, address string) (*B
 	}, nil
 }
 
-func fetchJson(client *http.Client, url string, v interface{}) error {
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+func fetchJson(client *http.Client, url *url.URL, v interface{}) error {
+	request, err := http.NewRequest(http.MethodGet, url.String(), nil)
 	if err != nil {
 		return fmt.Errorf("failed to prepare request for URL '%s' (cause: %w)", url, err)
 	}
@@ -190,7 +191,7 @@ type BridgeClient interface {
 	// Bridge gets the bridge instance this client accesses.
 	Bridge() *Bridge
 	// Server gets bridge server URL.
-	Server() string
+	Server() *url.URL
 	// HttpClient gets the underlying [http.Client] used to access the bridge.
 	HttpClient() *http.Client
 	// Authenticate API call.
@@ -293,7 +294,7 @@ type BridgeClient interface {
 
 type bridgeClient struct {
 	bridge     *Bridge
-	server     string
+	server     *url.URL
 	httpClient *http.Client
 	apiClient  hueapi.ClientWithResponsesInterface
 }
@@ -302,7 +303,7 @@ func (client *bridgeClient) Bridge() *Bridge {
 	return client.bridge
 }
 
-func (client *bridgeClient) Server() string {
+func (client *bridgeClient) Server() *url.URL {
 	return client.server
 }
 

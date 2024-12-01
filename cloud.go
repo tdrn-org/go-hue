@@ -18,8 +18,11 @@ package hue
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 	"time"
+
+	stdlog "log"
 
 	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-log"
@@ -39,7 +42,7 @@ func NewCloudBridgeLocator() *CloudBridgeLocator {
 const cloudBridgeLocatorName string = "cloud"
 
 type CloudBridgeLocator struct {
-	DiscoveryEndpointUrl string
+	DiscoveryEndpointUrl *url.URL
 	InsecureSkipVerify   bool
 	logger               *zerolog.Logger
 }
@@ -115,7 +118,15 @@ func (locator *CloudBridgeLocator) queryDiscoveryEndpoint(timeout time.Duration)
 	return response, nil
 }
 
-const cloudDefaultDiscoveryEndpointUrl string = "https://discovery.meethue.com"
+var cloudDefaultDiscoveryEndpointUrl *url.URL = initCloudDefaultDiscoveryEndpointUrl()
+
+func initCloudDefaultDiscoveryEndpointUrl() *url.URL {
+	url, err := url.Parse("https://discovery.meethue.com")
+	if err != nil {
+		stdlog.Fatal(err)
+	}
+	return url
+}
 
 type cloudDiscoveryEndpointResponseEntry struct {
 	Id                string `json:"id"`

@@ -27,7 +27,10 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"net/url"
 	"sync"
+
+	stdlog "log"
 
 	"github.com/brutella/dnssd"
 	"github.com/rs/zerolog"
@@ -51,8 +54,8 @@ type BridgeServer interface {
 	Address() string
 	// AddressParts gets the different parts (IP and port) of the mock server's address.
 	AddressParts() (net.IP, int, error)
-	// BaseURL gets the base URL wich can be used to build up the API URLs.
-	BaseURL() string
+	// Server gets the base URL wich can be used to build up the API URLs.
+	Server() *url.URL
 	// Ping checks whether the mock server is up and running.
 	Ping() error
 	// Shutdown terminates the mock server gracefully.
@@ -66,19 +69,25 @@ type BridgeServer interface {
 func Start() BridgeServer {
 	ifaces, err := net.Interfaces()
 	if err != nil {
-		panic(err)
+		stdlog.Fatal(err)
 	}
 	bridgeInterface, err := determineBridgeInterface(ifaces)
 	if err != nil {
-		panic(err)
+		stdlog.Fatal(err)
 	}
 	httpListener, err := net.Listen("tcp", ":0")
 	if err != nil {
-		panic(err)
+		stdlog.Fatal(err)
 	}
-	logger := log.RootLogger().With().Str("bridge", httpListener.Addr().String()).Logger()
+	address := httpListener.Addr().String()
+	logger := log.RootLogger().With().Str("bridge", address).Logger()
+	server, err := url.Parse("https://" + address)
+	if err != nil {
+		stdlog.Fatal(err)
+	}
 	mDNSServiceCtx, cancelMDNSService := context.WithCancel(context.Background())
 	mock := &mockServer{
+		server:            server,
 		httpListener:      httpListener,
 		cancelMDNSService: cancelMDNSService,
 		logger:            &logger,
@@ -86,14 +95,14 @@ func Start() BridgeServer {
 	mock.httpServer = mock.setupHttpServer()
 	mDNSService, err := mock.setupMDNSService(bridgeInterface)
 	if err != nil {
-		panic(err)
+		stdlog.Fatal(err)
 	}
 	mock.mDNSService = mDNSService
 	go mock.listenAndServe()
 	go mock.announceMDNSService(mDNSServiceCtx)
 	_, err = dnssd.ProbeService(context.Background(), *mock.mDNSService)
 	if err != nil {
-		panic(err)
+		stdlog.Fatal(err)
 	}
 	return mock
 }
@@ -126,6 +135,7 @@ func determineBridgeInterface(ifaces []net.Interface) (string, error) {
 }
 
 type mockServer struct {
+	server            *url.URL
 	httpListener      net.Listener
 	httpServer        *http.Server
 	mDNSService       *dnssd.Service
@@ -161,12 +171,12 @@ func (mock *mockServer) AddressParts() (net.IP, int, error) {
 	return ips[0], port, nil
 }
 
-func (mock *mockServer) BaseURL() string {
-	return "https://" + mock.Address()
+func (mock *mockServer) Server() *url.URL {
+	return mock.server
 }
 
 func (mock *mockServer) Ping() error {
-	_, err := mock.newHttpClient().Get(mock.BaseURL() + "/ping")
+	_, err := mock.newHttpClient().Get(mock.Server().JoinPath("ping").String())
 	return err
 }
 

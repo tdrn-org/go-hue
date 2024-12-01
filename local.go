@@ -23,6 +23,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -31,9 +32,13 @@ import (
 
 func queryAndValidateBridgeConfig(address string, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
 	client := newLocalBridgeHttpClient(bridgeId, timeout)
-	apiUrl := fmt.Sprintf("https://%s/api/0/config", address)
+	configUrlString := fmt.Sprintf("https://%s/api/0/config", address)
+	configUrl, err := url.Parse(configUrlString)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse config URL '%s' (cause: %w)", configUrlString, err)
+	}
 	config := &bridgeConfig{}
-	err := fetchJson(&client.Client, apiUrl, config)
+	err = fetchJson(&client.Client, configUrl, config)
 	if err != nil {
 		return nil, err
 	}
@@ -92,13 +97,17 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 }
 
 func newLocalBridgeHueClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	server := "https://" + bridge.Address()
+	address := bridge.Address()
+	server, err := url.Parse("https://" + address)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse server URL for address '%s' (cause: %w)", address, err)
+	}
 	httpClient := newLocalBridgeHttpClient(bridge.BridgeId, timeout)
 	httpClientOpt := func(c *hueapi.Client) error {
 		c.Client = httpClient
 		return nil
 	}
-	apiClient, err := hueapi.NewClientWithResponses(server, httpClientOpt)
+	apiClient, err := hueapi.NewClientWithResponses(server.Scheme+"://"+server.Host+server.Path, httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
