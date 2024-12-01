@@ -187,8 +187,12 @@ func newDefaultClient(timeout time.Duration, skipVerify bool) *http.Client {
 
 // BridgeClient provides the Hue API functions provided by a bridge.
 type BridgeClient interface {
-	// Bridge get the bridge instance this client accesses.
+	// Bridge gets the bridge instance this client accesses.
 	Bridge() *Bridge
+	// Server gets bridge server URL.
+	Server() string
+	// HttpClient gets the underlying [http.Client] used to access the bridge.
+	HttpClient() *http.Client
 	// Authenticate API call.
 	Authenticate(request hueapi.AuthenticateJSONRequestBody) (*hueapi.AuthenticateResponse, error)
 	// GetResources API call.
