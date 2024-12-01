@@ -92,18 +92,21 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 }
 
 func newLocalBridgeHueClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	server := "https://" + bridge.address
+	server := "https://" + bridge.Address()
+	httpClient := newLocalBridgeHttpClient(bridge.BridgeId, timeout)
 	httpClientOpt := func(c *hueapi.Client) error {
-		c.Client = newLocalBridgeHttpClient(bridge.BridgeId, timeout)
+		c.Client = httpClient
 		return nil
 	}
-	hueapiClient, err := hueapi.NewClientWithResponses(server, httpClientOpt)
+	apiClient, err := hueapi.NewClientWithResponses(server, httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
 	return &bridgeClient{
-		Target: bridge,
-		Hueapi: hueapiClient,
+		bridge:     bridge,
+		server:     server,
+		httpClient: &httpClient.Client,
+		apiClient:  apiClient,
 	}, nil
 }
 

@@ -288,12 +288,22 @@ type BridgeClient interface {
 }
 
 type bridgeClient struct {
-	Target *Bridge
-	Hueapi hueapi.ClientWithResponsesInterface
+	bridge     *Bridge
+	server     string
+	httpClient *http.Client
+	apiClient  hueapi.ClientWithResponsesInterface
 }
 
 func (client *bridgeClient) Bridge() *Bridge {
-	return client.Target
+	return client.bridge
+}
+
+func (client *bridgeClient) Server() string {
+	return client.server
+}
+
+func (client *bridgeClient) HttpClient() *http.Client {
+	return client.httpClient
 }
 
 func bridgeClientApiName() string {
@@ -318,7 +328,7 @@ func bridgeClientApiError(response *http.Response) error {
 }
 
 func (client *bridgeClient) Authenticate(request hueapi.AuthenticateJSONRequestBody) (*hueapi.AuthenticateResponse, error) {
-	response, err := client.Hueapi.AuthenticateWithResponse(context.Background(), request)
+	response, err := client.apiClient.AuthenticateWithResponse(context.Background(), request)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -326,7 +336,7 @@ func (client *bridgeClient) Authenticate(request hueapi.AuthenticateJSONRequestB
 }
 
 func (client *bridgeClient) GetResources() (*hueapi.GetResourcesResponse, error) {
-	response, err := client.Hueapi.GetResourcesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetResourcesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -334,7 +344,7 @@ func (client *bridgeClient) GetResources() (*hueapi.GetResourcesResponse, error)
 }
 
 func (client *bridgeClient) GetBridges() (*hueapi.GetBridgesResponse, error) {
-	response, err := client.Hueapi.GetBridgesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetBridgesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -342,7 +352,7 @@ func (client *bridgeClient) GetBridges() (*hueapi.GetBridgesResponse, error) {
 }
 
 func (client *bridgeClient) GetBridge(bridgeId string) (*hueapi.GetBridgeResponse, error) {
-	response, err := client.Hueapi.GetBridgeWithResponse(context.Background(), bridgeId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetBridgeWithResponse(context.Background(), bridgeId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -350,7 +360,7 @@ func (client *bridgeClient) GetBridge(bridgeId string) (*hueapi.GetBridgeRespons
 }
 
 func (client *bridgeClient) UpdateBridge(bridgeId string, body hueapi.UpdateBridgeJSONRequestBody) (*hueapi.UpdateBridgeResponse, error) {
-	response, err := client.Hueapi.UpdateBridgeWithResponse(context.Background(), bridgeId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateBridgeWithResponse(context.Background(), bridgeId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -358,7 +368,7 @@ func (client *bridgeClient) UpdateBridge(bridgeId string, body hueapi.UpdateBrid
 }
 
 func (client *bridgeClient) GetBridgeHomes() (*hueapi.GetBridgeHomesResponse, error) {
-	response, err := client.Hueapi.GetBridgeHomesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetBridgeHomesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -366,7 +376,7 @@ func (client *bridgeClient) GetBridgeHomes() (*hueapi.GetBridgeHomesResponse, er
 }
 
 func (client *bridgeClient) GetBridgeHome(bridgeHomeId string) (*hueapi.GetBridgeHomeResponse, error) {
-	response, err := client.Hueapi.GetBridgeHomeWithResponse(context.Background(), bridgeHomeId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetBridgeHomeWithResponse(context.Background(), bridgeHomeId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -374,7 +384,7 @@ func (client *bridgeClient) GetBridgeHome(bridgeHomeId string) (*hueapi.GetBridg
 }
 
 func (client *bridgeClient) GetDevices() (*hueapi.GetDevicesResponse, error) {
-	response, err := client.Hueapi.GetDevicesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetDevicesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -382,7 +392,7 @@ func (client *bridgeClient) GetDevices() (*hueapi.GetDevicesResponse, error) {
 }
 
 func (client *bridgeClient) DeleteDevice(deviceId string) (*hueapi.DeleteDeviceResponse, error) {
-	response, err := client.Hueapi.DeleteDeviceWithResponse(context.Background(), deviceId, client.Target.authenticatorFn)
+	response, err := client.apiClient.DeleteDeviceWithResponse(context.Background(), deviceId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -390,7 +400,7 @@ func (client *bridgeClient) DeleteDevice(deviceId string) (*hueapi.DeleteDeviceR
 }
 
 func (client *bridgeClient) GetDevice(deviceId string) (*hueapi.GetDeviceResponse, error) {
-	response, err := client.Hueapi.GetDeviceWithResponse(context.Background(), deviceId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetDeviceWithResponse(context.Background(), deviceId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -398,7 +408,7 @@ func (client *bridgeClient) GetDevice(deviceId string) (*hueapi.GetDeviceRespons
 }
 
 func (client *bridgeClient) UpdateDevice(deviceId string, body hueapi.UpdateDeviceJSONRequestBody) (*hueapi.UpdateDeviceResponse, error) {
-	response, err := client.Hueapi.UpdateDeviceWithResponse(context.Background(), deviceId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateDeviceWithResponse(context.Background(), deviceId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -406,7 +416,7 @@ func (client *bridgeClient) UpdateDevice(deviceId string, body hueapi.UpdateDevi
 }
 
 func (client *bridgeClient) GetDevicePowers() (*hueapi.GetDevicePowersResponse, error) {
-	response, err := client.Hueapi.GetDevicePowersWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetDevicePowersWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -414,7 +424,7 @@ func (client *bridgeClient) GetDevicePowers() (*hueapi.GetDevicePowersResponse, 
 }
 
 func (client *bridgeClient) GetDevicePower(deviceId string) (*hueapi.GetDevicePowerResponse, error) {
-	response, err := client.Hueapi.GetDevicePowerWithResponse(context.Background(), deviceId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetDevicePowerWithResponse(context.Background(), deviceId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -422,7 +432,7 @@ func (client *bridgeClient) GetDevicePower(deviceId string) (*hueapi.GetDevicePo
 }
 
 func (client *bridgeClient) GetGroupedLights() (*hueapi.GetGroupedLightsResponse, error) {
-	response, err := client.Hueapi.GetGroupedLightsWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetGroupedLightsWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -430,7 +440,7 @@ func (client *bridgeClient) GetGroupedLights() (*hueapi.GetGroupedLightsResponse
 }
 
 func (client *bridgeClient) GetGroupedLight(groupedLightId string) (*hueapi.GetGroupedLightResponse, error) {
-	response, err := client.Hueapi.GetGroupedLightWithResponse(context.Background(), groupedLightId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetGroupedLightWithResponse(context.Background(), groupedLightId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -438,7 +448,7 @@ func (client *bridgeClient) GetGroupedLight(groupedLightId string) (*hueapi.GetG
 }
 
 func (client *bridgeClient) UpdateGroupedLight(groupedLightId string, body hueapi.UpdateGroupedLightJSONRequestBody) (*hueapi.UpdateGroupedLightResponse, error) {
-	response, err := client.Hueapi.UpdateGroupedLightWithResponse(context.Background(), groupedLightId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateGroupedLightWithResponse(context.Background(), groupedLightId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -446,7 +456,7 @@ func (client *bridgeClient) UpdateGroupedLight(groupedLightId string, body hueap
 }
 
 func (client *bridgeClient) GetLights() (*hueapi.GetLightsResponse, error) {
-	response, err := client.Hueapi.GetLightsWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetLightsWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -454,7 +464,7 @@ func (client *bridgeClient) GetLights() (*hueapi.GetLightsResponse, error) {
 }
 
 func (client *bridgeClient) GetLight(lightId string) (*hueapi.GetLightResponse, error) {
-	response, err := client.Hueapi.GetLightWithResponse(context.Background(), lightId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetLightWithResponse(context.Background(), lightId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -462,7 +472,7 @@ func (client *bridgeClient) GetLight(lightId string) (*hueapi.GetLightResponse, 
 }
 
 func (client *bridgeClient) UpdateLight(lightId string, body hueapi.UpdateLightJSONRequestBody) (*hueapi.UpdateLightResponse, error) {
-	response, err := client.Hueapi.UpdateLightWithResponse(context.Background(), lightId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateLightWithResponse(context.Background(), lightId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -470,7 +480,7 @@ func (client *bridgeClient) UpdateLight(lightId string, body hueapi.UpdateLightJ
 }
 
 func (client *bridgeClient) GetLightLevels() (*hueapi.GetLightLevelsResponse, error) {
-	response, err := client.Hueapi.GetLightLevelsWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetLightLevelsWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -478,7 +488,7 @@ func (client *bridgeClient) GetLightLevels() (*hueapi.GetLightLevelsResponse, er
 }
 
 func (client *bridgeClient) GetLightLevel(lightId string) (*hueapi.GetLightLevelResponse, error) {
-	response, err := client.Hueapi.GetLightLevelWithResponse(context.Background(), lightId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetLightLevelWithResponse(context.Background(), lightId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -486,7 +496,7 @@ func (client *bridgeClient) GetLightLevel(lightId string) (*hueapi.GetLightLevel
 }
 
 func (client *bridgeClient) UpdateLightLevel(lightId string, body hueapi.UpdateLightLevelJSONRequestBody) (*hueapi.UpdateLightLevelResponse, error) {
-	response, err := client.Hueapi.UpdateLightLevelWithResponse(context.Background(), lightId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateLightLevelWithResponse(context.Background(), lightId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -494,7 +504,7 @@ func (client *bridgeClient) UpdateLightLevel(lightId string, body hueapi.UpdateL
 }
 
 func (client *bridgeClient) GetMotionSensors() (*hueapi.GetMotionSensorsResponse, error) {
-	response, err := client.Hueapi.GetMotionSensorsWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetMotionSensorsWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -502,7 +512,7 @@ func (client *bridgeClient) GetMotionSensors() (*hueapi.GetMotionSensorsResponse
 }
 
 func (client *bridgeClient) GetMotionSensor(motionId string) (*hueapi.GetMotionSensorResponse, error) {
-	response, err := client.Hueapi.GetMotionSensorWithResponse(context.Background(), motionId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetMotionSensorWithResponse(context.Background(), motionId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -510,7 +520,7 @@ func (client *bridgeClient) GetMotionSensor(motionId string) (*hueapi.GetMotionS
 }
 
 func (client *bridgeClient) UpdateMotionSensor(motionId string, body hueapi.UpdateMotionSensorJSONRequestBody) (*hueapi.UpdateMotionSensorResponse, error) {
-	response, err := client.Hueapi.UpdateMotionSensorWithResponse(context.Background(), motionId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateMotionSensorWithResponse(context.Background(), motionId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -518,7 +528,7 @@ func (client *bridgeClient) UpdateMotionSensor(motionId string, body hueapi.Upda
 }
 
 func (client *bridgeClient) GetRooms() (*hueapi.GetRoomsResponse, error) {
-	response, err := client.Hueapi.GetRoomsWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetRoomsWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -526,7 +536,7 @@ func (client *bridgeClient) GetRooms() (*hueapi.GetRoomsResponse, error) {
 }
 
 func (client *bridgeClient) CreateRoom(body hueapi.CreateRoomJSONRequestBody) (*hueapi.CreateRoomResponse, error) {
-	response, err := client.Hueapi.CreateRoomWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	response, err := client.apiClient.CreateRoomWithResponse(context.Background(), body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -534,7 +544,7 @@ func (client *bridgeClient) CreateRoom(body hueapi.CreateRoomJSONRequestBody) (*
 }
 
 func (client *bridgeClient) DeleteRoom(roomId string) (*hueapi.DeleteRoomResponse, error) {
-	response, err := client.Hueapi.DeleteRoomWithResponse(context.Background(), roomId, client.Target.authenticatorFn)
+	response, err := client.apiClient.DeleteRoomWithResponse(context.Background(), roomId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -542,7 +552,7 @@ func (client *bridgeClient) DeleteRoom(roomId string) (*hueapi.DeleteRoomRespons
 }
 
 func (client *bridgeClient) GetRoom(roomId string) (*hueapi.GetRoomResponse, error) {
-	response, err := client.Hueapi.GetRoomWithResponse(context.Background(), roomId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetRoomWithResponse(context.Background(), roomId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -550,7 +560,7 @@ func (client *bridgeClient) GetRoom(roomId string) (*hueapi.GetRoomResponse, err
 }
 
 func (client *bridgeClient) UpdateRoom(roomId string, body hueapi.UpdateRoomJSONRequestBody) (*hueapi.UpdateRoomResponse, error) {
-	response, err := client.Hueapi.UpdateRoomWithResponse(context.Background(), roomId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateRoomWithResponse(context.Background(), roomId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -558,7 +568,7 @@ func (client *bridgeClient) UpdateRoom(roomId string, body hueapi.UpdateRoomJSON
 }
 
 func (client *bridgeClient) GetScenes() (*hueapi.GetScenesResponse, error) {
-	response, err := client.Hueapi.GetScenesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetScenesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -566,7 +576,7 @@ func (client *bridgeClient) GetScenes() (*hueapi.GetScenesResponse, error) {
 }
 
 func (client *bridgeClient) CreateScene(body hueapi.CreateSceneJSONRequestBody) (*hueapi.CreateSceneResponse, error) {
-	response, err := client.Hueapi.CreateSceneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	response, err := client.apiClient.CreateSceneWithResponse(context.Background(), body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -574,7 +584,7 @@ func (client *bridgeClient) CreateScene(body hueapi.CreateSceneJSONRequestBody) 
 }
 
 func (client *bridgeClient) DeleteScene(sceneId string) (*hueapi.DeleteSceneResponse, error) {
-	response, err := client.Hueapi.DeleteSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.DeleteSceneWithResponse(context.Background(), sceneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -582,7 +592,7 @@ func (client *bridgeClient) DeleteScene(sceneId string) (*hueapi.DeleteSceneResp
 }
 
 func (client *bridgeClient) GetScene(sceneId string) (*hueapi.GetSceneResponse, error) {
-	response, err := client.Hueapi.GetSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetSceneWithResponse(context.Background(), sceneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -590,7 +600,7 @@ func (client *bridgeClient) GetScene(sceneId string) (*hueapi.GetSceneResponse, 
 }
 
 func (client *bridgeClient) UpdateScene(sceneId string, body hueapi.UpdateSceneJSONRequestBody) (*hueapi.UpdateSceneResponse, error) {
-	response, err := client.Hueapi.UpdateSceneWithResponse(context.Background(), sceneId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateSceneWithResponse(context.Background(), sceneId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -598,7 +608,7 @@ func (client *bridgeClient) UpdateScene(sceneId string, body hueapi.UpdateSceneJ
 }
 
 func (client *bridgeClient) GetSmartScenes() (*hueapi.GetSmartScenesResponse, error) {
-	response, err := client.Hueapi.GetSmartScenesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetSmartScenesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -606,7 +616,7 @@ func (client *bridgeClient) GetSmartScenes() (*hueapi.GetSmartScenesResponse, er
 }
 
 func (client *bridgeClient) CreateSmartScene(body hueapi.CreateSmartSceneJSONRequestBody) (*hueapi.CreateSmartSceneResponse, error) {
-	response, err := client.Hueapi.CreateSmartSceneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	response, err := client.apiClient.CreateSmartSceneWithResponse(context.Background(), body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -614,7 +624,7 @@ func (client *bridgeClient) CreateSmartScene(body hueapi.CreateSmartSceneJSONReq
 }
 
 func (client *bridgeClient) DeleteSmartScene(sceneId string) (*hueapi.DeleteSmartSceneResponse, error) {
-	response, err := client.Hueapi.DeleteSmartSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.DeleteSmartSceneWithResponse(context.Background(), sceneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -622,7 +632,7 @@ func (client *bridgeClient) DeleteSmartScene(sceneId string) (*hueapi.DeleteSmar
 }
 
 func (client *bridgeClient) GetSmartScene(sceneId string) (*hueapi.GetSmartSceneResponse, error) {
-	response, err := client.Hueapi.GetSmartSceneWithResponse(context.Background(), sceneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetSmartSceneWithResponse(context.Background(), sceneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -630,7 +640,7 @@ func (client *bridgeClient) GetSmartScene(sceneId string) (*hueapi.GetSmartScene
 }
 
 func (client *bridgeClient) UpdateSmartScene(sceneId string, body hueapi.UpdateSmartSceneJSONRequestBody) (*hueapi.UpdateSmartSceneResponse, error) {
-	response, err := client.Hueapi.UpdateSmartSceneWithResponse(context.Background(), sceneId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateSmartSceneWithResponse(context.Background(), sceneId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -638,7 +648,7 @@ func (client *bridgeClient) UpdateSmartScene(sceneId string, body hueapi.UpdateS
 }
 
 func (client *bridgeClient) GetTemperatures() (*hueapi.GetTemperaturesResponse, error) {
-	response, err := client.Hueapi.GetTemperaturesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetTemperaturesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -646,7 +656,7 @@ func (client *bridgeClient) GetTemperatures() (*hueapi.GetTemperaturesResponse, 
 }
 
 func (client *bridgeClient) GetTemperature(temperatureId string) (*hueapi.GetTemperatureResponse, error) {
-	response, err := client.Hueapi.GetTemperatureWithResponse(context.Background(), temperatureId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetTemperatureWithResponse(context.Background(), temperatureId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -654,7 +664,7 @@ func (client *bridgeClient) GetTemperature(temperatureId string) (*hueapi.GetTem
 }
 
 func (client *bridgeClient) UpdateTemperature(temperatureId string, body hueapi.UpdateTemperatureJSONRequestBody) (*hueapi.UpdateTemperatureResponse, error) {
-	response, err := client.Hueapi.UpdateTemperatureWithResponse(context.Background(), temperatureId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateTemperatureWithResponse(context.Background(), temperatureId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -662,7 +672,7 @@ func (client *bridgeClient) UpdateTemperature(temperatureId string, body hueapi.
 }
 
 func (client *bridgeClient) GetZones() (*hueapi.GetZonesResponse, error) {
-	response, err := client.Hueapi.GetZonesWithResponse(context.Background(), client.Target.authenticatorFn)
+	response, err := client.apiClient.GetZonesWithResponse(context.Background(), client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -670,7 +680,7 @@ func (client *bridgeClient) GetZones() (*hueapi.GetZonesResponse, error) {
 }
 
 func (client *bridgeClient) CreateZone(body hueapi.CreateZoneJSONRequestBody) (*hueapi.CreateZoneResponse, error) {
-	response, err := client.Hueapi.CreateZoneWithResponse(context.Background(), body, client.Target.authenticatorFn)
+	response, err := client.apiClient.CreateZoneWithResponse(context.Background(), body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -678,7 +688,7 @@ func (client *bridgeClient) CreateZone(body hueapi.CreateZoneJSONRequestBody) (*
 }
 
 func (client *bridgeClient) DeleteZone(zoneId string) (*hueapi.DeleteZoneResponse, error) {
-	response, err := client.Hueapi.DeleteZoneWithResponse(context.Background(), zoneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.DeleteZoneWithResponse(context.Background(), zoneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -686,7 +696,7 @@ func (client *bridgeClient) DeleteZone(zoneId string) (*hueapi.DeleteZoneRespons
 }
 
 func (client *bridgeClient) GetZone(zoneId string) (*hueapi.GetZoneResponse, error) {
-	response, err := client.Hueapi.GetZoneWithResponse(context.Background(), zoneId, client.Target.authenticatorFn)
+	response, err := client.apiClient.GetZoneWithResponse(context.Background(), zoneId, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -694,7 +704,7 @@ func (client *bridgeClient) GetZone(zoneId string) (*hueapi.GetZoneResponse, err
 }
 
 func (client *bridgeClient) UpdateZone(zoneId string, body hueapi.UpdateZoneJSONRequestBody) (*hueapi.UpdateZoneResponse, error) {
-	response, err := client.Hueapi.UpdateZoneWithResponse(context.Background(), zoneId, body, client.Target.authenticatorFn)
+	response, err := client.apiClient.UpdateZoneWithResponse(context.Background(), zoneId, body, client.bridge.authenticatorFn)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
