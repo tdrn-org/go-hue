@@ -81,7 +81,7 @@ func Start() BridgeServer {
 	}
 	address := httpListener.Addr().String()
 	logger := log.RootLogger().With().Str("bridge", address).Logger()
-	server, err := url.Parse("https://" + address)
+	server, err := url.Parse("https://" + address + "/")
 	if err != nil {
 		stdlog.Fatal(err)
 	}

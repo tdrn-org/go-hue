@@ -121,7 +121,7 @@ func (locator *CloudBridgeLocator) queryDiscoveryEndpoint(timeout time.Duration)
 var cloudDefaultDiscoveryEndpointUrl *url.URL = initCloudDefaultDiscoveryEndpointUrl()
 
 func initCloudDefaultDiscoveryEndpointUrl() *url.URL {
-	url, err := url.Parse("https://discovery.meethue.com")
+	url, err := url.Parse("https://discovery.meethue.com/")
 	if err != nil {
 		stdlog.Fatal(err)
 	}

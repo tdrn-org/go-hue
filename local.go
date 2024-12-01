@@ -98,7 +98,7 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 
 func newLocalBridgeHueClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
 	address := bridge.Address()
-	server, err := url.Parse("https://" + address)
+	server, err := url.Parse("https://" + address + "/")
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse server URL for address '%s' (cause: %w)", address, err)
 	}
