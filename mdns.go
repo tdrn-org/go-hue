@@ -117,6 +117,10 @@ func (locator *MdnsBridgeLocator) Lookup(bridgeId string, timeout time.Duration)
 	return bridge, nil
 }
 
+func (locator *MdnsBridgeLocator) Address(bridge *Bridge) string {
+	return bridge.address
+}
+
 func (locator *MdnsBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
 	return newLocalBridgeHueClient(bridge, timeout)
 }

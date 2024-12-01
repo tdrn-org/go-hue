@@ -98,6 +98,10 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 	return nil, ErrBridgeNotAvailable
 }
 
+func (locator *CloudBridgeLocator) Address(bridge *Bridge) string {
+	return bridge.address
+}
+
 func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
 	return newLocalBridgeHueClient(bridge, timeout)
 }

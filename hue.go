@@ -69,6 +69,11 @@ type Bridge struct {
 	authenticatorFn hueapi.RequestEditorFn
 }
 
+// Address gets the address used to access the bridge.
+func (bridge *Bridge) Address() string {
+	return bridge.Locator.Address(bridge)
+}
+
 // NewClient creates a new [BridgeClient] suitable for access the bridge services.
 func (bridge *Bridge) NewClient(timeout time.Duration) (BridgeClient, error) {
 	return bridge.Locator.NewClient(bridge, timeout)
@@ -110,6 +115,8 @@ type BridgeLocator interface {
 	//
 	// An error is returned in case the bridge is not available.
 	Lookup(bridgeId string, timeout time.Duration) (*Bridge, error)
+	// Address gets the address used to access the bridge.
+	Address(bridge *Bridge) string
 	// NewClient create a new [BridgeClient] for accessing the given bridge's services.
 	NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error)
 }

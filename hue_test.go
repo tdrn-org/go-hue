@@ -71,6 +71,7 @@ func testBridgeLocator(t *testing.T, locator hue.BridgeLocator) {
 	require.NoError(t, err)
 	require.NotNil(t, bridge)
 	require.Equal(t, mock.MockBridgeId, bridge.BridgeId)
+	require.NotEmpty(t, bridge.Address())
 }
 
 func TestClient(t *testing.T) {

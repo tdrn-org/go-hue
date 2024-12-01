@@ -27,7 +27,7 @@ import (
 func NewAddressBridgeLocator(address string) *AddressBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
 	return &AddressBridgeLocator{
-		Address: address,
+		address: address,
 		logger:  &logger,
 	}
 }
@@ -35,7 +35,7 @@ func NewAddressBridgeLocator(address string) *AddressBridgeLocator {
 const addressBridgeLocatorName string = "address"
 
 type AddressBridgeLocator struct {
-	Address string
+	address string
 	logger  *zerolog.Logger
 }
 
@@ -52,18 +52,22 @@ func (locator *AddressBridgeLocator) Query(timeout time.Duration) ([]*Bridge, er
 }
 
 func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.Address)
-	config, err := queryAndValidateBridgeConfig(locator.Address, bridgeId, timeout)
+	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.address)
+	config, err := queryAndValidateBridgeConfig(locator.address, bridgeId, timeout)
 	if err != nil {
 		locator.logger.Info().Msgf("bridge '%s' not available (details: %v)", bridgeId, err)
 		return nil, ErrBridgeNotAvailable
 	}
-	bridge, err := config.newBridge(locator, locator.Address)
+	bridge, err := config.newBridge(locator, locator.address)
 	if err != nil {
 		return nil, err
 	}
 	locator.logger.Info().Msgf("located brige %s", bridge)
 	return bridge, nil
+}
+
+func (locator *AddressBridgeLocator) Address(bridge *Bridge) string {
+	return bridge.address
 }
 
 func (locator *AddressBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
