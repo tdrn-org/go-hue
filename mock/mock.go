@@ -23,12 +23,15 @@ import (
 	"context"
 	"crypto/tls"
 	_ "embed"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"net/http"
 	"net/url"
 	"sync"
+	"time"
 
 	stdlog "log"
 
@@ -37,16 +40,35 @@ import (
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-log"
+	"golang.org/x/oauth2"
 )
 
-// Bridge id of the Bridge provided by the mock server.
+// Mock Bridge id
 const MockBridgeId = "0123456789ABCDEF"
 
-// User name used by the Bridge provided by the mock server.
+// Mock Bridge User name
 const MockBridgeUsername = "MockBridgeUsername"
 
-// Client key used by the Bridge provided by the mock server.
+// Mock Bridge Client key
 const MockBridgeClientkey = "MockBridgeClientkey"
+
+// Mock Bridge remote app Client id (used during OAuth2 authorization flow)
+const MockClientId = "MockClientId"
+
+// Mock Bridge remote app Client secret (used during OAuth2 authorization flow)
+const MockClientSecret = "MockClientSecret"
+
+// State value used during OAuth2 authorization flow
+const MockOAuth2State = "MockOAuth2State"
+
+// Code value used during OAuth2 authorization flow
+const MockOAuth2Code = "MockOAuth2Code"
+
+// Access token value used during OAuth2 authorization flow
+const MockOAuth2AccessToken = "MockOAuth2AccessToken"
+
+// Refresh token value used during OAuth2 authorization flow
+const MockOAuth2RefreshToken = "MockOAuth2RefreshToken"
 
 // BridgeServer interface used to interact with the mock server.
 type BridgeServer interface {
@@ -207,6 +229,9 @@ func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler.HandleFunc("GET /ping", mock.handlePing)
 	baseHandler.HandleFunc("GET /api/0/config", mock.handleConfig)
 	baseHandler.HandleFunc("GET /discovery", mock.handleDiscovery)
+	baseHandler.HandleFunc("GET /v2/oauth2/authorize", mock.handleOAuth2Authorize)
+	baseHandler.HandleFunc("POST /v2/oauth2/token", mock.handleOAuth2Token)
+	baseHandler.HandleFunc("GET /authorized", mock.handleOAuth2Callback)
 	middlewares := make([]hueapi.StrictMiddlewareFunc, 0)
 	middlewares = append(middlewares, mock.logOperationMiddleware)
 	middlewares = append(middlewares, mock.checkAuthenticationMiddleware)
@@ -340,9 +365,90 @@ func (mock *mockServer) handleDiscovery(w http.ResponseWriter, req *http.Request
 	if err != nil {
 		mock.logger.Error().Err(err).Msgf("failed to decode mock address (cause: %s)", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	response := fmt.Sprintf(responsePattern, MockBridgeId, ip, port)
 	w.Write([]byte(response))
+}
+
+func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.Request) {
+	reqParams, err := url.ParseQuery(req.URL.RawQuery)
+	if err != nil {
+		mock.logger.Error().Err(err).Msgf("failed to decode authorize request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	clientId := reqParams.Get("client_id")
+	responseType := reqParams.Get("response_type")
+	state := reqParams.Get("state")
+	redirectUri := reqParams.Get("redirect_uri")
+	if clientId != MockClientId || responseType != "code" || state != MockOAuth2State || redirectUri == "" {
+		mock.logger.Error().Err(err).Msgf("invalid authorize request parameters '%s'", req.URL.RawQuery)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	rspParams := url.Values{}
+	rspParams.Add("code", MockOAuth2Code)
+	rspParams.Add("state", state)
+	redirectUrl, err := url.Parse(redirectUri)
+	if err != nil {
+		mock.logger.Error().Err(err).Msgf("invalid redirect URI '%s' (cause: %s)", redirectUri, err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	redirectUrl.RawQuery = rspParams.Encode()
+	http.Redirect(w, req, redirectUrl.String(), http.StatusFound)
+}
+
+func (mock *mockServer) handleOAuth2Token(w http.ResponseWriter, req *http.Request) {
+	authorization := req.Header.Get("Authorization")
+	if authorization != "Basic "+base64.StdEncoding.EncodeToString([]byte(MockClientId+":"+MockClientSecret)) {
+		mock.logger.Error().Msgf("missing or invalid authorization header '%s'", authorization)
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+		return
+	}
+	err := req.ParseForm()
+	if err != nil {
+		mock.logger.Error().Err(err).Msgf("failed to parse token request (cause: %s)", err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	grantType := req.FormValue("grant_type")
+	code := req.FormValue("code")
+	redirectUri := req.FormValue("redirect_uri")
+	if grantType != "authorization_code" || code != MockOAuth2Code || redirectUri == "" {
+		mock.logger.Error().Err(err).Msgf("invalid token request")
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	token := &oauth2.Token{
+		AccessToken:  MockOAuth2AccessToken,
+		TokenType:    "bearer",
+		RefreshToken: MockOAuth2RefreshToken,
+		ExpiresIn:    time.Now().Add(60 * time.Second).Unix(),
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(token)
+	if err != nil {
+		mock.logger.Error().Err(err).Msgf("failed to send token response (cause: %s)", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+}
+
+func (mock *mockServer) handleOAuth2Callback(w http.ResponseWriter, req *http.Request) {
+	reqParams, err := url.ParseQuery(req.URL.RawQuery)
+	if err != nil {
+		mock.logger.Error().Err(err).Msgf("failed to decode callback request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	code := reqParams.Get("code")
+	state := reqParams.Get("state")
+	if code != MockOAuth2Code || state != MockOAuth2State {
+		mock.logger.Error().Err(err).Msgf("invalid callback request parameters '%s'", req.URL.RawQuery)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 }
 
 // Authenticate

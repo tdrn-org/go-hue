@@ -2,7 +2,7 @@ module github.com/tdrn-org/go-hue
 
 go 1.23.2
 
-require github.com/stretchr/testify v1.9.0
+require github.com/stretchr/testify v1.10.0
 
 require (
 	github.com/vishvananda/netlink v1.3.0 // indirect
@@ -36,6 +36,7 @@ require (
 	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/oauth2 v0.24.0
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
 	golang.org/x/tools v0.27.0 // indirect
