@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/mock"
@@ -105,7 +106,8 @@ func TestOAuth2Authentication(t *testing.T) {
 			},
 		},
 	}
-	authCodeURL := config.AuthCodeURL(mock.MockOAuth2State, oauth2.AccessTypeOffline)
+	state := uuid.New().String()
+	authCodeURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
 	authCodeRsp, err := client.Get(authCodeURL)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, authCodeRsp.StatusCode)

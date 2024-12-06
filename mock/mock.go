@@ -58,9 +58,6 @@ const MockClientId = "MockClientId"
 // Mock Bridge remote app Client secret (used during OAuth2 authorization flow)
 const MockClientSecret = "MockClientSecret"
 
-// State value used during OAuth2 authorization flow
-const MockOAuth2State = "MockOAuth2State"
-
 // Code value used during OAuth2 authorization flow
 const MockOAuth2Code = "MockOAuth2Code"
 
@@ -444,7 +441,7 @@ func (mock *mockServer) handleOAuth2Callback(w http.ResponseWriter, req *http.Re
 	}
 	code := reqParams.Get("code")
 	state := reqParams.Get("state")
-	if code != MockOAuth2Code || state != MockOAuth2State {
+	if code != MockOAuth2Code || state == "" {
 		mock.logger.Error().Err(err).Msgf("invalid callback request parameters '%s'", req.URL.RawQuery)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
