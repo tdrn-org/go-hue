@@ -382,7 +382,7 @@ func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.R
 	responseType := reqParams.Get("response_type")
 	state := reqParams.Get("state")
 	redirectUri := reqParams.Get("redirect_uri")
-	if clientId != MockClientId || responseType != "code" || state != MockOAuth2State || redirectUri == "" {
+	if clientId != MockClientId || responseType != "code" || state == "" || redirectUri == "" {
 		mock.logger.Error().Err(err).Msgf("invalid authorize request parameters '%s'", req.URL.RawQuery)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
