@@ -28,12 +28,19 @@ import (
 
 // Used via go:generate to fetch remote files during build.
 func main() {
-	rsp, err := http.Get(os.Args[1])
+	switch os.Args[1] {
+	case "fetch":
+		fetch()
+	}
+}
+
+func fetch() {
+	rsp, err := http.Get(os.Args[2])
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rsp.Body.Close()
-	file, err := os.Create(os.Args[2])
+	file, err := os.Create(os.Args[3])
 	if err != nil {
 		log.Fatal(err)
 	}

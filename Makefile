@@ -1,7 +1,6 @@
 MAKEFLAGS += --no-print-directory
 
 GOBIN ?= $(shell go env GOPATH)/bin
-GOTAGS ?= -tags huemocks
 
 .DEFAULT_GOAL := check
 
@@ -15,7 +14,7 @@ testdeps: deps
 
 .PHONE: generate
 generate: deps
-	go generate $(GOTAGS) ./...
+	go generate ./...
 
 .PHONE: tidy
 tidy:
@@ -24,18 +23,18 @@ tidy:
 
 .PHONE: vet
 vet: testdeps
-	go vet $(GOTAGS) ./...
+	go vet ./...
 
 .PHONE: staticcheck
 staticcheck: testdeps
-	$(GOBIN)/staticcheck $(GOTAGS) ./...
+	$(GOBIN)/staticcheck ./...
 
 .PHONE: lint
 lint: vet staticcheck
 
 .PHONE: test
 test:
-	go test $(GOTAGS) -v -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
+	go test -v -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
 
 .PHONE: check
 check: generate test lint

@@ -1,6 +1,3 @@
-//go:build huemocks
-// +build huemocks
-
 /*
  * Copyright 2024 Holger de Carne
  *
