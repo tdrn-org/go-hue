@@ -17,6 +17,8 @@
 package hue
 
 import (
+	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -24,19 +26,23 @@ import (
 )
 
 // NewAddressBridgeLocator creates a new [BridgeLocator] for accessing a bridge with a well-known address.
-func NewAddressBridgeLocator(address string) *AddressBridgeLocator {
+func NewAddressBridgeLocator(address string) (*AddressBridgeLocator, error) {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
-	return &AddressBridgeLocator{
-		address: address,
-		logger:  &logger,
+	server, err := url.Parse("https://" + address + "/")
+	if err != nil {
+		return nil, fmt.Errorf("invalid address '%s' (cause: %w)", address, err)
 	}
+	return &AddressBridgeLocator{
+		server: server,
+		logger: &logger,
+	}, nil
 }
 
 const addressBridgeLocatorName string = "address"
 
 type AddressBridgeLocator struct {
-	address string
-	logger  *zerolog.Logger
+	server *url.URL
+	logger *zerolog.Logger
 }
 
 func (locator *AddressBridgeLocator) Name() string {
@@ -52,13 +58,13 @@ func (locator *AddressBridgeLocator) Query(timeout time.Duration) ([]*Bridge, er
 }
 
 func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.address)
-	config, err := queryAndValidateBridgeConfig(locator.address, bridgeId, timeout)
+	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.server)
+	config, err := queryAndValidateBridgeConfig(locator.server, bridgeId, timeout)
 	if err != nil {
 		locator.logger.Info().Msgf("bridge '%s' not available (details: %v)", bridgeId, err)
 		return nil, ErrBridgeNotAvailable
 	}
-	bridge, err := config.newBridge(locator, locator.address)
+	bridge, err := config.newBridge(locator, locator.server)
 	if err != nil {
 		return nil, err
 	}
@@ -66,10 +72,6 @@ func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Durati
 	return bridge, nil
 }
 
-func (locator *AddressBridgeLocator) Address(bridge *Bridge) string {
-	return bridge.address
-}
-
-func (locator *AddressBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	return newLocalBridgeHueClient(bridge, timeout)
+func (locator *AddressBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, authenticator, timeout)
 }
