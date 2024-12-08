@@ -121,7 +121,7 @@ type localBridgeAuthenticator struct {
 
 func (authentictor *localBridgeAuthenticator) Authenticate(ctx context.Context, req *http.Request) error {
 	if authentictor.userName != "" {
-		authentictor.logger.Debug().Msgf("authenticating request to '%s'", req.RequestURI)
+		authentictor.logger.Debug().Msgf("authenticating request to '%s'", req.URL)
 		req.Header.Add(hueapi.ApplicationKeyHeader, authentictor.userName)
 	}
 	return nil
@@ -130,7 +130,7 @@ func (authentictor *localBridgeAuthenticator) Authenticate(ctx context.Context, 
 func (authenticator *localBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
 	if rsp.StatusCode() == http.StatusOK {
 		clientKey := *(*rsp.JSON200)[0].Success.Clientkey
-		authenticator.logger.Info().Msgf("updating authentication user name for client '%s'", clientKey)
+		authenticator.logger.Info().Msgf("updating authentication for client '%s'", clientKey)
 		userName := *(*rsp.JSON200)[0].Success.Username
 		authenticator.userName = userName
 	}
