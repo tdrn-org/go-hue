@@ -74,7 +74,8 @@ func TestAddressLocator(t *testing.T) {
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	locator := hue.NewAddressBridgeLocator(bridgeMock.Address())
+	locator, err := hue.NewAddressBridgeLocator(bridgeMock.Server().Host)
+	require.NoError(t, err)
 	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)

@@ -57,7 +57,8 @@ func TestAddressBridgeLocator(t *testing.T) {
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	locator := hue.NewAddressBridgeLocator(bridgeMock.Address())
+	locator, err := hue.NewAddressBridgeLocator(bridgeMock.Server().Host)
+	require.NoError(t, err)
 	require.Equal(t, "address", locator.Name())
 	testBridgeLocator(t, locator)
 }
@@ -71,7 +72,6 @@ func testBridgeLocator(t *testing.T, locator hue.BridgeLocator) {
 	require.NoError(t, err)
 	require.NotNil(t, bridge)
 	require.Equal(t, mock.MockBridgeId, bridge.BridgeId)
-	require.NotEmpty(t, bridge.Address())
 }
 
 func TestClient(t *testing.T) {
@@ -80,10 +80,11 @@ func TestClient(t *testing.T) {
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	locator := hue.NewAddressBridgeLocator(bridgeMock.Address())
+	locator, err := hue.NewAddressBridgeLocator(bridgeMock.Server().Host)
+	require.NoError(t, err)
 	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaulTimeout)
 	require.NoError(t, err)
-	client, err := bridge.NewClient(hue.DefaulTimeout)
+	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(""), hue.DefaulTimeout)
 	require.NoError(t, err)
 	testGetResourcesForbidden(t, client)
 	testAuthenticate(t, client)
@@ -152,7 +153,6 @@ func testAuthenticate(t *testing.T, client hue.BridgeClient) {
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 	require.Equal(t, mock.MockBridgeClientkey, *(*response.JSON200)[0].Success.Clientkey)
 	require.Equal(t, mock.MockBridgeUsername, *(*response.JSON200)[0].Success.Username)
-	client.Bridge().UpdateAuthentication(*(*response.JSON200)[0].Success.Username, "")
 }
 
 func testGetResources(t *testing.T, client hue.BridgeClient) {

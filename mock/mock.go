@@ -67,9 +67,9 @@ const MockOAuth2RefreshToken = "MockOAuth2RefreshToken"
 // BridgeServer interface used to interact with the mock server.
 type BridgeServer interface {
 	// Address gets the address the mock server is listening on.
-	Address() string
+	//	Address() string
 	// AddressParts gets the different parts (IP and port) of the mock server's address.
-	AddressParts() (net.IP, int, error)
+	//	AddressParts() (net.IP, int, error)
 	// Server gets the base URL wich can be used to build up the API URLs.
 	Server() *url.URL
 	// Ping checks whether the mock server is up and running.
@@ -160,33 +160,6 @@ type mockServer struct {
 	logger            *zerolog.Logger
 }
 
-func (mock *mockServer) Address() string {
-	return mock.httpListener.Addr().String()
-}
-
-func (mock *mockServer) AddressParts() (net.IP, int, error) {
-	address := mock.Address()
-	host, portName, err := net.SplitHostPort(address)
-	if err != nil {
-		return nil, 0, fmt.Errorf("failed decode address '%s' (cause: %w)", address, err)
-	}
-	if host == "" {
-		host = "localhost"
-	}
-	ips, err := net.LookupIP(host)
-	if err != nil {
-		return nil, 0, fmt.Errorf("failed to lookup host '%s' (cause: %w)", host, err)
-	}
-	if portName == "" {
-		portName = "https"
-	}
-	port, err := net.LookupPort("tcp", portName)
-	if err != nil {
-		return nil, 0, fmt.Errorf("failed to lookup port '%s' (cause: %w)", portName, err)
-	}
-	return ips[0], port, nil
-}
-
 func (mock *mockServer) Server() *url.URL {
 	return mock.server
 }
@@ -204,6 +177,26 @@ func (mock *mockServer) Shutdown() {
 		mock.logger.Error().Err(err).Msgf("shutdown failure (cause: %s)", err)
 	}
 	mock.stoppedWG.Wait()
+}
+
+func (mock *mockServer) addressParts() (net.IP, int, error) {
+	host := mock.server.Hostname()
+	if host == "" {
+		host = "localhost"
+	}
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to lookup host '%s' (cause: %w)", host, err)
+	}
+	portName := mock.server.Port()
+	if portName == "" {
+		portName = "https"
+	}
+	port, err := net.LookupPort("tcp", portName)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to lookup port '%s' (cause: %w)", portName, err)
+	}
+	return ips[0], port, nil
 }
 
 func (mock *mockServer) newHttpClient() *http.Client {
@@ -308,12 +301,12 @@ func (mock *mockServer) announceMDNSService(ctx context.Context) {
 }
 
 func (mock *mockServer) setupMDNSService(iface string) (*dnssd.Service, error) {
-	_, port, err := mock.AddressParts()
+	_, port, err := mock.addressParts()
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode mock address (cause: %w)", err)
 	}
 	config := dnssd.Config{
-		Name:   "Mock Bridge - " + mock.Address(),
+		Name:   "Mock Bridge - " + mock.Server().Host,
 		Type:   "_hue._tcp",
 		Host:   "localhost",
 		Text:   map[string]string{"bridgeid": MockBridgeId},
@@ -355,7 +348,7 @@ func (mock *mockServer) handleConfig(w http.ResponseWriter, req *http.Request) {
 func (mock *mockServer) handleDiscovery(w http.ResponseWriter, req *http.Request) {
 	mock.logger.Info().Msg("/discovery")
 	const responsePattern = `[{"id":"%s","internalipaddress":"%s","port":%d}]`
-	ip, port, err := mock.AddressParts()
+	ip, port, err := mock.addressParts()
 	if err != nil {
 		mock.logger.Error().Err(err).Msgf("failed to decode mock address (cause: %s)", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

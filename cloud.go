@@ -18,8 +18,9 @@ package hue
 
 import (
 	"fmt"
+	"net"
 	"net/url"
-	"regexp"
+	"strconv"
 	"time"
 
 	stdlog "log"
@@ -59,13 +60,17 @@ func (locator *CloudBridgeLocator) Query(timeout time.Duration) ([]*Bridge, erro
 	}
 	bridges := make([]*Bridge, 0, len(discoveredEntries))
 	for _, discoveredEntry := range discoveredEntries {
-		address := discoveredEntry.toAddress()
-		config, err := queryAndValidateBridgeConfig(address, discoveredEntry.Id, timeout)
+		server, err := discoveredEntry.toServer()
 		if err != nil {
-			locator.logger.Error().Err(err).Msgf("ignoring invalid response entry '%v'", discoveredEntry)
+			locator.logger.Error().Err(err).Msgf("ignoring invalid response entry '%v' (cause: %s)", discoveredEntry, err)
 			continue
 		}
-		bridge, err := config.newBridge(locator, address)
+		config, err := queryAndValidateBridgeConfig(server, discoveredEntry.Id, timeout)
+		if err != nil {
+			locator.logger.Error().Err(err).Msgf("ignoring response entry '%v' (cause: %s)", discoveredEntry, err)
+			continue
+		}
+		bridge, err := config.newBridge(locator, server)
 		if err != nil {
 			return nil, err
 		}
@@ -85,13 +90,17 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 		if discoveredEntry.Id != bridgeId {
 			continue
 		}
-		address := discoveredEntry.toAddress()
-		config, err := queryAndValidateBridgeConfig(address, discoveredEntry.Id, timeout)
+		server, err := discoveredEntry.toServer()
 		if err != nil {
-			locator.logger.Info().Msgf("bridge '%s' not available (details: %v)", bridgeId, err)
+			locator.logger.Info().Msgf("bridge '%s' entry not valide (cause: %s)", bridgeId, err)
 			return nil, ErrBridgeNotAvailable
 		}
-		bridge, err := config.newBridge(locator, address)
+		config, err := queryAndValidateBridgeConfig(server, discoveredEntry.Id, timeout)
+		if err != nil {
+			locator.logger.Info().Msgf("bridge '%s' not available (cause: %s)", bridgeId, err)
+			return nil, ErrBridgeNotAvailable
+		}
+		bridge, err := config.newBridge(locator, server)
 		if err != nil {
 			return nil, err
 		}
@@ -101,12 +110,8 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 	return nil, ErrBridgeNotAvailable
 }
 
-func (locator *CloudBridgeLocator) Address(bridge *Bridge) string {
-	return bridge.address
-}
-
-func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	return newLocalBridgeHueClient(bridge, timeout)
+func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, authenticator, timeout)
 }
 
 func (locator *CloudBridgeLocator) queryDiscoveryEndpoint(timeout time.Duration) ([]cloudDiscoveryEndpointResponseEntry, error) {
@@ -134,14 +139,11 @@ type cloudDiscoveryEndpointResponseEntry struct {
 	Port              int    `json:"port"`
 }
 
-var ipv4Regexp = regexp.MustCompile(`^\d+\.\d+\.\d+\.\d+$`)
-
-func (entry *cloudDiscoveryEndpointResponseEntry) toAddress() string {
-	var address string
-	if ipv4Regexp.MatchString(entry.InternalIpAddress) {
-		address = fmt.Sprintf("%s:%d", entry.InternalIpAddress, entry.Port)
-	} else {
-		address = fmt.Sprintf("[%s]:%d", entry.InternalIpAddress, entry.Port)
+func (entry *cloudDiscoveryEndpointResponseEntry) toServer() (*url.URL, error) {
+	address := net.JoinHostPort(entry.InternalIpAddress, strconv.Itoa(entry.Port))
+	server, err := url.Parse("https://" + address + "/")
+	if err != nil {
+		return nil, fmt.Errorf("invalid address '%s' (cause: %w)", address, err)
 	}
-	return address
+	return server, err
 }

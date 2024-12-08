@@ -20,6 +20,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
+	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/brutella/dnssd"
@@ -56,12 +59,12 @@ func (locator *MdnsBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error
 	bridges := make([]*Bridge, 0)
 	add := func(entry dnssd.BrowseEntry) {
 		locator.logger.Info().Msgf("detected service '%s' (%v)", entry.ServiceInstanceName(), entry.Text)
-		address, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
+		server, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("ignoring invalid service '%s'", entry.Name)
 			return
 		}
-		bridge, err := config.newBridge(locator, address)
+		bridge, err := config.newBridge(locator, server)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
 			return
@@ -117,31 +120,26 @@ func (locator *MdnsBridgeLocator) Lookup(bridgeId string, timeout time.Duration)
 	return bridge, nil
 }
 
-func (locator *MdnsBridgeLocator) Address(bridge *Bridge) string {
-	return bridge.address
+func (locator *MdnsBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
+	return newLocalBridgeHueClient(bridge, authenticator, timeout)
 }
 
-func (locator *MdnsBridgeLocator) NewClient(bridge *Bridge, timeout time.Duration) (BridgeClient, error) {
-	return newLocalBridgeHueClient(bridge, timeout)
-}
-
-func (locator *MdnsBridgeLocator) queryAndValidateBridgeConfig(entry *dnssd.BrowseEntry, timeout time.Duration) (string, *bridgeConfig, error) {
+func (locator *MdnsBridgeLocator) queryAndValidateBridgeConfig(entry *dnssd.BrowseEntry, timeout time.Duration) (*url.URL, *bridgeConfig, error) {
 	if len(entry.IPs) == 0 {
-		return "", nil, fmt.Errorf("addressless service '%s'", entry.Name)
+		return nil, nil, fmt.Errorf("addressless service '%s'", entry.Name)
 	}
 	ip := entry.IPs[0]
-	var address string
-	if len(ip) != 16 {
-		address = fmt.Sprintf("%s:%d", ip, entry.Port)
-	} else {
-		address = fmt.Sprintf("[%s]:%d", ip, entry.Port)
+	address := net.JoinHostPort(ip.String(), strconv.Itoa(entry.Port))
+	server, err := url.Parse("https://" + address + "/")
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to compose URL for address '%s' (cause: %w)", address, err)
 	}
 	bridgeId := locator.browseEntryBridgeId(entry)
-	config, err := queryAndValidateBridgeConfig(address, bridgeId, timeout)
+	config, err := queryAndValidateBridgeConfig(server, bridgeId, timeout)
 	if err != nil {
-		return "", nil, err
+		return nil, nil, err
 	}
-	return address, config, nil
+	return server, config, nil
 }
 
 func (locator *MdnsBridgeLocator) browseEntryBridgeId(entry *dnssd.BrowseEntry) string {
