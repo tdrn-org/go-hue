@@ -17,6 +17,7 @@
 package hue_test
 
 import (
+	"crypto/tls"
 	"net/http"
 	"testing"
 
@@ -63,6 +64,24 @@ func TestAddressBridgeLocator(t *testing.T) {
 	testBridgeLocator(t, locator)
 }
 
+func TestRemoteBridgeLocator(t *testing.T) {
+	// Start mock server
+	bridgeMock := mock.Start()
+	require.NotNil(t, bridgeMock)
+	defer bridgeMock.Shutdown()
+	// Actual test
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil)
+	require.NoError(t, err)
+	locator.EndpointUrl = bridgeMock.Server()
+	locator.InsecureSkipVerify = true
+	require.Equal(t, "remote", locator.Name())
+	httpClient := httpClient(true)
+	rsp, err := httpClient.Get(locator.AuthCodeURL())
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, rsp.StatusCode)
+	testBridgeLocator(t, locator)
+}
+
 func testBridgeLocator(t *testing.T, locator hue.BridgeLocator) {
 	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
@@ -74,7 +93,7 @@ func testBridgeLocator(t *testing.T, locator hue.BridgeLocator) {
 	require.Equal(t, mock.MockBridgeId, bridge.BridgeId)
 }
 
-func TestClient(t *testing.T) {
+func TestLocalClient(t *testing.T) {
 	// Start mock server
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
@@ -86,6 +105,34 @@ func TestClient(t *testing.T) {
 	require.NoError(t, err)
 	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(""), hue.DefaulTimeout)
 	require.NoError(t, err)
+	testClient(t, client)
+}
+
+func TestRemoteClient(t *testing.T) {
+	// Start mock server
+	bridgeMock := mock.Start()
+	require.NotNil(t, bridgeMock)
+	defer bridgeMock.Shutdown()
+	// Actual test
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil)
+	require.NoError(t, err)
+	locator.EndpointUrl = bridgeMock.Server()
+	locator.InsecureSkipVerify = true
+	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaulTimeout)
+	require.NoError(t, err)
+	httpClient := httpClient(true)
+	rsp, err := httpClient.Get(locator.AuthCodeURL())
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, rsp.StatusCode)
+	authenticator := hue.NewRemoteBridgeAuthenticator(locator, "")
+	client, err := bridge.NewClient(authenticator, hue.DefaulTimeout)
+	require.NoError(t, err)
+	err = authenticator.EnableLinking(bridge)
+	require.NoError(t, err)
+	testClient(t, client)
+}
+
+func testClient(t *testing.T, client hue.BridgeClient) {
 	testGetResourcesForbidden(t, client)
 	testAuthenticate(t, client)
 	testGetResources(t, client)
@@ -142,7 +189,7 @@ func testGetResourcesForbidden(t *testing.T, client hue.BridgeClient) {
 }
 
 func testAuthenticate(t *testing.T, client hue.BridgeClient) {
-	deviceType := "HueTester#1"
+	deviceType := "HueTest#1"
 	generateClientKey := true
 	request := hueapi.AuthenticateJSONRequestBody{
 		Devicetype:        &deviceType,
@@ -444,4 +491,14 @@ func testUpdateZone(t *testing.T, client hue.BridgeClient) {
 	response, err := client.UpdateZone("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
+}
+
+func httpClient(insecureSkipVerify bool) *http.Client {
+	return &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: insecureSkipVerify,
+			},
+		},
+	}
 }

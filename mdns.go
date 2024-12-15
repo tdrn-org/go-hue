@@ -135,7 +135,7 @@ func (locator *MdnsBridgeLocator) queryAndValidateBridgeConfig(entry *dnssd.Brow
 		return nil, nil, fmt.Errorf("failed to compose URL for address '%s' (cause: %w)", address, err)
 	}
 	bridgeId := locator.browseEntryBridgeId(entry)
-	config, err := queryAndValidateBridgeConfig(server, bridgeId, timeout)
+	config, err := queryAndValidateLocalBridgeConfig(server, bridgeId, timeout)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -59,7 +59,7 @@ func (locator *AddressBridgeLocator) Query(timeout time.Duration) ([]*Bridge, er
 
 func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
 	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.server)
-	config, err := queryAndValidateBridgeConfig(locator.server, bridgeId, timeout)
+	config, err := queryAndValidateLocalBridgeConfig(locator.server, bridgeId, timeout)
 	if err != nil {
 		locator.logger.Info().Msgf("bridge '%s' not available (details: %v)", bridgeId, err)
 		return nil, ErrBridgeNotAvailable

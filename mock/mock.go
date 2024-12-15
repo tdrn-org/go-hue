@@ -27,6 +27,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -91,7 +92,7 @@ func Start() BridgeServer {
 	if err != nil {
 		stdlog.Fatal(err)
 	}
-	httpListener, err := net.Listen("tcp", ":0")
+	httpListener, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		stdlog.Fatal(err)
 	}
@@ -214,11 +215,12 @@ func (mock *mockServer) newHttpClient() *http.Client {
 func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler := http.NewServeMux()
 	baseHandler.HandleFunc("GET /ping", mock.handlePing)
-	baseHandler.HandleFunc("GET /api/0/config", mock.handleConfig)
+	baseHandler.HandleFunc("GET /api/0/config", mock.handleGetConfig)
 	baseHandler.HandleFunc("GET /discovery", mock.handleDiscovery)
 	baseHandler.HandleFunc("GET /v2/oauth2/authorize", mock.handleOAuth2Authorize)
 	baseHandler.HandleFunc("POST /v2/oauth2/token", mock.handleOAuth2Token)
 	baseHandler.HandleFunc("GET /authorized", mock.handleOAuth2Callback)
+	baseHandler.HandleFunc("/", mock.handleRoute)
 	middlewares := make([]hueapi.StrictMiddlewareFunc, 0)
 	middlewares = append(middlewares, mock.logOperationMiddleware)
 	middlewares = append(middlewares, mock.checkAuthenticationMiddleware)
@@ -272,7 +274,7 @@ func (mock *mockServer) listenAndServe() {
 	defer mock.stoppedWG.Done()
 	err := mock.httpServer.ServeTLS(mock.httpListener, "", "")
 	if !errors.Is(err, http.ErrServerClosed) {
-		mock.logger.Error().Err(err).Msgf("server failure (cause: %s)", err)
+		mock.logger.Error().Err(err).Msgf("http server failure (cause: %s)", err)
 		return
 	}
 	mock.logger.Info().Msg("http server stopped")
@@ -338,7 +340,7 @@ func (mock *mockServer) handlePing(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(MockBridgeId))
 }
 
-func (mock *mockServer) handleConfig(w http.ResponseWriter, req *http.Request) {
+func (mock *mockServer) handleGetConfig(w http.ResponseWriter, req *http.Request) {
 	mock.logger.Info().Msg("/api/0/config")
 	const responsePattern = `{"name":"Mock","datastoreversion":"172","swversion":"1967054020","apiversion":"1.67.0","mac":"01:23:45:67:89:ab","bridgeid":"%s","factorynew":false,"replacesbridgeid":null,"modelid":"BSB002","starterkitid":""}`
 	response := fmt.Sprintf(responsePattern, MockBridgeId)
@@ -436,6 +438,16 @@ func (mock *mockServer) handleOAuth2Callback(w http.ResponseWriter, req *http.Re
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
+}
+
+func (mock *mockServer) handleRoute(w http.ResponseWriter, req *http.Request) {
+	const routePrefix = "/route"
+	if !strings.HasPrefix(req.URL.Path, routePrefix) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	req.URL.Path = strings.TrimPrefix(req.URL.Path, routePrefix)
+	mock.httpServer.Handler.ServeHTTP(w, req)
 }
 
 // Authenticate

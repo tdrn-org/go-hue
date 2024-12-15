@@ -28,24 +28,56 @@ import (
 	"strings"
 	"time"
 
+	stdlog "log"
+
 	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-log"
 )
 
-func queryAndValidateBridgeConfig(server *url.URL, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
-	client := newLocalBridgeHttpClient(bridgeId, timeout)
-	configUrl := server.JoinPath("/api/0/config")
+func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
+	logger := log.RootLogger().With().Str("authenticator", "local").Logger()
+	return &LocalBridgeAuthenticator{
+		UserName: userName,
+		logger:   &logger,
+	}
+}
+
+type LocalBridgeAuthenticator struct {
+	ClientKey string
+	UserName  string
+	logger    *zerolog.Logger
+}
+
+func (authenticator *LocalBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
+	if authenticator.UserName != "" {
+		authenticator.logger.Debug().Msgf("authenticating request to '%s'", req.URL)
+		req.Header.Add(hueapi.ApplicationKeyHeader, authenticator.UserName)
+	}
+	return nil
+}
+
+func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
+	if rsp.StatusCode() == http.StatusOK {
+		authenticator.ClientKey = *(*rsp.JSON200)[0].Success.Clientkey
+		authenticator.UserName = *(*rsp.JSON200)[0].Success.Username
+		authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+	}
+}
+
+func queryAndValidateLocalBridgeConfig(server *url.URL, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
+	httpClient := localBridgeHttpClient(bridgeId, timeout)
+	configUrl := configUrl(server)
 	config := &bridgeConfig{}
-	err := fetchJson(&client.Client, configUrl, config)
+	err := fetchJson(&httpClient.Client, configUrl, config)
 	if err != nil {
 		return nil, err
 	}
-	if client.CertificateBridgeId == "" {
+	if httpClient.CertificateBridgeId == "" {
 		return nil, fmt.Errorf("failed to receive bridge id from '%s'", server)
 	}
-	if !strings.EqualFold(client.CertificateBridgeId, config.BridgeId) {
-		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", client.CertificateBridgeId, server, config.BridgeId)
+	if bridgeId != "" && !strings.EqualFold(httpClient.CertificateBridgeId, config.BridgeId) {
+		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", httpClient.CertificateBridgeId, server, config.BridgeId)
 	}
 	return config, nil
 }
@@ -78,12 +110,11 @@ func (client *localBridgeClient) verifyBridgeCertificate(rawCerts [][]byte, veri
 	return nil
 }
 
-func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBridgeClient {
+func localBridgeHttpClient(bridgeId string, timeout time.Duration) *localBridgeClient {
 	client := &localBridgeClient{
 		Client:              http.Client{Timeout: timeout},
 		CertificateBridgeId: strings.ToLower(bridgeId),
 	}
-	client.Timeout = timeout
 	tlsClientconfig := &tls.Config{
 		VerifyPeerCertificate: client.verifyBridgeCertificate,
 		InsecureSkipVerify:    true,
@@ -96,7 +127,7 @@ func newLocalBridgeHttpClient(bridgeId string, timeout time.Duration) *localBrid
 }
 
 func newLocalBridgeHueClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
-	httpClient := newLocalBridgeHttpClient(bridge.BridgeId, timeout)
+	httpClient := localBridgeHttpClient(bridge.BridgeId, timeout)
 	httpClientOpt := func(c *hueapi.Client) error {
 		c.Client = httpClient
 		return nil
@@ -114,36 +145,6 @@ func newLocalBridgeHueClient(bridge *Bridge, authenticator BridgeAuthenticator, 
 	}, nil
 }
 
-type localBridgeAuthenticator struct {
-	userName string
-	logger   *zerolog.Logger
-}
-
-func (authentictor *localBridgeAuthenticator) Authenticate(ctx context.Context, req *http.Request) error {
-	if authentictor.userName != "" {
-		authentictor.logger.Debug().Msgf("authenticating request to '%s'", req.URL)
-		req.Header.Add(hueapi.ApplicationKeyHeader, authentictor.userName)
-	}
-	return nil
-}
-
-func (authenticator *localBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
-	if rsp.StatusCode() == http.StatusOK {
-		clientKey := *(*rsp.JSON200)[0].Success.Clientkey
-		authenticator.logger.Info().Msgf("updating authentication for client '%s'", clientKey)
-		userName := *(*rsp.JSON200)[0].Success.Username
-		authenticator.userName = userName
-	}
-}
-
-func NewLocalBridgeAuthenticator(userName string) BridgeAuthenticator {
-	logger := log.RootLogger().With().Str("authenticator", "local").Logger()
-	return &localBridgeAuthenticator{
-		userName: userName,
-		logger:   &logger,
-	}
-}
-
 //go:embed hueCA.pem
 var hueCACertRaw []byte
 var hueCACert *x509.Certificate
@@ -155,11 +156,11 @@ func init() {
 func initDecodeCert(data []byte) *x509.Certificate {
 	block, rest := pem.Decode(data)
 	if block == nil || block.Type != "CERTIFICATE" || len(rest) > 0 {
-		panic("invalid certificate data")
+		stdlog.Fatal("invalid certificate data")
 	}
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
-		panic(fmt.Errorf("failed to parse Hue CA certificate (cause: %w)", err))
+		stdlog.Fatal(fmt.Errorf("failed to parse Hue CA certificate (cause: %w)", err))
 	}
 	return cert
 }

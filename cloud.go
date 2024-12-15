@@ -65,7 +65,7 @@ func (locator *CloudBridgeLocator) Query(timeout time.Duration) ([]*Bridge, erro
 			locator.logger.Error().Err(err).Msgf("ignoring invalid response entry '%v' (cause: %s)", discoveredEntry, err)
 			continue
 		}
-		config, err := queryAndValidateBridgeConfig(server, discoveredEntry.Id, timeout)
+		config, err := queryAndValidateLocalBridgeConfig(server, discoveredEntry.Id, timeout)
 		if err != nil {
 			locator.logger.Error().Err(err).Msgf("ignoring response entry '%v' (cause: %s)", discoveredEntry, err)
 			continue
@@ -95,7 +95,7 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 			locator.logger.Info().Msgf("bridge '%s' entry not valide (cause: %s)", bridgeId, err)
 			return nil, ErrBridgeNotAvailable
 		}
-		config, err := queryAndValidateBridgeConfig(server, discoveredEntry.Id, timeout)
+		config, err := queryAndValidateLocalBridgeConfig(server, discoveredEntry.Id, timeout)
 		if err != nil {
 			locator.logger.Info().Msgf("bridge '%s' not available (cause: %s)", bridgeId, err)
 			return nil, ErrBridgeNotAvailable
