@@ -92,7 +92,7 @@ func Start() BridgeServer {
 	if err != nil {
 		stdlog.Fatal(err)
 	}
-	httpListener, err := net.Listen("tcp", "localhost:0")
+	httpListener, err := net.Listen("tcp", ":0")
 	if err != nil {
 		stdlog.Fatal(err)
 	}
