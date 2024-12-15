@@ -267,7 +267,7 @@ func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) er
 		return fmt.Errorf("failed to send enable linking request (cause: %w)", err)
 	}
 	if rsp.StatusCode != http.StatusOK {
-		return fmt.Errorf("%s", req.Response.Status)
+		return fmt.Errorf("failed to enable linking (status: %s)", rsp.Status)
 	}
 	return nil
 }

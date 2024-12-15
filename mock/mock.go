@@ -215,7 +215,7 @@ func (mock *mockServer) newHttpClient() *http.Client {
 func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler := http.NewServeMux()
 	baseHandler.HandleFunc("GET /ping", mock.handlePing)
-	baseHandler.HandleFunc("GET /api/0/config", mock.handleGetConfig)
+	baseHandler.HandleFunc("/api/0/config", mock.handleConfig)
 	baseHandler.HandleFunc("GET /discovery", mock.handleDiscovery)
 	baseHandler.HandleFunc("GET /v2/oauth2/authorize", mock.handleOAuth2Authorize)
 	baseHandler.HandleFunc("POST /v2/oauth2/token", mock.handleOAuth2Token)
@@ -340,11 +340,26 @@ func (mock *mockServer) handlePing(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(MockBridgeId))
 }
 
-func (mock *mockServer) handleGetConfig(w http.ResponseWriter, req *http.Request) {
+func (mock *mockServer) handleConfig(w http.ResponseWriter, req *http.Request) {
 	mock.logger.Info().Msg("/api/0/config")
+	switch req.Method {
+	case http.MethodGet:
+		mock.handleConfigGet(w, req)
+	case http.MethodPut:
+		mock.handleConfigPut(w, req)
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+	}
+}
+
+func (mock *mockServer) handleConfigGet(w http.ResponseWriter, req *http.Request) {
 	const responsePattern = `{"name":"Mock","datastoreversion":"172","swversion":"1967054020","apiversion":"1.67.0","mac":"01:23:45:67:89:ab","bridgeid":"%s","factorynew":false,"replacesbridgeid":null,"modelid":"BSB002","starterkitid":""}`
 	response := fmt.Sprintf(responsePattern, MockBridgeId)
 	w.Write([]byte(response))
+}
+
+func (mock *mockServer) handleConfigPut(w http.ResponseWriter, req *http.Request) {
+	// Nothing to do
 }
 
 func (mock *mockServer) handleDiscovery(w http.ResponseWriter, req *http.Request) {
