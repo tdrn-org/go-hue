@@ -40,14 +40,16 @@ func main() {
 	}
 	address := os.Args[1]
 	authentication := os.Args[2]
-	locator := hue.NewAddressBridgeLocator(address)
+	locator, err := hue.NewAddressBridgeLocator(address)
+	if err != nil {
+		log.Fatal(err)
+	}
 	bridges, err := locator.Query(hue.DefaulTimeout)
 	if err != nil {
 		log.Fatal(err)
 	}
 	bridge := bridges[0]
-	bridge.UpdateAuthentication(authentication, "")
-	client, err := bridge.NewClient(hue.DefaulTimeout)
+	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(authentication), hue.DefaulTimeout)
 	if err != nil {
 		log.Fatal(err)
 	}

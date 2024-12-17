@@ -59,9 +59,16 @@ func (authenticator *LocalBridgeAuthenticator) AuthenticateRequest(ctx context.C
 
 func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
 	if rsp.StatusCode() == http.StatusOK {
-		authenticator.ClientKey = *(*rsp.JSON200)[0].Success.Clientkey
-		authenticator.UserName = *(*rsp.JSON200)[0].Success.Username
-		authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+		rspSuccess := (*rsp.JSON200)[0].Success
+		rspError := (*rsp.JSON200)[0].Error
+		if rspSuccess != nil {
+			authenticator.ClientKey = *rspSuccess.Clientkey
+			authenticator.UserName = *rspSuccess.Username
+			authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+		}
+		if rspError != nil {
+			authenticator.logger.Warn().Msgf("authentication failed status: %d (%s)", *rspError.Type, *rspError.Description)
+		}
 	}
 }
 

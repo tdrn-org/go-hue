@@ -42,8 +42,9 @@ var ErrNoToken = errors.New("token missing or expired")
 
 type RemoteAuthenticator interface {
 	AuthCodeURL() string
+	Authenticated() bool
 	SetAuthHeader(req *http.Request) error
-	HttpClient(timeout time.Duration) *http.Client
+	AuthHttpClient(timeout time.Duration) *http.Client
 }
 
 func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL) (*RemoteBridgeLocator, error) {
@@ -88,7 +89,7 @@ func (locator *RemoteBridgeLocator) Query(timeout time.Duration) ([]*Bridge, err
 }
 
 func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	client := locator.HttpClient(timeout)
+	client := locator.AuthHttpClient(timeout)
 	server := locator.EndpointUrl.JoinPath("/route")
 	locator.logger.Info().Msgf("probing remote endpoint '%s' ...", server)
 	configUrl := configUrl(server)
@@ -109,7 +110,7 @@ func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duratio
 }
 
 func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
-	httpClient := locator.HttpClient(timeout)
+	httpClient := locator.AuthHttpClient(timeout)
 	httpClientOpt := func(c *hueapi.Client) error {
 		c.Client = httpClient
 		return nil
@@ -133,6 +134,10 @@ func (locator *RemoteBridgeLocator) AuthCodeURL() string {
 	return oauth2Config.AuthCodeURL(state, oauth2.AccessTypeOffline)
 }
 
+func (locator *RemoteBridgeLocator) Authenticated() bool {
+	return locator.oauth2TokenSource != nil
+}
+
 func (locator *RemoteBridgeLocator) SetAuthHeader(req *http.Request) error {
 	if locator.oauth2TokenSource == nil {
 		return ErrNoToken
@@ -145,7 +150,7 @@ func (locator *RemoteBridgeLocator) SetAuthHeader(req *http.Request) error {
 	return nil
 }
 
-func (locator *RemoteBridgeLocator) HttpClient(timeout time.Duration) *http.Client {
+func (locator *RemoteBridgeLocator) AuthHttpClient(timeout time.Duration) *http.Client {
 	tlsClientconfig := &tls.Config{
 		InsecureSkipVerify: locator.InsecureSkipVerify,
 	}
@@ -175,7 +180,7 @@ func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter
 	code := reqParams.Get("code")
 	state := reqParams.Get("state")
 	if code == "" || state == "" {
-		locator.logger.Error().Err(err).Msgf("invalid callback request parameters '%s'", req.URL.RawQuery)
+		locator.logger.Error().Err(err).Msgf("authorization workflow failed (callback request parameters '%s')", req.URL.RawQuery)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -247,21 +252,28 @@ func (authenticator *RemoteBridgeAuthenticator) AuthenticateRequest(ctx context.
 
 func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
 	if rsp.StatusCode() == http.StatusOK {
-		authenticator.ClientKey = *(*rsp.JSON200)[0].Success.Clientkey
-		authenticator.UserName = *(*rsp.JSON200)[0].Success.Username
-		authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+		rspSuccess := (*rsp.JSON200)[0].Success
+		rspError := (*rsp.JSON200)[0].Error
+		if rspSuccess != nil {
+			authenticator.ClientKey = *rspSuccess.Clientkey
+			authenticator.UserName = *rspSuccess.Username
+			authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+		}
+		if rspError != nil {
+			authenticator.logger.Warn().Msgf("authentication failed status: %d (%s)", *rspError.Type, *rspError.Description)
+		}
 	}
 }
 
 func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) error {
 	configUrl := configUrl(bridge.Server)
-	body := bytes.NewBuffer([]byte(`{"devicetype":"<your-application-name>"}`))
+	body := bytes.NewBuffer([]byte(`{"linkbutton":true}`))
 	req, err := http.NewRequest(http.MethodPut, configUrl.String(), body)
 	if err != nil {
 		return fmt.Errorf("failed to prepare linking request (cause: %w)", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	client := authenticator.remoteAuthenticator.HttpClient(DefaulTimeout)
+	client := authenticator.remoteAuthenticator.AuthHttpClient(DefaulTimeout)
 	rsp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to send enable linking request (cause: %w)", err)
@@ -288,17 +300,17 @@ type remoteSession struct {
 	logger               *zerolog.Logger
 }
 
-func (sm *remoteSessionManager) session(redirectUrl *url.URL, authorized func(http.ResponseWriter, *http.Request)) (*remoteSession, error) {
-	sm.sessionMutex.Lock()
-	defer sm.sessionMutex.Unlock()
+func (sessionManager *remoteSessionManager) session(redirectUrl *url.URL, authorized func(http.ResponseWriter, *http.Request)) (*remoteSession, error) {
+	sessionManager.sessionMutex.Lock()
+	defer sessionManager.sessionMutex.Unlock()
 	var sessionKey string
 	var session *remoteSession
 	if redirectUrl != nil {
 		sessionKey = redirectUrl.String()
-		session = sm.sessions[sessionKey]
+		session = sessionManager.sessions[sessionKey]
 	}
 	if session == nil {
-		listenAndRedirectUrl, listener, err := sm.listen(redirectUrl)
+		listenAndRedirectUrl, listener, err := sessionManager.listen(redirectUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -319,12 +331,12 @@ func (sm *remoteSessionManager) session(redirectUrl *url.URL, authorized func(ht
 				logger.Error().Err(err).Msgf("http server failure (cause: %s)", err)
 			}
 		}()
-		sm.sessions[sessionKey] = session
+		sessionManager.sessions[sessionKey] = session
 	}
 	return session, nil
 }
 
-func (sm *remoteSessionManager) listen(redirectUrl *url.URL) (*url.URL, net.Listener, error) {
+func (sessionManager *remoteSessionManager) listen(redirectUrl *url.URL) (*url.URL, net.Listener, error) {
 	var address string
 	var path string
 	if redirectUrl != nil {
@@ -354,6 +366,10 @@ func (sm *remoteSessionManager) listen(redirectUrl *url.URL) (*url.URL, net.List
 	}
 	listenAndRedirectUrl := listenUrl.JoinPath(path)
 	return listenAndRedirectUrl, listener, nil
+}
+
+func (session *remoteSession) oauth2Context() {
+
 }
 
 var remoteDefaultEndpointUrl *url.URL = initRemoteDefaultEndpointUrl()
