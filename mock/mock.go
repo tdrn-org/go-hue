@@ -45,32 +45,28 @@ import (
 const MockBridgeId = "0123456789ABCDEF"
 
 // Mock Bridge User name
-const MockBridgeUsername = "MockBridgeUsername"
+const MockBridgeUsername = "mockUser"
 
 // Mock Bridge Client key
-const MockBridgeClientkey = "MockBridgeClientkey"
+const MockBridgeClientkey = "mockClientKey"
 
 // Mock Bridge remote app Client id (used during OAuth2 authorization flow)
-const MockClientId = "MockClientId"
+const MockClientId = "mockClientId"
 
 // Mock Bridge remote app Client secret (used during OAuth2 authorization flow)
-const MockClientSecret = "MockClientSecret"
+const MockClientSecret = "mockClientSecret"
 
 // Code value used during OAuth2 authorization flow
-const MockOAuth2Code = "MockOAuth2Code"
+const MockOAuth2Code = "mockOauth2Code"
 
 // Access token value used during OAuth2 authorization flow
-const MockOAuth2AccessToken = "MockOAuth2AccessToken"
+const MockOAuth2AccessToken = "mockOauth2AccessToken"
 
 // Refresh token value used during OAuth2 authorization flow
-const MockOAuth2RefreshToken = "MockOAuth2RefreshToken"
+const MockOAuth2RefreshToken = "mockOauth2RefreshToken"
 
 // BridgeServer interface used to interact with the mock server.
 type BridgeServer interface {
-	// Address gets the address the mock server is listening on.
-	//	Address() string
-	// AddressParts gets the different parts (IP and port) of the mock server's address.
-	//	AddressParts() (net.IP, int, error)
 	// Server gets the base URL wich can be used to build up the API URLs.
 	Server() *url.URL
 	// Ping checks whether the mock server is up and running.
@@ -82,7 +78,7 @@ type BridgeServer interface {
 // Start starts a new mock server instance.
 //
 // The mock server listens on all interfaces and on a dynamic port.
-// Use the [BridgeServer.Address] function to determine the actual address.
+// Use the [BridgeServer.Server] function to get the actual address.
 func Start() BridgeServer {
 	ifaces, err := net.Interfaces()
 	if err != nil {
@@ -223,7 +219,7 @@ func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler.HandleFunc("/", mock.handleRoute)
 	middlewares := make([]hueapi.StrictMiddlewareFunc, 0)
 	middlewares = append(middlewares, mock.logOperationMiddleware)
-	middlewares = append(middlewares, mock.checkAuthenticationMiddleware)
+	middlewares = append(middlewares, mock.checkAuthorizationAndAuthenticationMiddleware)
 	strictHandler := hueapi.NewStrictHandlerWithOptions(mock, middlewares, hueapi.StrictHTTPServerOptions{
 		RequestErrorHandlerFunc:  mock.defaultErrorHandler,
 		ResponseErrorHandlerFunc: mock.defaultErrorHandler,
@@ -255,16 +251,23 @@ func (mock *mockServer) logOperationMiddleware(f hueapi.StrictHandlerFunc, opera
 	return f
 }
 
-func (mock *mockServer) checkAuthenticationMiddleware(f hueapi.StrictHandlerFunc, operationID string) hueapi.StrictHandlerFunc {
+func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f hueapi.StrictHandlerFunc, operationID string) hueapi.StrictHandlerFunc {
 	if operationID == "Authenticate" {
 		return f
 	}
-	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (response interface{}, err error) {
-		authentication := r.Header.Get(hueapi.ApplicationKeyHeader)
+	return func(ctx context.Context, w http.ResponseWriter, req *http.Request, request interface{}) (response interface{}, err error) {
+		const routePrefix = "/route"
+		if strings.HasPrefix(req.URL.Path, routePrefix) {
+			authorization := req.Header.Get("Authorization")
+			if authorization != MockOAuth2AccessToken {
+				return nil, hue.ErrHueAPIForbidden
+			}
+		}
+		authentication := req.Header.Get(hueapi.ApplicationKeyHeader)
 		if authentication != MockBridgeUsername {
 			return nil, hue.ErrHueAPIForbidden
 		}
-		return f(ctx, w, r, request)
+		return f(ctx, w, req, request)
 	}
 }
 
@@ -352,7 +355,7 @@ func (mock *mockServer) handleConfig(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (mock *mockServer) handleConfigGet(w http.ResponseWriter, req *http.Request) {
+func (mock *mockServer) handleConfigGet(w http.ResponseWriter, _ *http.Request) {
 	const responsePattern = `{"name":"Mock","datastoreversion":"172","swversion":"1967054020","apiversion":"1.67.0","mac":"01:23:45:67:89:ab","bridgeid":"%s","factorynew":false,"replacesbridgeid":null,"modelid":"BSB002","starterkitid":""}`
 	response := fmt.Sprintf(responsePattern, MockBridgeId)
 	w.Write([]byte(response))

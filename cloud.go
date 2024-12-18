@@ -29,9 +29,11 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
-// NewCloudBridgeLocator creates a new [BridgeLocator] for discovering bridges accross the Hue clouds discovery endpoint.
+// NewCloudBridgeLocator creates a new [CloudBridgeLocator] for discovering local bridges via the Hue Cloud's [Discovery endpoint].
 //
 // Only bridges registered in the cloud are locatable via this [BridgeLocator].
+//
+// [Discovery endpoint]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Disocvery%20Endpoint
 func NewCloudBridgeLocator() *CloudBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", cloudBridgeLocatorName).Logger()
 	return &CloudBridgeLocator{
@@ -42,10 +44,19 @@ func NewCloudBridgeLocator() *CloudBridgeLocator {
 
 const cloudBridgeLocatorName string = "cloud"
 
+// CloudBridgeLocator locates local bridges via the Hue Cloud's [Discovery endpoint].
+//
+// Use [NewCloudBridgeLocator] to create a new instance.
+//
+// [Discovery endpoint]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Disocvery%20Endpoint
 type CloudBridgeLocator struct {
+	// DiscoveryEndpointUrl defines the discovery endpoint URL to use. This URL defaults to https://discovery.meethue.com and may be
+	// overwritten for local testing.
 	DiscoveryEndpointUrl *url.URL
-	InsecureSkipVerify   bool
-	logger               *zerolog.Logger
+	// InsecureSkipVerify defines whether insecure certificates are ignored or not (default) while accessing the discovery endpoint.
+	// This may be set to true during local testing with self-signed certificates.
+	InsecureSkipVerify bool
+	logger             *zerolog.Logger
 }
 
 func (locator *CloudBridgeLocator) Name() string {

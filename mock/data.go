@@ -19,6 +19,7 @@ package mock
 import (
 	_ "embed"
 	"encoding/json"
+	"log"
 
 	"github.com/tdrn-org/go-hue/hueapi"
 )
@@ -90,6 +91,6 @@ var mockData *Data = &Data{}
 func init() {
 	err := json.Unmarshal(mockDataBytes, mockData)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }

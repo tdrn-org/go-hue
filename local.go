@@ -35,6 +35,12 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
+// NewLocalBridgeAuthenticator creates a new [LocalBridgeAuthenticator] suitable for authenticating towards a local bridge.
+//
+// The user name must be empty or previously been created via a successfull [Authenticate] API call. Everytime a
+// successfull [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
+//
+// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
 	logger := log.RootLogger().With().Str("authenticator", "local").Logger()
 	return &LocalBridgeAuthenticator{
@@ -43,10 +49,16 @@ func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
 	}
 }
 
+// LocalBridgeAuthenticator contains the necessary attributes to authenticate towards a local bridge.
 type LocalBridgeAuthenticator struct {
+	// ClientKey contains the client key returned by a successfull Authenticate API call. This attribute is not required
+	// for the actual authentication. After a successfull Authenticate API call it is provied for informational purposes.
 	ClientKey string
-	UserName  string
-	logger    *zerolog.Logger
+	// UserName contains used to authenticate towards a bridge. This user name must be previously been created via a successfull [Authenticate] API call.
+	//
+	// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
+	UserName string
+	logger   *zerolog.Logger
 }
 
 func (authenticator *LocalBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {

@@ -25,7 +25,9 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
-// NewAddressBridgeLocator creates a new [BridgeLocator] for accessing a bridge with a well-known address.
+// NewAddressBridgeLocator creates a new [AddressBridgeLocator] for accessing a local bridge via a [well-known address].
+//
+// [well-known address]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Manual-ip
 func NewAddressBridgeLocator(address string) (*AddressBridgeLocator, error) {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
 	server, err := url.Parse("https://" + address + "/")
@@ -40,6 +42,10 @@ func NewAddressBridgeLocator(address string) (*AddressBridgeLocator, error) {
 
 const addressBridgeLocatorName string = "address"
 
+// AddressBridgeLocator locates a local bridge via a well-known address.
+//
+// Use [NewAddressBridgeLocator] to create a new instance. As this locator is looking at exactly one bridge,
+// a [BridgeLocator.Query] call will return not more than one brigde.
 type AddressBridgeLocator struct {
 	server *url.URL
 	logger *zerolog.Logger

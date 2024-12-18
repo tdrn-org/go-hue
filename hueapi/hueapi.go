@@ -23,7 +23,7 @@ import (
 	_ "embed"
 )
 
-// The openhue-api spec used to generate the API code.
+// The openhue-api spec yaml file used to generate the API code.
 //
 //go:embed openhue.gen.yaml
 var OpenHueApiSpecYaml []byte

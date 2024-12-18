@@ -33,7 +33,7 @@ import (
 	"github.com/tdrn-org/go-hue/hueapi"
 )
 
-// ErrBridgeNotAvailable indicates a previously located bridge is currently not accessible.
+// ErrBridgeNotAvailable indicates a bridge is currently not accessible.
 var ErrBridgeNotAvailable = errors.New("bridge not available")
 
 // ErrBridgeClientFailure indicates a system error while invoking the bridge client.
@@ -42,7 +42,7 @@ var ErrBridgeClientFailure = errors.New("bridge client call failure")
 // ErrHueAPIForbidden indicates a restricted API has been called without a valid authentication.
 var ErrHueAPIForbidden = errors.New("api access denied")
 
-// ErrHueAPIFailure indicates an API has failed with an API error.
+// ErrHueAPIFailure indicates an API call has failed with an API error.
 var ErrHueAPIFailure = errors.New("api failure")
 
 // DefaultTimeout defines a suitable default for timeout related functions.
@@ -70,18 +70,21 @@ type Bridge struct {
 	Server *url.URL
 }
 
-// NewClient creates a new [BridgeClient] suitable for access the bridge services.
+// NewClient creates a new [BridgeClient] suitable for accessing the bridge services.
 func (bridge *Bridge) NewClient(authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
 	return bridge.Locator.NewClient(bridge, authenticator, timeout)
 }
 
-// String gets bridge signature string.
+// String gets the bridge's signature string.
 func (bridge *Bridge) String() string {
 	return fmt.Sprintf("%s:%s (Name: '%s', SW: %s, API: %s, MAC: %s, Server: %s)", bridge.Locator.Name(), bridge.BridgeId, bridge.Name, bridge.SoftwareVersion, bridge.ApiVersion, bridge.HardwareAddress.String(), bridge.Server)
 }
 
+// BridgeAuthenticator injects the necessary authentication credentials into an bridge API call.
 type BridgeAuthenticator interface {
+	// AuthenticateRequest authenticates the given request.
 	AuthenticateRequest(ctx context.Context, req *http.Request) error
+	// Authenticated is called with the response of an Authenticate API call and updates this instance's authentication credentials.
 	Authenticated(rsp *hueapi.AuthenticateResponse)
 }
 

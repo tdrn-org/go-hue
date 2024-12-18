@@ -30,7 +30,9 @@ import (
 	"github.com/tdrn-org/go-log"
 )
 
-// NewMDNSBridgeLocator creates a new [BridgeLocator] for discovering bridges via Multicast DNS (mDNS).
+// NewMDNSBridgeLocator creates a new [MdnsBridgeLocator] for discovering bridges via [Multicast DNS (mDNS)].
+//
+// [Multicast DNS (mDNS)]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#mDNS
 func NewMDNSBridgeLocator() *MdnsBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", mdnsBridgeLocatorName).Logger()
 	return &MdnsBridgeLocator{
@@ -41,7 +43,15 @@ func NewMDNSBridgeLocator() *MdnsBridgeLocator {
 
 const mdnsBridgeLocatorName string = "mDNS"
 
+// MdnsBridgeLocator locates local bridges via via [Multicast DNS (mDNS)].
+//
+// Use [NewMDNSBridgeLocator] to create a new instance.
+//
+// [Multicast DNS (mDNS)]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#mDNS
 type MdnsBridgeLocator struct {
+	// Limit defines the maxmimum number of bridges to return during a [BridgeLocator.Query] call. 0 means no limit.
+	// As mDNS is working asynchronously, a query normally continues until the given timeout is reached. If a limit is
+	// set, a query is complete as soon as the limit is reached.
 	Limit  int
 	logger *zerolog.Logger
 }

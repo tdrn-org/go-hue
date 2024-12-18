@@ -26,7 +26,7 @@ import (
 	"os"
 )
 
-// Used via go:generate to fetch remote files during build.
+// Used via go:generate to perform build tasks.
 func main() {
 	switch os.Args[1] {
 	case "fetch":
@@ -34,6 +34,7 @@ func main() {
 	}
 }
 
+// fetch external file
 func fetch() {
 	rsp, err := http.Get(os.Args[2])
 	if err != nil {

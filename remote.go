@@ -41,16 +41,39 @@ import (
 	"golang.org/x/oauth2"
 )
 
-var ErrNoToken = errors.New("token missing or expired")
+// ErrNotAuthorized indicates the necessary authorization for remote access is either missing or has expired.
+var ErrNotAuthorized = errors.New("authorization missing or expired")
 
+// RemoteSession represents the necessary remote authorization required to access a bridge remotely.
 type RemoteSession interface {
+	// Authorized determines whether a remote authorization has been completed and is still valid (not expired).
 	Authorized() bool
+	// AuthCodeURL gets the URL to invoke to start the [authorization workflow]. The workflow requires manual
+	// interacation (e.g. login into device account and acknowledging device access) and therefore must executed
+	// within a browser.
+	//
+	// [authorization workflow]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 	AuthCodeURL() string
 	setAuthHeader(req *http.Request) error
 	authHttpClient(timeout time.Duration) *http.Client
 	handleOauth2Authorized(w http.ResponseWriter, code string)
 }
 
+// NewRemoteBridgeLocator creates a new [RemoteBridgeLocator] for discovering a remote bridge via the Hue [Cloud API].
+//
+// The given client id and secret are obtaining a Hue developer account and registering a [Remote Hue API app].
+// The redirect URL must match the callback URL registered during app creation. The [RemoteSession] associated with
+// the newly created locator is listening on this URL to receive the authorization credentials.
+//
+// If redirect URL is nil, a localhost based URL is created dynamically. Such dynamic redirect URLs are suitable
+// for local testing only.
+//
+// If tokenDir is not empty, it must represent a directory for storing authorization credentials. Such credentials
+// are automatically restored during next start avoiding the need for a new interactive authorization workflow (unless
+// the stored credentials have not expired)
+//
+// [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
+// [Remote Hue API app]: https://developers.meethue.com/my-apps/
 func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL, tokenDir string) (*RemoteBridgeLocator, error) {
 	tokenSource, err := loadRemoteTokenSource(clientId, tokenDir)
 	if err != nil {
@@ -74,10 +97,27 @@ func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *u
 
 const remoteBridgeLocatorName string = "remote"
 
+// RemoteBridgeLocator locates a remote bridge via the Hue [Cloud API].
+//
+// Use [NewRemoteBridgeLocator] to create a new instance.
+//
+// [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 type RemoteBridgeLocator struct {
-	EndpointUrl         *url.URL
-	InsecureSkipVerify  bool
-	ClientId            string
+	// EndpointUrl defines the [Cloud API] endpoint to use. This URL defaults to https://api.meethue.com and may be
+	// overwritten for local testing.
+	//
+	// [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
+	EndpointUrl *url.URL
+	// InsecureSkipVerify defines whether insecure certificates are ignored or not (default) while accessing the cloud endpoint.
+	// This may be set to true during local testing with self-signed certificates.
+	InsecureSkipVerify bool
+	// ClientId defines the client id of the [Remote Hue API app] to use for remote access.
+	//
+	// [Remote Hue API app]: https://developers.meethue.com/my-apps/
+	ClientId string
+	// ClientSecret defines the client secret of the [Remote Hue API app] to use for remote access.
+	//
+	// [Remote Hue API app]: https://developers.meethue.com/my-apps/
 	ClientSecret        string
 	oauth2Callback      *remoteOauth2Callback
 	oauth2TokenSource   *persistentTokenSource
@@ -152,10 +192,10 @@ func (locator *RemoteBridgeLocator) AuthCodeURL() string {
 func (locator *RemoteBridgeLocator) setAuthHeader(req *http.Request) error {
 	token, err := locator.oauth2TokenSource.Token()
 	if err != nil {
-		return errors.Join(ErrNoToken, err)
+		return errors.Join(ErrNotAuthorized, err)
 	}
 	if !token.Valid() {
-		return ErrNoToken
+		return ErrNotAuthorized
 	}
 	token.SetAuthHeader(req)
 	return nil
@@ -227,6 +267,20 @@ func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
 	return locator.cachedOauth2Context
 }
 
+// NewRemoteBridgeAuthenticator creates a new [RemoteBridgeAuthenticator] suitable for authenticating towards a remote bridge.
+//
+// The user name must be previously been created via a successfull [Authenticate] API call. In difference to a local [Authenticate]
+// calls, where the bridge's link button is pressed physically to acknowledge acccess, the remote variant is acknowledged by invoking
+// [RemoteBridgeAuthenticator.EnableLinking] prior to the [Authenticate] API call.
+//
+// The given [RemoteSession] argument represents the authorization to use for accessing the [Cloud API]. The [RemoteBridgeLocator]
+// used to locate the remote bridge and authorize the remote access provides this [RemoteSession].
+//
+// The user name must be empty or previously been created via a successfull [Authenticate] API call. Everytime a
+// successfull [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
+//
+// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
+// [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 func NewRemoteBridgeAuthenticator(remoteSession RemoteSession, userName string) *RemoteBridgeAuthenticator {
 	logger := log.RootLogger().With().Str("authenticator", "remote").Logger()
 	return &RemoteBridgeAuthenticator{
@@ -236,6 +290,7 @@ func NewRemoteBridgeAuthenticator(remoteSession RemoteSession, userName string) 
 	}
 }
 
+// RemoteBridgeAuthenticator is used to authenticate towards a remote bridge.
 type RemoteBridgeAuthenticator struct {
 	remoteSession RemoteSession
 	ClientKey     string
@@ -270,6 +325,9 @@ func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.Authen
 	}
 }
 
+// EnableLinking must be called prior to a [Authenticate] API call to acknoledge the user registration.
+//
+// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) error {
 	configUrl := configUrl(bridge.Server)
 	body := bytes.NewBuffer([]byte(`{"linkbutton":true}`))
@@ -482,7 +540,7 @@ type persistentTokenSource struct {
 
 func (tokenSource *persistentTokenSource) Token() (*oauth2.Token, error) {
 	if tokenSource.liveSource == nil {
-		return nil, ErrNoToken
+		return nil, ErrNotAuthorized
 	}
 	token, err := tokenSource.liveSource.Token()
 	if err != nil {

@@ -20,5 +20,6 @@
 package main
 
 import (
+	// import oapi-codegen tool used during go:generate
 	_ "github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen"
 )
