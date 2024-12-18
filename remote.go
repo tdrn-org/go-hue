@@ -20,11 +20,14 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -48,13 +51,18 @@ type RemoteSession interface {
 	handleOauth2Authorized(w http.ResponseWriter, code string)
 }
 
-func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL) (*RemoteBridgeLocator, error) {
+func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL, tokenDir string) (*RemoteBridgeLocator, error) {
+	tokenSource, err := loadRemoteTokenSource(clientId, tokenDir)
+	if err != nil {
+		return nil, err
+	}
 	logger := log.RootLogger().With().Str("locator", remoteBridgeLocatorName).Logger()
 	locator := &RemoteBridgeLocator{
-		EndpointUrl:  remoteDefaultEndpointUrl,
-		ClientId:     clientId,
-		ClientSecret: clientSecret,
-		logger:       &logger,
+		EndpointUrl:       remoteDefaultEndpointUrl,
+		ClientId:          clientId,
+		ClientSecret:      clientSecret,
+		oauth2TokenSource: tokenSource,
+		logger:            &logger,
 	}
 	callback, err := remoteOauth2.listen(redirectUrl)
 	if err != nil {
@@ -72,7 +80,7 @@ type RemoteBridgeLocator struct {
 	ClientId            string
 	ClientSecret        string
 	oauth2Callback      *remoteOauth2Callback
-	oauth2TokenSource   oauth2.TokenSource
+	oauth2TokenSource   *persistentTokenSource
 	cachedOauthConfig   *oauth2.Config
 	cachedOauth2Context context.Context
 	logger              *zerolog.Logger
@@ -131,7 +139,8 @@ func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator Brid
 }
 
 func (locator *RemoteBridgeLocator) Authorized() bool {
-	return locator.oauth2TokenSource != nil
+	token, _ := locator.oauth2TokenSource.Token()
+	return token.Valid()
 }
 
 func (locator *RemoteBridgeLocator) AuthCodeURL() string {
@@ -141,12 +150,12 @@ func (locator *RemoteBridgeLocator) AuthCodeURL() string {
 }
 
 func (locator *RemoteBridgeLocator) setAuthHeader(req *http.Request) error {
-	if locator.oauth2TokenSource == nil {
-		return ErrNoToken
-	}
 	token, err := locator.oauth2TokenSource.Token()
 	if err != nil {
 		return errors.Join(ErrNoToken, err)
+	}
+	if !token.Valid() {
+		return ErrNoToken
 	}
 	token.SetAuthHeader(req)
 	return nil
@@ -161,7 +170,11 @@ func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.
 		ResponseHeaderTimeout: timeout,
 		TLSClientConfig:       tlsClientconfig,
 	}
-	if locator.oauth2TokenSource != nil {
+	token, _ := locator.oauth2TokenSource.Token()
+	if token.Valid() {
+		config := locator.oauth2Config()
+		ctx := locator.oauth2Context()
+		locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
 		transport = &oauth2.Transport{
 			Source: locator.oauth2TokenSource,
 			Base:   transport,
@@ -181,7 +194,7 @@ func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	locator.oauth2TokenSource = config.TokenSource(ctx, token)
+	locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
 }
 
 func (locator *RemoteBridgeLocator) oauth2Config() *oauth2.Config {
@@ -415,6 +428,85 @@ func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWr
 		return
 	}
 	session.handleOauth2Authorized(w, code)
+}
+
+func loadRemoteTokenSource(clientId string, tokenDir string) (*persistentTokenSource, error) {
+	tokenFile := ""
+	if tokenDir != "" {
+		absoluteTokenDir, err := filepath.Abs(tokenDir)
+		if err != nil {
+			return nil, fmt.Errorf("failed to resolve token directory '%s' (cause: %w)", tokenDir, err)
+		}
+		err = os.MkdirAll(absoluteTokenDir, os.ModeDir|0700)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create token directory '%s' (cause: %w)", absoluteTokenDir, err)
+		}
+		tokenFile = filepath.Join(absoluteTokenDir, clientId+".json")
+	}
+	logger := log.RootLogger().With().Str("token", tokenFile).Logger()
+	var cachedToken *oauth2.Token
+	var liveSource oauth2.TokenSource
+	if tokenFile != "" {
+		logger.Info().Msgf("using token file '%s'", tokenFile)
+		tokenBytes, err := os.ReadFile(tokenFile)
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("failed to read token file '%s' (cause: %w)", tokenFile, err)
+		}
+		if err == nil {
+			logger.Info().Msgf("reading token file '%s'...", tokenFile)
+			cachedToken = &oauth2.Token{}
+			err = json.Unmarshal(tokenBytes, cachedToken)
+			if err != nil {
+				return nil, fmt.Errorf("failed to unmarshal token file '%s' (cause: %w)", tokenFile, err)
+			}
+			liveSource = oauth2.StaticTokenSource(cachedToken)
+		} else {
+			logger.Info().Msgf("token file '%s' not yet available", tokenFile)
+		}
+	}
+	tokenSource := &persistentTokenSource{
+		tokenFile:   tokenFile,
+		cachedToken: cachedToken,
+		liveSource:  liveSource,
+		logger:      &logger,
+	}
+	return tokenSource, nil
+}
+
+type persistentTokenSource struct {
+	tokenFile   string
+	cachedToken *oauth2.Token
+	liveSource  oauth2.TokenSource
+	logger      *zerolog.Logger
+}
+
+func (tokenSource *persistentTokenSource) Token() (*oauth2.Token, error) {
+	if tokenSource.liveSource == nil {
+		return nil, ErrNoToken
+	}
+	token, err := tokenSource.liveSource.Token()
+	if err != nil {
+		return token, err
+	}
+	if tokenSource.tokenFile != "" {
+		if tokenSource.cachedToken == nil || tokenSource.cachedToken.AccessToken != token.AccessToken || tokenSource.cachedToken.TokenType != token.TokenType || tokenSource.cachedToken.RefreshToken != token.RefreshToken {
+			tokenSource.logger.Info().Msgf("updating token file '%s'...", tokenSource.tokenFile)
+			tokenBytes, err := json.Marshal(token)
+			if err != nil {
+				tokenSource.logger.Error().Err(err).Msgf("failed to marshal token (cause: %s)", err)
+			}
+			err = os.WriteFile(tokenSource.tokenFile, tokenBytes, 0600)
+			if err != nil {
+				tokenSource.logger.Error().Err(err).Msgf("failed to write token file '%s' (cause: %s)", tokenSource.tokenFile, err)
+			}
+			tokenSource.cachedToken = token
+		}
+	}
+	return token, nil
+}
+
+func (tokenSource *persistentTokenSource) Reset(liveSource oauth2.TokenSource) {
+	tokenSource.liveSource = liveSource
 }
 
 var remoteDefaultEndpointUrl *url.URL = initRemoteDefaultEndpointUrl()

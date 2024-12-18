@@ -19,6 +19,7 @@ package hue_test
 import (
 	"crypto/tls"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -70,7 +71,7 @@ func TestRemoteBridgeLocator(t *testing.T) {
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil)
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, "")
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true
@@ -113,8 +114,17 @@ func TestRemoteClient(t *testing.T) {
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
+	// Setup temp token dir
+	tokenDir, err := os.MkdirTemp("", "TestRemoteClient")
+	require.NoError(t, err)
+	defer os.RemoveAll(tokenDir)
 	// Actual test
-	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil)
+	testRemoteClientHelper(t, bridgeMock, tokenDir)
+	testRemoteClientHelper(t, bridgeMock, tokenDir)
+}
+
+func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenDir string) {
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenDir)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true
