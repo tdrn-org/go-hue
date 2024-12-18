@@ -37,8 +37,8 @@ import (
 
 // NewLocalBridgeAuthenticator creates a new [LocalBridgeAuthenticator] suitable for authenticating towards a local bridge.
 //
-// The user name must be empty or previously been created via a successfull [Authenticate] API call. Everytime a
-// successfull [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
+// The user name must be empty or previously been created via a successful [Authenticate] API call. Everytime a
+// successful [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
 //
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
@@ -51,10 +51,10 @@ func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
 
 // LocalBridgeAuthenticator contains the necessary attributes to authenticate towards a local bridge.
 type LocalBridgeAuthenticator struct {
-	// ClientKey contains the client key returned by a successfull Authenticate API call. This attribute is not required
-	// for the actual authentication. After a successfull Authenticate API call it is provied for informational purposes.
+	// ClientKey contains the client key returned by a successful Authenticate API call. This attribute is not required
+	// for the actual authentication. After a successful Authenticate API call it is provied for informational purposes.
 	ClientKey string
-	// UserName contains used to authenticate towards a bridge. This user name must be previously been created via a successfull [Authenticate] API call.
+	// UserName contains used to authenticate towards a bridge. This user name must be previously been created via a successful [Authenticate] API call.
 	//
 	// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 	UserName string

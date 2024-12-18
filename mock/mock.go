@@ -67,7 +67,7 @@ const MockOAuth2RefreshToken = "mockOauth2RefreshToken"
 
 // BridgeServer interface used to interact with the mock server.
 type BridgeServer interface {
-	// Server gets the base URL wich can be used to build up the API URLs.
+	// Server gets the base URL which can be used to build up the API URLs.
 	Server() *url.URL
 	// Ping checks whether the mock server is up and running.
 	Ping() error

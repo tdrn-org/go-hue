@@ -269,15 +269,15 @@ func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
 
 // NewRemoteBridgeAuthenticator creates a new [RemoteBridgeAuthenticator] suitable for authenticating towards a remote bridge.
 //
-// The user name must be previously been created via a successfull [Authenticate] API call. In difference to a local [Authenticate]
+// The user name must be previously been created via a successful [Authenticate] API call. In difference to a local [Authenticate]
 // calls, where the bridge's link button is pressed physically to acknowledge acccess, the remote variant is acknowledged by invoking
 // [RemoteBridgeAuthenticator.EnableLinking] prior to the [Authenticate] API call.
 //
 // The given [RemoteSession] argument represents the authorization to use for accessing the [Cloud API]. The [RemoteBridgeLocator]
 // used to locate the remote bridge and authorize the remote access provides this [RemoteSession].
 //
-// The user name must be empty or previously been created via a successfull [Authenticate] API call. Everytime a
-// successfull [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
+// The user name must be empty or previously been created via a successful [Authenticate] API call. Everytime a
+// successful [Authenticate] API call is performed, the user name will be overwritten by the returned user name.
 //
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 // [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
