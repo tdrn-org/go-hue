@@ -40,11 +40,12 @@ import (
 
 var ErrNoToken = errors.New("token missing or expired")
 
-type RemoteAuthenticator interface {
+type RemoteSession interface {
+	Authorized() bool
 	AuthCodeURL() string
-	Authenticated() bool
-	SetAuthHeader(req *http.Request) error
-	AuthHttpClient(timeout time.Duration) *http.Client
+	setAuthHeader(req *http.Request) error
+	authHttpClient(timeout time.Duration) *http.Client
+	handleOauth2Authorized(w http.ResponseWriter, code string)
 }
 
 func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL) (*RemoteBridgeLocator, error) {
@@ -55,11 +56,11 @@ func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *u
 		ClientSecret: clientSecret,
 		logger:       &logger,
 	}
-	session, err := remoteSessions.session(redirectUrl, locator.handleOauth2Authorized)
+	callback, err := remoteOauth2.listen(redirectUrl)
 	if err != nil {
 		return nil, err
 	}
-	locator.oauth2Session = session
+	locator.oauth2Callback = callback
 	return locator, nil
 }
 
@@ -70,9 +71,10 @@ type RemoteBridgeLocator struct {
 	InsecureSkipVerify  bool
 	ClientId            string
 	ClientSecret        string
-	oauth2Session       *remoteSession
-	cachedOauth2Context context.Context
+	oauth2Callback      *remoteOauth2Callback
 	oauth2TokenSource   oauth2.TokenSource
+	cachedOauthConfig   *oauth2.Config
+	cachedOauth2Context context.Context
 	logger              *zerolog.Logger
 }
 
@@ -89,7 +91,7 @@ func (locator *RemoteBridgeLocator) Query(timeout time.Duration) ([]*Bridge, err
 }
 
 func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	client := locator.AuthHttpClient(timeout)
+	client := locator.authHttpClient(timeout)
 	server := locator.EndpointUrl.JoinPath("/route")
 	locator.logger.Info().Msgf("probing remote endpoint '%s' ...", server)
 	configUrl := configUrl(server)
@@ -110,7 +112,7 @@ func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duratio
 }
 
 func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
-	httpClient := locator.AuthHttpClient(timeout)
+	httpClient := locator.authHttpClient(timeout)
 	httpClientOpt := func(c *hueapi.Client) error {
 		c.Client = httpClient
 		return nil
@@ -128,17 +130,17 @@ func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator Brid
 	}, nil
 }
 
-func (locator *RemoteBridgeLocator) AuthCodeURL() string {
-	oauth2Config := locator.oauth2Config()
-	state := uuid.New().String()
-	return oauth2Config.AuthCodeURL(state, oauth2.AccessTypeOffline)
-}
-
-func (locator *RemoteBridgeLocator) Authenticated() bool {
+func (locator *RemoteBridgeLocator) Authorized() bool {
 	return locator.oauth2TokenSource != nil
 }
 
-func (locator *RemoteBridgeLocator) SetAuthHeader(req *http.Request) error {
+func (locator *RemoteBridgeLocator) AuthCodeURL() string {
+	oauth2Config := locator.oauth2Config()
+	state := remoteOauth2.authCodeState(locator)
+	return oauth2Config.AuthCodeURL(state, oauth2.AccessTypeOffline)
+}
+
+func (locator *RemoteBridgeLocator) setAuthHeader(req *http.Request) error {
 	if locator.oauth2TokenSource == nil {
 		return ErrNoToken
 	}
@@ -150,7 +152,7 @@ func (locator *RemoteBridgeLocator) SetAuthHeader(req *http.Request) error {
 	return nil
 }
 
-func (locator *RemoteBridgeLocator) AuthHttpClient(timeout time.Duration) *http.Client {
+func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.Client {
 	tlsClientconfig := &tls.Config{
 		InsecureSkipVerify: locator.InsecureSkipVerify,
 	}
@@ -170,20 +172,7 @@ func (locator *RemoteBridgeLocator) AuthHttpClient(timeout time.Duration) *http.
 		Timeout:   timeout}
 }
 
-func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter, req *http.Request) {
-	reqParams, err := url.ParseQuery(req.URL.RawQuery)
-	if err != nil {
-		locator.logger.Error().Err(err).Msgf("failed to decode callback request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
-	code := reqParams.Get("code")
-	state := reqParams.Get("state")
-	if code == "" || state == "" {
-		locator.logger.Error().Err(err).Msgf("authorization workflow failed (callback request parameters '%s')", req.URL.RawQuery)
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
+func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter, code string) {
 	config := locator.oauth2Config()
 	ctx := locator.oauth2Context()
 	token, err := config.Exchange(ctx, code)
@@ -196,16 +185,19 @@ func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter
 }
 
 func (locator *RemoteBridgeLocator) oauth2Config() *oauth2.Config {
-	return &oauth2.Config{
-		ClientID:     locator.ClientId,
-		ClientSecret: locator.ClientSecret,
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  locator.EndpointUrl.JoinPath("/v2/oauth2/authorize").String(),
-			TokenURL: locator.EndpointUrl.JoinPath("/v2/oauth2/token").String(),
-		},
-		RedirectURL: locator.oauth2Session.listenAndRedirectUrl.String(),
-		Scopes:      []string{},
+	if locator.cachedOauthConfig == nil {
+		locator.cachedOauthConfig = &oauth2.Config{
+			ClientID:     locator.ClientId,
+			ClientSecret: locator.ClientSecret,
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  locator.EndpointUrl.JoinPath("/v2/oauth2/authorize").String(),
+				TokenURL: locator.EndpointUrl.JoinPath("/v2/oauth2/token").String(),
+			},
+			RedirectURL: locator.oauth2Callback.redirectUrl.String(),
+			Scopes:      []string{},
+		}
 	}
+	return locator.cachedOauthConfig
 }
 
 func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
@@ -222,24 +214,24 @@ func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
 	return locator.cachedOauth2Context
 }
 
-func NewRemoteBridgeAuthenticator(remoteAuthenticator RemoteAuthenticator, userName string) *RemoteBridgeAuthenticator {
+func NewRemoteBridgeAuthenticator(remoteSession RemoteSession, userName string) *RemoteBridgeAuthenticator {
 	logger := log.RootLogger().With().Str("authenticator", "remote").Logger()
 	return &RemoteBridgeAuthenticator{
-		remoteAuthenticator: remoteAuthenticator,
-		UserName:            userName,
-		logger:              &logger,
+		remoteSession: remoteSession,
+		UserName:      userName,
+		logger:        &logger,
 	}
 }
 
 type RemoteBridgeAuthenticator struct {
-	remoteAuthenticator RemoteAuthenticator
-	ClientKey           string
-	UserName            string
-	logger              *zerolog.Logger
+	remoteSession RemoteSession
+	ClientKey     string
+	UserName      string
+	logger        *zerolog.Logger
 }
 
 func (authenticator *RemoteBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
-	err := authenticator.remoteAuthenticator.SetAuthHeader(req)
+	err := authenticator.remoteSession.setAuthHeader(req)
 	if err == nil {
 		authenticator.logger.Debug().Msgf("authorizing remote request to '%s'", req.URL)
 		if authenticator.UserName != "" {
@@ -273,7 +265,7 @@ func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) er
 		return fmt.Errorf("failed to prepare linking request (cause: %w)", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	client := authenticator.remoteAuthenticator.AuthHttpClient(DefaulTimeout)
+	client := authenticator.remoteSession.authHttpClient(DefaulTimeout)
 	rsp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to send enable linking request (cause: %w)", err)
@@ -284,59 +276,69 @@ func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) er
 	return nil
 }
 
-var remoteSessions = &remoteSessionManager{
-	sessions: make(map[string]*remoteSession),
+var remoteOauth2 = &remoteOauth2Callbacks{
+	entries: make(map[string]*remoteOauth2Callback),
+	states:  make(map[string]*remoteOauth2State),
 }
 
-type remoteSessionManager struct {
-	sessionMutex sync.RWMutex
-	sessions     map[string]*remoteSession
+type remoteOauth2Callbacks struct {
+	mutex   sync.Mutex
+	entries map[string]*remoteOauth2Callback
+	states  map[string]*remoteOauth2State
 }
 
-type remoteSession struct {
-	listenAndRedirectUrl *url.URL
-	listener             net.Listener
-	server               *http.Server
-	logger               *zerolog.Logger
+type remoteOauth2Callback struct {
+	redirectUrl *url.URL
+	listener    net.Listener
+	httpServer  *http.Server
 }
 
-func (sessionManager *remoteSessionManager) session(redirectUrl *url.URL, authorized func(http.ResponseWriter, *http.Request)) (*remoteSession, error) {
-	sessionManager.sessionMutex.Lock()
-	defer sessionManager.sessionMutex.Unlock()
-	var sessionKey string
-	var session *remoteSession
+type remoteOauth2State struct {
+	session RemoteSession
+	expiry  time.Time
+}
+
+func (callbacks *remoteOauth2Callbacks) logger(redirectUrl *url.URL) *zerolog.Logger {
+	logger := log.RootLogger().With().Str("oauth2-callback", redirectUrl.String()).Logger()
+	return &logger
+}
+
+func (callbacks *remoteOauth2Callbacks) listen(redirectUrl *url.URL) (*remoteOauth2Callback, error) {
+	callbacks.mutex.Lock()
+	defer callbacks.mutex.Unlock()
+	var callbackKey string
+	var callback *remoteOauth2Callback
 	if redirectUrl != nil {
-		sessionKey = redirectUrl.String()
-		session = sessionManager.sessions[sessionKey]
+		callbackKey = redirectUrl.String()
+		callback = callbacks.entries[callbackKey]
 	}
-	if session == nil {
-		listenAndRedirectUrl, listener, err := sessionManager.listen(redirectUrl)
+	if callback == nil {
+		listenAndRedirectUrl, listener, err := callbacks.listen0(redirectUrl)
 		if err != nil {
 			return nil, err
 		}
 		handler := http.NewServeMux()
-		handler.HandleFunc("GET "+listenAndRedirectUrl.Path, authorized)
-		logger := log.RootLogger().With().Str("oauth2-session", listenAndRedirectUrl.String()).Logger()
-		sessionKey = listenAndRedirectUrl.String()
-		session = &remoteSession{
-			listenAndRedirectUrl: listenAndRedirectUrl,
-			listener:             listener,
-			server:               &http.Server{Handler: handler},
-			logger:               &logger,
+		handler.HandleFunc("GET "+listenAndRedirectUrl.Path, callbacks.handleOauth2Authorized)
+		callbackKey = listenAndRedirectUrl.String()
+		callback = &remoteOauth2Callback{
+			redirectUrl: listenAndRedirectUrl,
+			listener:    listener,
+			httpServer:  &http.Server{Handler: handler},
 		}
 		go func() {
+			logger := callbacks.logger(listenAndRedirectUrl)
 			logger.Info().Msg("http server starting...")
-			err := session.server.Serve(session.listener)
+			err := callback.httpServer.Serve(callback.listener)
 			if !errors.Is(err, http.ErrServerClosed) {
 				logger.Error().Err(err).Msgf("http server failure (cause: %s)", err)
 			}
 		}()
-		sessionManager.sessions[sessionKey] = session
+		callbacks.entries[callbackKey] = callback
 	}
-	return session, nil
+	return callback, nil
 }
 
-func (sessionManager *remoteSessionManager) listen(redirectUrl *url.URL) (*url.URL, net.Listener, error) {
+func (callbacks *remoteOauth2Callbacks) listen0(redirectUrl *url.URL) (*url.URL, net.Listener, error) {
 	var address string
 	var path string
 	if redirectUrl != nil {
@@ -368,8 +370,51 @@ func (sessionManager *remoteSessionManager) listen(redirectUrl *url.URL) (*url.U
 	return listenAndRedirectUrl, listener, nil
 }
 
-func (session *remoteSession) oauth2Context() {
+func (callbacks *remoteOauth2Callbacks) authCodeState(session RemoteSession) string {
+	callbacks.mutex.Lock()
+	defer callbacks.mutex.Unlock()
+	state := uuid.New().String()
+	expiry := time.Now().Add(60 * time.Second)
+	callbacks.states[state] = &remoteOauth2State{
+		session: session,
+		expiry:  expiry,
+	}
+	return state
+}
 
+func (callbacks *remoteOauth2Callbacks) stateSession(state string) RemoteSession {
+	callbacks.mutex.Lock()
+	defer callbacks.mutex.Unlock()
+	var session RemoteSession
+	now := time.Now()
+	for state0, resolvedState0 := range callbacks.states {
+		if resolvedState0.expiry.Before(now) {
+			delete(callbacks.states, state0)
+		} else if state0 == state {
+			session = resolvedState0.session
+			delete(callbacks.states, state0)
+		}
+	}
+	return session
+}
+
+func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWriter, req *http.Request) {
+	logger := callbacks.logger(req.URL)
+	reqParams, err := url.ParseQuery(req.URL.RawQuery)
+	if err != nil {
+		logger.Error().Err(err).Msgf("failed to decode callback request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	code := reqParams.Get("code")
+	state := reqParams.Get("state")
+	session := callbacks.stateSession(state)
+	if code == "" || state == "" || session == nil {
+		logger.Error().Err(err).Msgf("authorization workflow failed (callback request parameters '%s')", req.URL.RawQuery)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	session.handleOauth2Authorized(w, code)
 }
 
 var remoteDefaultEndpointUrl *url.URL = initRemoteDefaultEndpointUrl()
