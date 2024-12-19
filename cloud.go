@@ -71,17 +71,17 @@ func (locator *CloudBridgeLocator) Query(timeout time.Duration) ([]*Bridge, erro
 	}
 	bridges := make([]*Bridge, 0, len(discoveredEntries))
 	for _, discoveredEntry := range discoveredEntries {
-		server, err := discoveredEntry.toServer()
+		url, err := discoveredEntry.toUrl()
 		if err != nil {
 			locator.logger.Error().Err(err).Msgf("ignoring invalid response entry '%v' (cause: %s)", discoveredEntry, err)
 			continue
 		}
-		config, err := queryAndValidateLocalBridgeConfig(server, discoveredEntry.Id, timeout)
+		config, err := queryAndValidateLocalBridgeConfig(url, discoveredEntry.Id, timeout)
 		if err != nil {
 			locator.logger.Error().Err(err).Msgf("ignoring response entry '%v' (cause: %s)", discoveredEntry, err)
 			continue
 		}
-		bridge, err := config.newBridge(locator, server)
+		bridge, err := config.newBridge(locator, url)
 		if err != nil {
 			return nil, err
 		}
@@ -101,17 +101,17 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 		if discoveredEntry.Id != bridgeId {
 			continue
 		}
-		server, err := discoveredEntry.toServer()
+		url, err := discoveredEntry.toUrl()
 		if err != nil {
 			locator.logger.Info().Msgf("bridge '%s' entry not valide (cause: %s)", bridgeId, err)
 			return nil, ErrBridgeNotAvailable
 		}
-		config, err := queryAndValidateLocalBridgeConfig(server, discoveredEntry.Id, timeout)
+		config, err := queryAndValidateLocalBridgeConfig(url, discoveredEntry.Id, timeout)
 		if err != nil {
 			locator.logger.Info().Msgf("bridge '%s' not available (cause: %s)", bridgeId, err)
 			return nil, ErrBridgeNotAvailable
 		}
-		bridge, err := config.newBridge(locator, server)
+		bridge, err := config.newBridge(locator, url)
 		if err != nil {
 			return nil, err
 		}
@@ -150,11 +150,11 @@ type cloudDiscoveryEndpointResponseEntry struct {
 	Port              int    `json:"port"`
 }
 
-func (entry *cloudDiscoveryEndpointResponseEntry) toServer() (*url.URL, error) {
+func (entry *cloudDiscoveryEndpointResponseEntry) toUrl() (*url.URL, error) {
 	address := net.JoinHostPort(entry.InternalIpAddress, strconv.Itoa(entry.Port))
-	server, err := url.Parse("https://" + address + "/")
+	url, err := url.Parse("https://" + address + "/")
 	if err != nil {
 		return nil, fmt.Errorf("invalid address '%s' (cause: %w)", address, err)
 	}
-	return server, err
+	return url, err
 }

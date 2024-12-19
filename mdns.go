@@ -69,12 +69,12 @@ func (locator *MdnsBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error
 	bridges := make([]*Bridge, 0)
 	add := func(entry dnssd.BrowseEntry) {
 		locator.logger.Info().Msgf("detected service '%s' (%v)", entry.ServiceInstanceName(), entry.Text)
-		server, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
+		url, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("ignoring invalid service '%s'", entry.Name)
 			return
 		}
-		bridge, err := config.newBridge(locator, server)
+		bridge, err := config.newBridge(locator, url)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
 			return
@@ -106,12 +106,12 @@ func (locator *MdnsBridgeLocator) Lookup(bridgeId string, timeout time.Duration)
 		if serviceBridgeId != bridgeId {
 			return
 		}
-		address, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
+		url, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("ignoring invalid service '%s'", entry.Name)
 			return
 		}
-		bridge, err = config.newBridge(locator, address)
+		bridge, err = config.newBridge(locator, url)
 		if err != nil {
 			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
 			return
@@ -140,16 +140,16 @@ func (locator *MdnsBridgeLocator) queryAndValidateBridgeConfig(entry *dnssd.Brow
 	}
 	ip := entry.IPs[0]
 	address := net.JoinHostPort(ip.String(), strconv.Itoa(entry.Port))
-	server, err := url.Parse("https://" + address + "/")
+	url, err := url.Parse("https://" + address + "/")
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to compose URL for address '%s' (cause: %w)", address, err)
 	}
 	bridgeId := locator.browseEntryBridgeId(entry)
-	config, err := queryAndValidateLocalBridgeConfig(server, bridgeId, timeout)
+	config, err := queryAndValidateLocalBridgeConfig(url, bridgeId, timeout)
 	if err != nil {
 		return nil, nil, err
 	}
-	return server, config, nil
+	return url, config, nil
 }
 
 func (locator *MdnsBridgeLocator) browseEntryBridgeId(entry *dnssd.BrowseEntry) string {

@@ -66,8 +66,8 @@ type Bridge struct {
 	ReplacesBridgeId string
 	// ModelId contains the id of the bridge model.
 	ModelId string
-	// Server contains the URL used to access the bridge.
-	Server *url.URL
+	// Url contains the URL used to access the bridge.
+	Url *url.URL
 }
 
 // NewClient creates a new [BridgeClient] suitable for accessing the bridge services.
@@ -77,7 +77,7 @@ func (bridge *Bridge) NewClient(authenticator BridgeAuthenticator, timeout time.
 
 // String gets the bridge's signature string.
 func (bridge *Bridge) String() string {
-	return fmt.Sprintf("%s:%s (Name: '%s', SW: %s, API: %s, MAC: %s, Server: %s)", bridge.Locator.Name(), bridge.BridgeId, bridge.Name, bridge.SoftwareVersion, bridge.ApiVersion, bridge.HardwareAddress.String(), bridge.Server)
+	return fmt.Sprintf("%s:%s (Name: '%s', SW: %s, API: %s, MAC: %s, URL: %s)", bridge.Locator.Name(), bridge.BridgeId, bridge.Name, bridge.SoftwareVersion, bridge.ApiVersion, bridge.HardwareAddress.String(), bridge.Url)
 }
 
 // BridgeAuthenticator injects the necessary authentication credentials into an bridge API call.
@@ -115,7 +115,7 @@ type bridgeConfig struct {
 	ModelId          string `json:"modelid"`
 }
 
-func (config *bridgeConfig) newBridge(locator BridgeLocator, server *url.URL) (*Bridge, error) {
+func (config *bridgeConfig) newBridge(locator BridgeLocator, url *url.URL) (*Bridge, error) {
 	hardwareAddress, err := net.ParseMAC(config.Mac)
 	if err != nil {
 		return nil, fmt.Errorf("invalid hardware address '%s' in bridge config (cause: %w)", config.Mac, err)
@@ -129,12 +129,12 @@ func (config *bridgeConfig) newBridge(locator BridgeLocator, server *url.URL) (*
 		BridgeId:         config.BridgeId,
 		ReplacesBridgeId: config.ReplacesBridgeId,
 		ModelId:          config.ModelId,
-		Server:           server,
+		Url:              url,
 	}, nil
 }
 
-func configUrl(server *url.URL) *url.URL {
-	return server.JoinPath("/api/0/config")
+func configUrl(url *url.URL) *url.URL {
+	return url.JoinPath("/api/0/config")
 }
 
 func fetchJson(client *http.Client, url *url.URL, v interface{}) error {
@@ -175,8 +175,8 @@ func newDefaultClient(timeout time.Duration, skipVerify bool) *http.Client {
 type BridgeClient interface {
 	// Bridge gets the bridge instance this client accesses.
 	Bridge() *Bridge
-	// Server gets bridge server URL.
-	Server() *url.URL
+	// Url gets URL used to access the bridge services.
+	Url() *url.URL
 	// HttpClient gets the underlying [http.Client] used to access the bridge.
 	HttpClient() *http.Client
 	// Authenticate API call.
@@ -279,7 +279,7 @@ type BridgeClient interface {
 
 type bridgeClient struct {
 	bridge        *Bridge
-	server        *url.URL
+	url           *url.URL
 	httpClient    *http.Client
 	apiClient     hueapi.ClientWithResponsesInterface
 	authenticator BridgeAuthenticator
@@ -289,8 +289,8 @@ func (client *bridgeClient) Bridge() *Bridge {
 	return client.bridge
 }
 
-func (client *bridgeClient) Server() *url.URL {
-	return client.server
+func (client *bridgeClient) Url() *url.URL {
+	return client.url
 }
 
 func (client *bridgeClient) HttpClient() *http.Client {

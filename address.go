@@ -30,12 +30,12 @@ import (
 // [well-known address]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Manual-ip
 func NewAddressBridgeLocator(address string) (*AddressBridgeLocator, error) {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
-	server, err := url.Parse("https://" + address + "/")
+	url, err := url.Parse("https://" + address + "/")
 	if err != nil {
 		return nil, fmt.Errorf("invalid address '%s' (cause: %w)", address, err)
 	}
 	return &AddressBridgeLocator{
-		server: server,
+		url:    url,
 		logger: &logger,
 	}, nil
 }
@@ -47,7 +47,7 @@ const addressBridgeLocatorName string = "address"
 // Use [NewAddressBridgeLocator] to create a new instance. As this locator is looking at exactly one bridge,
 // a [BridgeLocator.Query] call will return not more than one brigde.
 type AddressBridgeLocator struct {
-	server *url.URL
+	url    *url.URL
 	logger *zerolog.Logger
 }
 
@@ -64,13 +64,13 @@ func (locator *AddressBridgeLocator) Query(timeout time.Duration) ([]*Bridge, er
 }
 
 func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.server)
-	config, err := queryAndValidateLocalBridgeConfig(locator.server, bridgeId, timeout)
+	locator.logger.Info().Msgf("probing bridge '%s' ...", locator.url)
+	config, err := queryAndValidateLocalBridgeConfig(locator.url, bridgeId, timeout)
 	if err != nil {
 		locator.logger.Info().Msgf("bridge '%s' not available (details: %v)", bridgeId, err)
 		return nil, ErrBridgeNotAvailable
 	}
-	bridge, err := config.newBridge(locator, locator.server)
+	bridge, err := config.newBridge(locator, locator.url)
 	if err != nil {
 		return nil, err
 	}

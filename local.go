@@ -84,19 +84,19 @@ func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.Authent
 	}
 }
 
-func queryAndValidateLocalBridgeConfig(server *url.URL, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
+func queryAndValidateLocalBridgeConfig(url *url.URL, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
 	httpClient := localBridgeHttpClient(bridgeId, timeout)
-	configUrl := configUrl(server)
+	configUrl := configUrl(url)
 	config := &bridgeConfig{}
 	err := fetchJson(&httpClient.Client, configUrl, config)
 	if err != nil {
 		return nil, err
 	}
 	if httpClient.CertificateBridgeId == "" {
-		return nil, fmt.Errorf("failed to receive bridge id from '%s'", server)
+		return nil, fmt.Errorf("failed to receive bridge id from '%s'", url)
 	}
 	if bridgeId != "" && !strings.EqualFold(httpClient.CertificateBridgeId, config.BridgeId) {
-		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", httpClient.CertificateBridgeId, server, config.BridgeId)
+		return nil, fmt.Errorf("bridge id mismatch (received '%s' from '%s' and expected '%s')", httpClient.CertificateBridgeId, url, config.BridgeId)
 	}
 	return config, nil
 }
@@ -151,13 +151,13 @@ func newLocalBridgeHueClient(bridge *Bridge, authenticator BridgeAuthenticator, 
 		c.Client = httpClient
 		return nil
 	}
-	apiClient, err := hueapi.NewClientWithResponses(bridge.Server.String(), httpClientOpt)
+	apiClient, err := hueapi.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
 	return &bridgeClient{
 		bridge:        bridge,
-		server:        bridge.Server,
+		url:           bridge.Url,
 		httpClient:    &httpClient.Client,
 		apiClient:     apiClient,
 		authenticator: authenticator,

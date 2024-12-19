@@ -56,7 +56,7 @@ type RemoteSession interface {
 	AuthCodeURL() string
 	setAuthHeader(req *http.Request) error
 	authHttpClient(timeout time.Duration) *http.Client
-	handleOauth2Authorized(w http.ResponseWriter, code string)
+	handleOauth2Authorized(w http.ResponseWriter, req *http.Request, code string)
 }
 
 // NewRemoteBridgeLocator creates a new [RemoteBridgeLocator] for discovering a remote bridge via the Hue [Cloud API].
@@ -118,7 +118,10 @@ type RemoteBridgeLocator struct {
 	// ClientSecret defines the client secret of the [Remote Hue API app] to use for remote access.
 	//
 	// [Remote Hue API app]: https://developers.meethue.com/my-apps/
-	ClientSecret        string
+	ClientSecret string
+	// ReferrerUrl defines the URL to redirect to after an authorization workflow has been completed. The default value nil
+	// disables the redirect.
+	ReferrerUrl         *url.URL
 	oauth2Callback      *remoteOauth2Callback
 	oauth2TokenSource   *persistentTokenSource
 	cachedOauthConfig   *oauth2.Config
@@ -140,9 +143,9 @@ func (locator *RemoteBridgeLocator) Query(timeout time.Duration) ([]*Bridge, err
 
 func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
 	client := locator.authHttpClient(timeout)
-	server := locator.EndpointUrl.JoinPath("/route")
-	locator.logger.Info().Msgf("probing remote endpoint '%s' ...", server)
-	configUrl := configUrl(server)
+	url := locator.EndpointUrl.JoinPath("/route")
+	locator.logger.Info().Msgf("probing remote endpoint '%s' ...", url)
+	configUrl := configUrl(url)
 	config := &bridgeConfig{}
 	err := fetchJson(client, configUrl, config)
 	if err != nil {
@@ -151,7 +154,7 @@ func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duratio
 	if bridgeId != "" && !strings.EqualFold(bridgeId, config.BridgeId) {
 		return nil, fmt.Errorf("bridge id mismatch (received '%s' and expected '%s')", bridgeId, config.BridgeId)
 	}
-	bridge, err := config.newBridge(locator, server)
+	bridge, err := config.newBridge(locator, url)
 	if err != nil {
 		return nil, err
 	}
@@ -165,13 +168,13 @@ func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator Brid
 		c.Client = httpClient
 		return nil
 	}
-	apiClient, err := hueapi.NewClientWithResponses(bridge.Server.String(), httpClientOpt)
+	apiClient, err := hueapi.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
 	return &bridgeClient{
 		bridge:        bridge,
-		server:        bridge.Server,
+		url:           bridge.Url,
 		httpClient:    httpClient,
 		apiClient:     apiClient,
 		authenticator: authenticator,
@@ -225,16 +228,21 @@ func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.
 		Timeout:   timeout}
 }
 
-func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter, code string) {
-	config := locator.oauth2Config()
-	ctx := locator.oauth2Context()
-	token, err := config.Exchange(ctx, code)
-	if err != nil {
-		locator.logger.Error().Err(err).Msgf("failed to retrieve token (cause: %s)", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
+func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter, req *http.Request, code string) {
+	if code != "" {
+		config := locator.oauth2Config()
+		ctx := locator.oauth2Context()
+		token, err := config.Exchange(ctx, code)
+		if err != nil {
+			locator.logger.Error().Err(err).Msgf("failed to retrieve token (cause: %s)", err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
 	}
-	locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
+	if locator.ReferrerUrl != nil {
+		http.Redirect(w, req, locator.ReferrerUrl.String(), http.StatusSeeOther)
+	}
 }
 
 func (locator *RemoteBridgeLocator) oauth2Config() *oauth2.Config {
@@ -329,7 +337,7 @@ func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.Authen
 //
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) error {
-	configUrl := configUrl(bridge.Server)
+	configUrl := configUrl(bridge.Url)
 	body := bytes.NewBuffer([]byte(`{"linkbutton":true}`))
 	req, err := http.NewRequest(http.MethodPut, configUrl.String(), body)
 	if err != nil {
@@ -480,12 +488,12 @@ func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWr
 	code := reqParams.Get("code")
 	state := reqParams.Get("state")
 	session := callbacks.stateSession(state)
-	if code == "" || state == "" || session == nil {
+	if session == nil {
 		logger.Error().Err(err).Msgf("authorization workflow failed (callback request parameters '%s')", req.URL.RawQuery)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	session.handleOauth2Authorized(w, code)
+	session.handleOauth2Authorized(w, req, code)
 }
 
 func loadRemoteTokenSource(clientId string, tokenDir string) (*persistentTokenSource, error) {
