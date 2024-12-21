@@ -32,8 +32,6 @@ import (
 	"sync"
 	"time"
 
-	stdlog "log"
-
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-hue/hueapi"
@@ -58,6 +56,8 @@ type RemoteSession interface {
 	authHttpClient(timeout time.Duration) *http.Client
 	handleOauth2Authorized(w http.ResponseWriter, req *http.Request, code string)
 }
+
+var remoteDefaultEndpointUrl *url.URL = safeParseUrl("https://api.meethue.com/")
 
 // NewRemoteBridgeLocator creates a new [RemoteBridgeLocator] for discovering a remote bridge via the Hue [Cloud API].
 //
@@ -333,6 +333,13 @@ func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.Authen
 	}
 }
 
+func (authenticator *RemoteBridgeAuthenticator) Authentication() (string, error) {
+	if authenticator.UserName == "" {
+		return authenticator.UserName, ErrNotAuthenticated
+	}
+	return authenticator.UserName, nil
+}
+
 // EnableLinking must be called prior to a [Authenticate] API call to acknoledge the user registration.
 //
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
@@ -573,14 +580,4 @@ func (tokenSource *persistentTokenSource) Token() (*oauth2.Token, error) {
 
 func (tokenSource *persistentTokenSource) Reset(liveSource oauth2.TokenSource) {
 	tokenSource.liveSource = liveSource
-}
-
-var remoteDefaultEndpointUrl *url.URL = initRemoteDefaultEndpointUrl()
-
-func initRemoteDefaultEndpointUrl() *url.URL {
-	url, err := url.Parse("https://api.meethue.com/")
-	if err != nil {
-		stdlog.Fatal(err)
-	}
-	return url
 }

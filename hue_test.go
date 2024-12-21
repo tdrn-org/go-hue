@@ -195,7 +195,7 @@ func testClient(t *testing.T, client hue.BridgeClient) {
 
 func testGetResourcesForbidden(t *testing.T, client hue.BridgeClient) {
 	_, err := client.GetResources()
-	require.ErrorIs(t, err, hue.ErrHueAPIForbidden)
+	require.ErrorIs(t, err, hue.ErrNotAuthenticated)
 }
 
 func testAuthenticate(t *testing.T, client hue.BridgeClient) {

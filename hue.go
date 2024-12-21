@@ -39,8 +39,8 @@ var ErrBridgeNotAvailable = errors.New("bridge not available")
 // ErrBridgeClientFailure indicates a system error while invoking the bridge client.
 var ErrBridgeClientFailure = errors.New("bridge client call failure")
 
-// ErrHueAPIForbidden indicates a restricted API has been called without a valid authentication.
-var ErrHueAPIForbidden = errors.New("api access denied")
+// ErrNotAuthenticated indicates bridge access has not yet been authenticated
+var ErrNotAuthenticated = errors.New("not authenticated")
 
 // ErrHueAPIFailure indicates an API call has failed with an API error.
 var ErrHueAPIFailure = errors.New("api failure")
@@ -86,6 +86,9 @@ type BridgeAuthenticator interface {
 	AuthenticateRequest(ctx context.Context, req *http.Request) error
 	// Authenticated is called with the response of an Authenticate API call and updates this instance's authentication credentials.
 	Authenticated(rsp *hueapi.AuthenticateResponse)
+	// Authentication returns the user name used to authenticate towards the bridge. Error [ErrNotAuthenticated] indicates, bridge access
+	// has not yet been authenticated.
+	Authentication() (string, error)
 }
 
 // BridgeLocator provides the necessary functions to identify and access bridge instances.
@@ -312,7 +315,7 @@ func bridgeClientApiError(response *http.Response) error {
 	case http.StatusOK:
 		return nil
 	case http.StatusForbidden:
-		return fmt.Errorf("%w %s(...) (status: %s)", ErrHueAPIForbidden, bridgeClientApiName(), response.Status)
+		return fmt.Errorf("%w %s(...) (status: %s)", ErrNotAuthenticated, bridgeClientApiName(), response.Status)
 	default:
 		return fmt.Errorf("%w %s(...) (status: %s)", ErrHueAPIFailure, bridgeClientApiName(), response.Status)
 	}

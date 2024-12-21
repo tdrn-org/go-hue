@@ -84,6 +84,13 @@ func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.Authent
 	}
 }
 
+func (authenticator *LocalBridgeAuthenticator) Authentication() (string, error) {
+	if authenticator.UserName == "" {
+		return authenticator.UserName, ErrNotAuthenticated
+	}
+	return authenticator.UserName, nil
+}
+
 func queryAndValidateLocalBridgeConfig(url *url.URL, bridgeId string, timeout time.Duration) (*bridgeConfig, error) {
 	httpClient := localBridgeHttpClient(bridgeId, timeout)
 	configUrl := configUrl(url)

@@ -45,7 +45,7 @@ import (
 const MockBridgeId = "0123456789ABCDEF"
 
 // Mock Bridge User name
-const MockBridgeUsername = "mockUser"
+const MockBridgeUsername = "mockUserName"
 
 // Mock Bridge Client key
 const MockBridgeClientkey = "mockClientKey"
@@ -239,7 +239,7 @@ func (mock *mockServer) setupHttpServer() *http.Server {
 }
 
 func (mock *mockServer) defaultErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
-	if errors.Is(err, hue.ErrHueAPIForbidden) {
+	if errors.Is(err, hue.ErrNotAuthenticated) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -260,12 +260,12 @@ func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f hueapi.S
 		if strings.HasPrefix(req.URL.Path, routePrefix) {
 			authorization := req.Header.Get("Authorization")
 			if authorization != MockOAuth2AccessToken {
-				return nil, hue.ErrHueAPIForbidden
+				return nil, hue.ErrNotAuthenticated
 			}
 		}
 		authentication := req.Header.Get(hueapi.ApplicationKeyHeader)
 		if authentication != MockBridgeUsername {
-			return nil, hue.ErrHueAPIForbidden
+			return nil, hue.ErrNotAuthenticated
 		}
 		return f(ctx, w, req, request)
 	}
