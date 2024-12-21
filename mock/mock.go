@@ -535,7 +535,10 @@ func (mock *mockServer) UpdateBridge(ctx context.Context, request hueapi.UpdateB
 // List bridge homes.
 // (GET /clip/v2/resource/bridge_home)
 func (mock *mockServer) GetBridgeHomes(ctx context.Context, request hueapi.GetBridgeHomesRequestObject) (hueapi.GetBridgeHomesResponseObject, error) {
-	response := hueapi.GetBridgeHomes200JSONResponse{}
+	response := hueapi.GetBridgeHomes200JSONResponse{
+		Data:   mockData.GetBridgeHomes.Data,
+		Errors: mockData.GetBridgeHomes.Errors,
+	}
 	return response, nil
 }
 
@@ -645,7 +648,10 @@ func (mock *mockServer) UpdateLight(ctx context.Context, request hueapi.UpdateLi
 // List light levels.
 // (GET /clip/v2/resource/light_level)
 func (mock *mockServer) GetLightLevels(ctx context.Context, request hueapi.GetLightLevelsRequestObject) (hueapi.GetLightLevelsResponseObject, error) {
-	response := hueapi.GetLightLevels200JSONResponse{}
+	response := hueapi.GetLightLevels200JSONResponse{
+		Data:   mockData.GetLightLevels.Data,
+		Errors: mockData.GetLightLevels.Errors,
+	}
 	return response, nil
 }
 
