@@ -1068,7 +1068,7 @@
           "model_id": "BSB002",
           "product_archetype": "bridge_v2",
           "product_name": "Hue Bridge",
-          "software_version": "1.67.1967054020"
+          "software_version": "1.68.1968096020"
         },
         "services": [
           {
@@ -1188,12 +1188,12 @@
           ]
         },
         "dimming": {
-          "brightness": 80.63
+          "brightness": 0
         },
         "id": "0b4c7cc4-624e-4b86-8964-c1cd99dec591",
         "id_v1": "/groups/1",
         "on": {
-          "on": true
+          "on": false
         },
         "owner": {
           "rid": "e998cc46-e091-41c2-bdb9-df7ac849982e",
@@ -1216,12 +1216,12 @@
           ]
         },
         "dimming": {
-          "brightness": 80.63
+          "brightness": 0
         },
         "id": "662c712d-d681-4309-b249-64a5bb638c3b",
         "id_v1": "/groups/0",
         "on": {
-          "on": true
+          "on": false
         },
         "owner": {
           "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
@@ -1327,7 +1327,7 @@
           ]
         },
         "dimming": {
-          "brightness": 0,
+          "brightness": 49.8,
           "min_dim_level": 5
         },
         "dynamics": {
@@ -1480,7 +1480,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 80.63,
+          "brightness": 100,
           "min_dim_level": 1
         },
         "dynamics": {
@@ -1521,7 +1521,7 @@
         },
         "mode": "normal",
         "on": {
-          "on": true
+          "on": false
         },
         "owner": {
           "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
@@ -1635,7 +1635,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 100,
+          "brightness": 56.52,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1773,7 +1773,7 @@
           ]
         },
         "dimming": {
-          "brightness": 0,
+          "brightness": 49.8,
           "min_dim_level": 5
         },
         "dynamics": {
@@ -1908,7 +1908,7 @@
           ]
         },
         "dimming": {
-          "brightness": 0,
+          "brightness": 49.8,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -2017,7 +2017,29 @@
     ],
     "errors": []
   },
-  "light_levels": null,
+  "light_levels": {
+    "data": [
+      {
+        "enabled": true,
+        "id": "b612b85c-1231-4aed-ac03-98250efdbb6c",
+        "id_v1": "/sensors/5",
+        "light": {
+          "light_level": 18948,
+          "light_level_report": {
+            "changed": "2024-12-21T11:25:05.225Z",
+            "light_level": 18948
+          },
+          "light_level_valid": true
+        },
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "light_level"
+      }
+    ],
+    "errors": []
+  },
   "motion_sensors": {
     "data": [
       {
@@ -2027,7 +2049,7 @@
         "motion": {
           "motion": false,
           "motion_report": {
-            "changed": "2024-11-28T18:43:06.307Z",
+            "changed": "2024-12-21T10:51:10.902Z",
             "motion": false
           },
           "motion_valid": true
@@ -4224,10 +4246,10 @@
           "rtype": "device"
         },
         "temperature": {
-          "temperature": 18.48,
+          "temperature": 17.63,
           "temperature_report": {
-            "changed": "2024-11-28T18:48:29.919Z",
-            "temperature": 18.48
+            "changed": "2024-12-21T11:20:39.155Z",
+            "temperature": 17.63
           },
           "temperature_valid": true
         },

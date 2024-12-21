@@ -91,6 +91,6 @@ var mockData *Data = &Data{}
 func init() {
 	err := json.Unmarshal(mockDataBytes, mockData)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("mock.json: ", err)
 	}
 }

@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"reflect"
 	"strings"
@@ -42,16 +43,16 @@ func main() {
 	authentication := os.Args[2]
 	locator, err := hue.NewAddressBridgeLocator(address)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("locator: ", err)
 	}
 	bridges, err := locator.Query(hue.DefaulTimeout)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("query: ", err)
 	}
 	bridge := bridges[0]
 	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(authentication), hue.DefaulTimeout)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("client: ", err)
 	}
 	data := &mock.Data{}
 	dumpResources(client, data)
@@ -61,6 +62,7 @@ func main() {
 	dumpDevicePowers(client, data)
 	dumpGroupedLights(client, data)
 	dumpLights(client, data)
+	dumpLightLevels(client, data)
 	dumpMotionSensors(client, data)
 	dumpRooms(client, data)
 	dumpScenes(client, data)
@@ -72,14 +74,17 @@ func main() {
 	encoder.SetIndent("", "  ")
 	err = encoder.Encode(data)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("encode: ", err)
 	}
 }
 
 func dumpResources(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetResources()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("resources: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("resources: ", response.HTTPResponse.Status)
 	}
 	data.GetResources = response.JSON200
 }
@@ -87,7 +92,10 @@ func dumpResources(client hue.BridgeClient, data *mock.Data) {
 func dumpBridges(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetBridges()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("bridges: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("bridges: ", response.HTTPResponse.Status)
 	}
 	data.GetBridges = response.JSON200
 }
@@ -95,7 +103,10 @@ func dumpBridges(client hue.BridgeClient, data *mock.Data) {
 func dumpBridgeHomes(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetBridgeHomes()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("bridge homes: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("bridge homes: ", response.HTTPResponse.Status)
 	}
 	data.GetBridgeHomes = response.JSON200
 }
@@ -103,7 +114,10 @@ func dumpBridgeHomes(client hue.BridgeClient, data *mock.Data) {
 func dumpDevices(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetDevices()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("devices: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("devices: ", response.HTTPResponse.Status)
 	}
 	data.GetDevices = response.JSON200
 }
@@ -111,7 +125,10 @@ func dumpDevices(client hue.BridgeClient, data *mock.Data) {
 func dumpDevicePowers(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetDevicePowers()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("device powers: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("device powers: ", response.HTTPResponse.Status)
 	}
 	data.GetDevicePowers = response.JSON200
 }
@@ -119,7 +136,10 @@ func dumpDevicePowers(client hue.BridgeClient, data *mock.Data) {
 func dumpGroupedLights(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetGroupedLights()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("grouped lights: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("grouped lights: ", response.HTTPResponse.Status)
 	}
 	data.GetGroupedLights = response.JSON200
 }
@@ -127,7 +147,10 @@ func dumpGroupedLights(client hue.BridgeClient, data *mock.Data) {
 func dumpLights(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetLights()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("lights: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("lights: ", response.HTTPResponse.Status)
 	}
 	data.GetLights = response.JSON200
 }
@@ -135,7 +158,10 @@ func dumpLights(client hue.BridgeClient, data *mock.Data) {
 func dumpLightLevels(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetLightLevels()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("light levels: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("light levels: ", response.HTTPResponse.Status)
 	}
 	data.GetLightLevels = response.JSON200
 }
@@ -143,7 +169,10 @@ func dumpLightLevels(client hue.BridgeClient, data *mock.Data) {
 func dumpMotionSensors(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetMotionSensors()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("motion sensors: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("motion sensors: ", response.HTTPResponse.Status)
 	}
 	data.GetMotionSensors = response.JSON200
 }
@@ -151,7 +180,10 @@ func dumpMotionSensors(client hue.BridgeClient, data *mock.Data) {
 func dumpRooms(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetRooms()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("rooms: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("rooms: ", response.HTTPResponse.Status)
 	}
 	data.GetRooms = response.JSON200
 }
@@ -159,7 +191,10 @@ func dumpRooms(client hue.BridgeClient, data *mock.Data) {
 func dumpScenes(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetScenes()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("scenes: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("scenes: ", response.HTTPResponse.Status)
 	}
 	data.GetScenes = response.JSON200
 }
@@ -167,7 +202,10 @@ func dumpScenes(client hue.BridgeClient, data *mock.Data) {
 func dumpSmartScenes(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetSmartScenes()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("smart scenes: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("smart scenes: ", response.HTTPResponse.Status)
 	}
 	data.GetSmartScenes = response.JSON200
 }
@@ -175,7 +213,10 @@ func dumpSmartScenes(client hue.BridgeClient, data *mock.Data) {
 func dumpTemperatures(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetTemperatures()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("temperatures: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("temperatures: ", response.HTTPResponse.Status)
 	}
 	data.GetTemperatures = response.JSON200
 }
@@ -183,7 +224,10 @@ func dumpTemperatures(client hue.BridgeClient, data *mock.Data) {
 func dumpZones(client hue.BridgeClient, data *mock.Data) {
 	response, err := client.GetZones()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("zones: ", err)
+	}
+	if response.HTTPResponse.StatusCode != http.StatusOK {
+		log.Fatal("zones: ", response.HTTPResponse.Status)
 	}
 	data.GetZones = response.JSON200
 }

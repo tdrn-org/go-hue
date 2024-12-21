@@ -24,7 +24,7 @@ import (
 func safeParseUrl(s string) *url.URL {
 	parsed, err := url.Parse(s)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed to parse url '", s, "': ", err)
 	}
 	return parsed
 }

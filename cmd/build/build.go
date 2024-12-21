@@ -38,16 +38,16 @@ func main() {
 func fetch() {
 	rsp, err := http.Get(os.Args[2])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("download failure: ", err)
 	}
 	defer rsp.Body.Close()
 	file, err := os.Create(os.Args[3])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("create file failure: ", err)
 	}
 	defer file.Close()
 	_, err = io.Copy(file, rsp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("write file failure: ", err)
 	}
 }
