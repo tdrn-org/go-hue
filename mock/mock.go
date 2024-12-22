@@ -27,6 +27,8 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -69,6 +71,8 @@ const MockOAuth2RefreshToken = "mockOauth2RefreshToken"
 type BridgeServer interface {
 	// Server gets the base URL which can be used to build up the API URLs.
 	Server() *url.URL
+	// TokenDir gets the token directory already containing a token file suitable for accessing the mock server.
+	TokenDir() string
 	// Ping checks whether the mock server is up and running.
 	Ping() error
 	// Shutdown terminates the mock server gracefully.
@@ -154,11 +158,32 @@ type mockServer struct {
 	mDNSService       *dnssd.Service
 	cancelMDNSService context.CancelFunc
 	stoppedWG         sync.WaitGroup
+	tokenDir          string
 	logger            *zerolog.Logger
 }
 
 func (mock *mockServer) Server() *url.URL {
 	return mock.server
+}
+
+func (mock *mockServer) TokenDir() string {
+	if mock.tokenDir == "" {
+		tokenDir, err := os.MkdirTemp("", "MockTokenDir")
+		if err != nil {
+			stdlog.Fatal(err)
+		}
+		tokenFile := filepath.Join(tokenDir, MockBridgeId+".json")
+		token := mock.newOAuth2Token()
+		tokenBytes, err := json.MarshalIndent(token, "", "  ")
+		if err != nil {
+			stdlog.Fatal(err)
+		}
+		err = os.WriteFile(tokenFile, tokenBytes, 0600)
+		if err != nil {
+			stdlog.Fatal(err)
+		}
+	}
+	return mock.tokenDir
 }
 
 func (mock *mockServer) Ping() error {
@@ -167,11 +192,14 @@ func (mock *mockServer) Ping() error {
 }
 
 func (mock *mockServer) Shutdown() {
-	mock.logger.Info().Msg("shutdown down http server...")
+	mock.logger.Info().Msg("shutting down mock server...")
 	mock.cancelMDNSService()
 	err := mock.httpServer.Shutdown(context.Background())
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("shutdown failure (cause: %s)", err)
+		mock.logger.Error().Err(err).Msgf("http server shutdown failure (cause: %s)", err)
+	}
+	if mock.tokenDir != "" {
+		os.RemoveAll(mock.tokenDir)
 	}
 	mock.stoppedWG.Wait()
 }
@@ -428,17 +456,21 @@ func (mock *mockServer) handleOAuth2Token(w http.ResponseWriter, req *http.Reque
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	token := &oauth2.Token{
-		AccessToken:  MockOAuth2AccessToken,
-		TokenType:    "bearer",
-		RefreshToken: MockOAuth2RefreshToken,
-		ExpiresIn:    time.Now().Add(60 * time.Second).Unix(),
-	}
+	token := mock.newOAuth2Token()
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(token)
 	if err != nil {
 		mock.logger.Error().Err(err).Msgf("failed to send token response (cause: %s)", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+}
+
+func (mock *mockServer) newOAuth2Token() *oauth2.Token {
+	return &oauth2.Token{
+		AccessToken:  MockOAuth2AccessToken,
+		TokenType:    "bearer",
+		RefreshToken: MockOAuth2RefreshToken,
+		ExpiresIn:    time.Now().Add(10 * time.Minute).Unix(),
 	}
 }
 

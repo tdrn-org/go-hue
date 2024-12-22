@@ -17,19 +17,14 @@
 package mock_test
 
 import (
-	"context"
-	"crypto/tls"
 	_ "embed"
-	"net/http"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/mock"
 	"github.com/tdrn-org/go-log"
-	"golang.org/x/oauth2"
 )
 
 func TestStartStop(t *testing.T) {
@@ -83,40 +78,19 @@ func TestAddressLocator(t *testing.T) {
 	require.Equal(t, len(bridges), 1)
 }
 
-func TestOAuth2Authentication(t *testing.T) {
+func TestRemoteLocator(t *testing.T) {
 	// Start mock server
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	config := oauth2.Config{
-		ClientID:     mock.MockClientId,
-		ClientSecret: mock.MockClientSecret,
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  bridgeMock.Server().JoinPath("/v2/oauth2/authorize").String(),
-			TokenURL: bridgeMock.Server().JoinPath("/v2/oauth2/token").String(),
-		},
-		RedirectURL: bridgeMock.Server().JoinPath("/authorized").String(),
-		Scopes:      []string{},
-	}
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		},
-	}
-	state := uuid.New().String()
-	authCodeURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
-	authCodeRsp, err := client.Get(authCodeURL)
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, mock.Start().TokenDir())
 	require.NoError(t, err)
-	require.Equal(t, http.StatusOK, authCodeRsp.StatusCode)
-	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, client)
-	token, err := config.Exchange(ctx, mock.MockOAuth2Code)
+	locator.EndpointUrl = bridgeMock.Server()
+	locator.InsecureSkipVerify = true
+	bridges, err := locator.Query(hue.DefaulTimeout)
 	require.NoError(t, err)
-	require.True(t, token.Valid())
-	require.Equal(t, mock.MockOAuth2AccessToken, token.AccessToken)
-	require.Equal(t, mock.MockOAuth2RefreshToken, token.RefreshToken)
+	require.Equal(t, len(bridges), 1)
 }
 
 func init() {
