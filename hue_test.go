@@ -22,10 +22,12 @@ import (
 	"os"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/hueapi"
 	"github.com/tdrn-org/go-hue/mock"
+	"github.com/tdrn-org/go-log"
 )
 
 func TestMDNSBridgeLocator(t *testing.T) {
@@ -511,4 +513,8 @@ func httpClient(insecureSkipVerify bool) *http.Client {
 			},
 		},
 	}
+}
+
+func init() {
+	log.SetLevel(zerolog.InfoLevel)
 }

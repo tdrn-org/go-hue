@@ -24,9 +24,11 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/mock"
+	"github.com/tdrn-org/go-log"
 	"golang.org/x/oauth2"
 )
 
@@ -115,4 +117,8 @@ func TestOAuth2Authentication(t *testing.T) {
 	require.True(t, token.Valid())
 	require.Equal(t, mock.MockOAuth2AccessToken, token.AccessToken)
 	require.Equal(t, mock.MockOAuth2RefreshToken, token.RefreshToken)
+}
+
+func init() {
+	log.SetLevel(zerolog.InfoLevel)
 }
