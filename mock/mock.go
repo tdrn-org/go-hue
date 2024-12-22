@@ -182,6 +182,7 @@ func (mock *mockServer) TokenDir() string {
 		if err != nil {
 			stdlog.Fatal(err)
 		}
+		mock.tokenDir = tokenDir
 	}
 	return mock.tokenDir
 }
