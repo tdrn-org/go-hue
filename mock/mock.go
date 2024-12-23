@@ -72,7 +72,7 @@ type BridgeServer interface {
 	// Server gets the base URL which can be used to build up the API URLs.
 	Server() *url.URL
 	// TokenDir gets the token directory already containing a token file suitable for accessing the mock server.
-	TokenDir() string
+	TokenFile() string
 	// Ping checks whether the mock server is up and running.
 	Ping() error
 	// Shutdown terminates the mock server gracefully.
@@ -158,7 +158,7 @@ type mockServer struct {
 	mDNSService       *dnssd.Service
 	cancelMDNSService context.CancelFunc
 	stoppedWG         sync.WaitGroup
-	tokenDir          string
+	tokenFile         string
 	logger            *zerolog.Logger
 }
 
@@ -166,8 +166,8 @@ func (mock *mockServer) Server() *url.URL {
 	return mock.server
 }
 
-func (mock *mockServer) TokenDir() string {
-	if mock.tokenDir == "" {
+func (mock *mockServer) TokenFile() string {
+	if mock.tokenFile == "" {
 		tokenDir, err := os.MkdirTemp("", "MockTokenDir")
 		if err != nil {
 			stdlog.Fatal(err)
@@ -182,9 +182,9 @@ func (mock *mockServer) TokenDir() string {
 		if err != nil {
 			stdlog.Fatal(err)
 		}
-		mock.tokenDir = tokenDir
+		mock.tokenFile = tokenFile
 	}
-	return mock.tokenDir
+	return mock.tokenFile
 }
 
 func (mock *mockServer) Ping() error {
@@ -199,8 +199,8 @@ func (mock *mockServer) Shutdown() {
 	if err != nil {
 		mock.logger.Error().Err(err).Msgf("http server shutdown failure (cause: %s)", err)
 	}
-	if mock.tokenDir != "" {
-		os.RemoveAll(mock.tokenDir)
+	if mock.tokenFile != "" {
+		os.RemoveAll(filepath.Dir(mock.tokenFile))
 	}
 	mock.stoppedWG.Wait()
 }

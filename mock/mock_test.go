@@ -84,7 +84,7 @@ func TestRemoteLocator(t *testing.T) {
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
 	// Actual test
-	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, bridgeMock.TokenDir())
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, bridgeMock.TokenFile())
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true

@@ -20,6 +20,7 @@ import (
 	"crypto/tls"
 	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/rs/zerolog"
@@ -116,17 +117,18 @@ func TestRemoteClient(t *testing.T) {
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
-	// Setup temp token dir
+	// Setup temp token file
 	tokenDir, err := os.MkdirTemp("", "TestRemoteClient")
 	require.NoError(t, err)
+	tokenFile := filepath.Join(tokenDir, "TestRemoteClient.json")
 	defer os.RemoveAll(tokenDir)
 	// Actual test
-	testRemoteClientHelper(t, bridgeMock, tokenDir)
-	testRemoteClientHelper(t, bridgeMock, tokenDir)
+	testRemoteClientHelper(t, bridgeMock, tokenFile)
+	testRemoteClientHelper(t, bridgeMock, tokenFile)
 }
 
-func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenDir string) {
-	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenDir)
+func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenFile string) {
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true

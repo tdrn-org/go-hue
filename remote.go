@@ -68,14 +68,14 @@ var remoteDefaultEndpointUrl *url.URL = safeParseUrl("https://api.meethue.com/")
 // If redirect URL is nil, a localhost based URL is created dynamically. Such dynamic redirect URLs are suitable
 // for local testing only.
 //
-// If tokenDir is not empty, it must represent a directory for storing authorization credentials. Such credentials
+// If tokenFile is not empty, it must point to a file for storing authorization credentials. Such credentials
 // are automatically restored during next start avoiding the need for a new interactive authorization workflow (unless
 // the stored credentials have not expired)
 //
 // [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 // [Remote Hue API app]: https://developers.meethue.com/my-apps/
-func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL, tokenDir string) (*RemoteBridgeLocator, error) {
-	tokenSource, err := loadRemoteTokenSource(clientId, tokenDir)
+func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *url.URL, tokenFile string) (*RemoteBridgeLocator, error) {
+	tokenSource, err := loadRemoteTokenSource(tokenFile)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ type RemoteBridgeLocator struct {
 	// disables the redirect.
 	ReferrerUrl         *url.URL
 	oauth2Callback      *remoteOauth2Callback
-	oauth2TokenSource   *persistentTokenSource
+	oauth2TokenSource   *cachedTokenSource
 	cachedOauthConfig   *oauth2.Config
 	cachedOauth2Context context.Context
 	logger              *zerolog.Logger
@@ -503,42 +503,43 @@ func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWr
 	session.handleOauth2Authorized(w, req, code)
 }
 
-func loadRemoteTokenSource(clientId string, tokenDir string) (*persistentTokenSource, error) {
-	tokenFile := ""
-	if tokenDir != "" {
-		absoluteTokenDir, err := filepath.Abs(tokenDir)
+func loadRemoteTokenSource(tokenFile string) (*cachedTokenSource, error) {
+	validatedTokenFile := ""
+	if tokenFile != "" {
+		absoluteTokenFile, err := filepath.Abs(tokenFile)
 		if err != nil {
-			return nil, fmt.Errorf("failed to resolve token directory '%s' (cause: %w)", tokenDir, err)
+			return nil, fmt.Errorf("failed to resolve token file '%s' (cause: %w)", tokenFile, err)
 		}
+		absoluteTokenDir := filepath.Dir(absoluteTokenFile)
 		err = os.MkdirAll(absoluteTokenDir, os.ModeDir|0700)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create token directory '%s' (cause: %w)", absoluteTokenDir, err)
 		}
-		tokenFile = filepath.Join(absoluteTokenDir, clientId+".json")
+		validatedTokenFile = absoluteTokenFile
 	}
-	logger := log.RootLogger().With().Str("token", tokenFile).Logger()
+	logger := log.RootLogger().With().Str("token", validatedTokenFile).Logger()
 	var cachedToken *oauth2.Token
 	var liveSource oauth2.TokenSource
-	if tokenFile != "" {
-		logger.Info().Msgf("using token file '%s'", tokenFile)
-		tokenBytes, err := os.ReadFile(tokenFile)
+	if validatedTokenFile != "" {
+		logger.Info().Msgf("using token file")
+		tokenBytes, err := os.ReadFile(validatedTokenFile)
 		if err != nil && !errors.Is(err, os.ErrNotExist) {
-			return nil, fmt.Errorf("failed to read token file '%s' (cause: %w)", tokenFile, err)
+			return nil, fmt.Errorf("failed to read token file '%s' (cause: %w)", validatedTokenFile, err)
 		}
 		if err == nil {
-			logger.Info().Msgf("reading token file '%s'...", tokenFile)
+			logger.Info().Msgf("reading token file...")
 			cachedToken = &oauth2.Token{}
 			err = json.Unmarshal(tokenBytes, cachedToken)
 			if err != nil {
-				return nil, fmt.Errorf("failed to unmarshal token file '%s' (cause: %w)", tokenFile, err)
+				return nil, fmt.Errorf("failed to unmarshal token file '%s' (cause: %w)", validatedTokenFile, err)
 			}
 			liveSource = oauth2.StaticTokenSource(cachedToken)
 		} else {
-			logger.Info().Msgf("token file '%s' not yet available", tokenFile)
+			logger.Info().Msgf("token file not yet available")
 		}
 	}
-	tokenSource := &persistentTokenSource{
-		tokenFile:   tokenFile,
+	tokenSource := &cachedTokenSource{
+		tokenFile:   validatedTokenFile,
 		cachedToken: cachedToken,
 		liveSource:  liveSource,
 		logger:      &logger,
@@ -546,14 +547,14 @@ func loadRemoteTokenSource(clientId string, tokenDir string) (*persistentTokenSo
 	return tokenSource, nil
 }
 
-type persistentTokenSource struct {
+type cachedTokenSource struct {
 	tokenFile   string
 	cachedToken *oauth2.Token
 	liveSource  oauth2.TokenSource
 	logger      *zerolog.Logger
 }
 
-func (tokenSource *persistentTokenSource) Token() (*oauth2.Token, error) {
+func (tokenSource *cachedTokenSource) Token() (*oauth2.Token, error) {
 	if tokenSource.liveSource == nil {
 		return nil, ErrNotAuthorized
 	}
@@ -578,6 +579,6 @@ func (tokenSource *persistentTokenSource) Token() (*oauth2.Token, error) {
 	return token, nil
 }
 
-func (tokenSource *persistentTokenSource) Reset(liveSource oauth2.TokenSource) {
+func (tokenSource *cachedTokenSource) Reset(liveSource oauth2.TokenSource) {
 	tokenSource.liveSource = liveSource
 }
