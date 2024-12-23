@@ -79,7 +79,7 @@ func (locator *MdnsBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error
 			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
 			return
 		}
-		locator.logger.Info().Msgf("located brige %s", bridge)
+		locator.logger.Info().Msgf("located bridge %s", bridge)
 		bridges = append(bridges, bridge)
 		if locator.Limit > 0 && len(bridges) >= locator.Limit {
 			cancel()

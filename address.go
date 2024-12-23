@@ -74,7 +74,7 @@ func (locator *AddressBridgeLocator) Lookup(bridgeId string, timeout time.Durati
 	if err != nil {
 		return nil, err
 	}
-	locator.logger.Info().Msgf("located brige %s", bridge)
+	locator.logger.Info().Msgf("located bridge %s", bridge)
 	return bridge, nil
 }
 
