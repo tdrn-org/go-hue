@@ -71,8 +71,8 @@ const MockOAuth2RefreshToken = "mockOauth2RefreshToken"
 type BridgeServer interface {
 	// Server gets the base URL which can be used to build up the API URLs.
 	Server() *url.URL
-	// TokenDir gets the token directory already containing a token file suitable for accessing the mock server.
-	TokenFile() string
+	// WriteTokenFile writes a token file suitable for authorizating towards the mock server to the given file.
+	WriteTokenFile(tokenFile string)
 	// Ping checks whether the mock server is up and running.
 	Ping() error
 	// Shutdown terminates the mock server gracefully.
@@ -158,7 +158,6 @@ type mockServer struct {
 	mDNSService       *dnssd.Service
 	cancelMDNSService context.CancelFunc
 	stoppedWG         sync.WaitGroup
-	tokenFile         string
 	logger            *zerolog.Logger
 }
 
@@ -166,25 +165,21 @@ func (mock *mockServer) Server() *url.URL {
 	return mock.server
 }
 
-func (mock *mockServer) TokenFile() string {
-	if mock.tokenFile == "" {
-		tokenDir, err := os.MkdirTemp("", "MockTokenDir")
-		if err != nil {
-			stdlog.Fatal(err)
-		}
-		tokenFile := filepath.Join(tokenDir, MockBridgeId+".json")
-		token := mock.newOAuth2Token()
-		tokenBytes, err := json.MarshalIndent(token, "", "  ")
-		if err != nil {
-			stdlog.Fatal(err)
-		}
-		err = os.WriteFile(tokenFile, tokenBytes, 0600)
-		if err != nil {
-			stdlog.Fatal(err)
-		}
-		mock.tokenFile = tokenFile
+func (mock *mockServer) WriteTokenFile(tokenFile string) {
+	tokeFileDir := filepath.Dir(tokenFile)
+	err := os.MkdirAll(tokeFileDir, 0700)
+	if err != nil {
+		stdlog.Fatal(err)
 	}
-	return mock.tokenFile
+	token := mock.newOAuth2Token()
+	tokenBytes, err := json.MarshalIndent(token, "", "  ")
+	if err != nil {
+		stdlog.Fatal(err)
+	}
+	err = os.WriteFile(tokenFile, tokenBytes, 0600)
+	if err != nil {
+		stdlog.Fatal(err)
+	}
 }
 
 func (mock *mockServer) Ping() error {
@@ -198,9 +193,6 @@ func (mock *mockServer) Shutdown() {
 	err := mock.httpServer.Shutdown(context.Background())
 	if err != nil {
 		mock.logger.Error().Err(err).Msgf("http server shutdown failure (cause: %s)", err)
-	}
-	if mock.tokenFile != "" {
-		os.RemoveAll(filepath.Dir(mock.tokenFile))
 	}
 	mock.stoppedWG.Wait()
 }

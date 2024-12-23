@@ -18,6 +18,9 @@ package mock_test
 
 import (
 	_ "embed"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/rs/zerolog"
@@ -83,8 +86,13 @@ func TestRemoteLocator(t *testing.T) {
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
 	defer bridgeMock.Shutdown()
+	// Prepare token directory
+	tokenDir, err := os.MkdirTemp("", "TestRemoteLocator")
+	require.NoError(t, err)
+	defer os.RemoveAll(tokenDir)
+	tokenFile := filepath.Join(tokenDir, mock.MockClientId, strings.ToUpper(mock.MockBridgeId)+".json")
 	// Actual test
-	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, bridgeMock.TokenFile())
+	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true

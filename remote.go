@@ -582,18 +582,26 @@ func (tokenSource *cachedTokenSource) Token() (*oauth2.Token, error) {
 	if err != nil {
 		return token, err
 	}
-	if tokenSource.tokenFile != "" {
-		if tokenSource.cachedToken == nil || tokenSource.cachedToken.AccessToken != token.AccessToken || tokenSource.cachedToken.TokenType != token.TokenType || tokenSource.cachedToken.RefreshToken != token.RefreshToken {
+	if tokenSource.cachedToken == nil || tokenSource.cachedToken.AccessToken != token.AccessToken || tokenSource.cachedToken.TokenType != token.TokenType || tokenSource.cachedToken.RefreshToken != token.RefreshToken {
+		tokenSource.cachedToken = token
+		if tokenSource.tokenFile != "" {
 			tokenSource.logger.Info().Msgf("updating token file '%s'...", tokenSource.tokenFile)
+			tokenFileDir := filepath.Dir(tokenSource.tokenFile)
+			err := os.MkdirAll(tokenFileDir, 0700)
+			if err != nil {
+				tokenSource.logger.Error().Err(err).Msgf("failed to create token directory '%s' (cause: %s)", tokenFileDir, err)
+				return token, nil
+			}
 			tokenBytes, err := json.Marshal(token)
 			if err != nil {
 				tokenSource.logger.Error().Err(err).Msgf("failed to marshal token (cause: %s)", err)
+				return token, nil
 			}
 			err = os.WriteFile(tokenSource.tokenFile, tokenBytes, 0600)
 			if err != nil {
 				tokenSource.logger.Error().Err(err).Msgf("failed to write token file '%s' (cause: %s)", tokenSource.tokenFile, err)
+				return token, nil
 			}
-			tokenSource.cachedToken = token
 		}
 	}
 	return token, nil
