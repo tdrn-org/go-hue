@@ -46,6 +46,10 @@ var ErrNotAuthorized = errors.New("authorization missing or expired")
 type RemoteSession interface {
 	// Authorized determines whether a remote authorization has been completed and is still valid (not expired).
 	Authorized() bool
+	// AuthorizationToken gets the current authorization token. The returned string can be stored to file
+	// and used to restore a restoration during a call to [NewRemoteBridgeLocator]. [ErrNotAuthorized] is returned
+	// in case there is not valid authorization in place.
+	Authorization() (string, error)
 	// AuthCodeURL gets the URL to invoke to start the [authorization workflow]. The workflow requires manual
 	// interacation (e.g. login into device account and acknowledging device access) and therefore must executed
 	// within a browser.
@@ -186,6 +190,18 @@ func (locator *RemoteBridgeLocator) Authorized() bool {
 	return token.Valid()
 }
 
+func (locator *RemoteBridgeLocator) Authorization() (string, error) {
+	token, _ := locator.oauth2TokenSource.Token()
+	if !token.Valid() {
+		return "", ErrNotAuthorized
+	}
+	tokenBytes, err := json.MarshalIndent(token, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal authorization token (cause: %w)", err)
+	}
+	return string(tokenBytes), nil
+}
+
 func (locator *RemoteBridgeLocator) AuthCodeURL() string {
 	oauth2Config := locator.oauth2Config()
 	state := remoteOauth2.authCodeState(locator)
@@ -306,6 +322,10 @@ type RemoteBridgeAuthenticator struct {
 	logger        *zerolog.Logger
 }
 
+func (authenticator *RemoteBridgeAuthenticator) Authorization() (string, error) {
+	return authenticator.remoteSession.Authorization()
+}
+
 func (authenticator *RemoteBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
 	err := authenticator.remoteSession.setAuthHeader(req)
 	if err == nil {
@@ -351,7 +371,7 @@ func (authenticator *RemoteBridgeAuthenticator) EnableLinking(bridge *Bridge) er
 		return fmt.Errorf("failed to prepare linking request (cause: %w)", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	client := authenticator.remoteSession.authHttpClient(DefaulTimeout)
+	client := authenticator.remoteSession.authHttpClient(DefaultTimeout)
 	rsp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to send enable linking request (cause: %w)", err)

@@ -46,7 +46,7 @@ var ErrNotAuthenticated = errors.New("not authenticated")
 var ErrHueAPIFailure = errors.New("api failure")
 
 // DefaultTimeout defines a suitable default for timeout related functions.
-const DefaulTimeout time.Duration = 60 * time.Second
+const DefaultTimeout time.Duration = 60 * time.Second
 
 // Bridge contains the general bridge attributes as well the [BridgeLocator] instance used to locate this bridge.
 type Bridge struct {

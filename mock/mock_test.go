@@ -46,7 +46,7 @@ func TestMDNSLocator(t *testing.T) {
 	// Actual test
 	locator := hue.NewMDNSBridgeLocator()
 	locator.Limit = 2
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.True(t, len(bridges) > 0)
 }
@@ -60,7 +60,7 @@ func TestCloudLocator(t *testing.T) {
 	locator := hue.NewCloudBridgeLocator()
 	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("discovery")
 	locator.InsecureSkipVerify = true
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
 }
@@ -73,7 +73,7 @@ func TestAddressLocator(t *testing.T) {
 	// Actual test
 	locator, err := hue.NewAddressBridgeLocator(bridgeMock.Server().Host)
 	require.NoError(t, err)
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
 }
@@ -88,7 +88,7 @@ func TestRemoteLocator(t *testing.T) {
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
 }

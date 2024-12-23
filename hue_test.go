@@ -87,11 +87,11 @@ func TestRemoteBridgeLocator(t *testing.T) {
 }
 
 func testBridgeLocator(t *testing.T, locator hue.BridgeLocator) {
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.NotNil(t, bridges)
 	require.True(t, len(bridges) > 0)
-	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaulTimeout)
+	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.NotNil(t, bridge)
 	require.Equal(t, mock.MockBridgeId, bridge.BridgeId)
@@ -105,9 +105,9 @@ func TestLocalClient(t *testing.T) {
 	// Actual test
 	locator, err := hue.NewAddressBridgeLocator(bridgeMock.Server().Host)
 	require.NoError(t, err)
-	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaulTimeout)
+	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaultTimeout)
 	require.NoError(t, err)
-	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(""), hue.DefaulTimeout)
+	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(""), hue.DefaultTimeout)
 	require.NoError(t, err)
 	testClient(t, client)
 }
@@ -123,32 +123,53 @@ func TestRemoteClient(t *testing.T) {
 	tokenFile := filepath.Join(tokenDir, "TestRemoteClient.json")
 	defer os.RemoveAll(tokenDir)
 	// Actual test
-	testRemoteClientHelper(t, bridgeMock, tokenFile)
+	authorization, err := testRemoteClientHelper(t, bridgeMock, "")
+	require.NoError(t, err)
+	err = os.WriteFile(tokenFile, []byte(authorization), 0600)
+	require.NoError(t, err)
 	testRemoteClientHelper(t, bridgeMock, tokenFile)
 }
 
-func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenFile string) {
+func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenFile string) (string, error) {
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
 	locator.InsecureSkipVerify = true
-	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaulTimeout)
+	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaultTimeout)
 	require.NoError(t, err)
-	httpClient := httpClient(true)
-	rsp, err := httpClient.Get(locator.AuthCodeURL())
-	require.NoError(t, err)
-	require.Equal(t, http.StatusOK, rsp.StatusCode)
-	authenticator := hue.NewRemoteBridgeAuthenticator(locator, "")
-	client, err := bridge.NewClient(authenticator, hue.DefaulTimeout)
-	require.NoError(t, err)
-	err = authenticator.EnableLinking(bridge)
-	require.NoError(t, err)
-	testClient(t, client)
+	var authenticator *hue.RemoteBridgeAuthenticator
+	if tokenFile == "" {
+		httpClient := httpClient(true)
+		rsp, err := httpClient.Get(locator.AuthCodeURL())
+		require.NoError(t, err)
+		require.Equal(t, http.StatusOK, rsp.StatusCode)
+		authenticator = hue.NewRemoteBridgeAuthenticator(locator, "")
+		client, err := bridge.NewClient(authenticator, hue.DefaultTimeout)
+		require.NoError(t, err)
+		err = authenticator.EnableLinking(bridge)
+		require.NoError(t, err)
+		testClientAuthentication(t, client)
+		testClientApi(t, client)
+	} else {
+		authenticator = hue.NewRemoteBridgeAuthenticator(locator, mock.MockBridgeUsername)
+		client, err := bridge.NewClient(authenticator, hue.DefaultTimeout)
+		require.NoError(t, err)
+		testClientApi(t, client)
+	}
+	return authenticator.Authorization()
 }
 
 func testClient(t *testing.T, client hue.BridgeClient) {
+	testClientAuthentication(t, client)
+	testClientApi(t, client)
+}
+
+func testClientAuthentication(t *testing.T, client hue.BridgeClient) {
 	testGetResourcesForbidden(t, client)
 	testAuthenticate(t, client)
+}
+
+func testClientApi(t *testing.T, client hue.BridgeClient) {
 	testGetResources(t, client)
 	testGetBridges(t, client)
 	testGetBridge(t, client)

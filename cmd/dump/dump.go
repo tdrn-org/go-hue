@@ -45,12 +45,12 @@ func main() {
 	if err != nil {
 		log.Fatal("locator: ", err)
 	}
-	bridges, err := locator.Query(hue.DefaulTimeout)
+	bridges, err := locator.Query(hue.DefaultTimeout)
 	if err != nil {
 		log.Fatal("query: ", err)
 	}
 	bridge := bridges[0]
-	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(authentication), hue.DefaulTimeout)
+	client, err := bridge.NewClient(hue.NewLocalBridgeAuthenticator(authentication), hue.DefaultTimeout)
 	if err != nil {
 		log.Fatal("client: ", err)
 	}
