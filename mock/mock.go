@@ -236,7 +236,6 @@ func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler.HandleFunc("GET /discovery", mock.handleDiscovery)
 	baseHandler.HandleFunc("GET /v2/oauth2/authorize", mock.handleOAuth2Authorize)
 	baseHandler.HandleFunc("POST /v2/oauth2/token", mock.handleOAuth2Token)
-	baseHandler.HandleFunc("GET /authorized", mock.handleOAuth2Callback)
 	baseHandler.HandleFunc("/", mock.handleRoute)
 	middlewares := make([]hueapi.StrictMiddlewareFunc, 0)
 	middlewares = append(middlewares, mock.logOperationMiddleware)
@@ -464,22 +463,6 @@ func (mock *mockServer) newOAuth2Token() *oauth2.Token {
 		TokenType:    "bearer",
 		RefreshToken: MockOAuth2RefreshToken,
 		ExpiresIn:    time.Now().Add(10 * time.Minute).Unix(),
-	}
-}
-
-func (mock *mockServer) handleOAuth2Callback(w http.ResponseWriter, req *http.Request) {
-	reqParams, err := url.ParseQuery(req.URL.RawQuery)
-	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to decode callback request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
-	code := reqParams.Get("code")
-	state := reqParams.Get("state")
-	if code != MockOAuth2Code || state == "" {
-		mock.logger.Error().Err(err).Msgf("invalid callback request parameters '%s'", req.URL.RawQuery)
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
 	}
 }
 
