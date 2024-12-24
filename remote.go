@@ -83,7 +83,7 @@ var remoteDefaultEndpointUrl *url.URL = safeParseUrl("https://api.meethue.com/")
 //	redirectUrl, _ := url.Parse("http://127.0.0.1:9123/authorized") // as defined in app registration
 //	locator, _ := hue.NewRemoteBridgeLocator(clientId, clientSecret, redirectUrl, "token.json")
 //	fmt.Println("Start authorization workflow in browser via: ", locator.AuthCodeURL())
-//	// After a successfull authorization workflow token.json contains a valid token for remote access
+//	// After a successful authorization workflow token.json contains a valid token for remote access
 //	bridges, _ := locator.Locate(hue.DefaultTimeout)
 //	for _, bridge := range bridges {
 //		authenticator := new hue.NewremoteAuthenticator(locator, "")
