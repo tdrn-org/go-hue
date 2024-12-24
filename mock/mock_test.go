@@ -91,6 +91,7 @@ func TestRemoteLocator(t *testing.T) {
 	require.NoError(t, err)
 	defer os.RemoveAll(tokenDir)
 	tokenFile := filepath.Join(tokenDir, mock.MockClientId, strings.ToUpper(mock.MockBridgeId)+".json")
+	bridgeMock.WriteTokenFile(tokenFile)
 	// Actual test
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
