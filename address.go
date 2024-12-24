@@ -27,6 +27,37 @@ import (
 
 // NewAddressBridgeLocator creates a new [AddressBridgeLocator] for accessing a local bridge via a [well-known address].
 //
+// Example:
+//
+//	locator, _ := hue.NewAddressBridgeLocator("196.168.1.127")
+//	bridges, _ := locator.Locate(hue.DefaultTimeout)
+//	for _, bridge := range bridges {
+//		client, _ := bridge.NewClient(new hue.NewLocalAuthenticator(""), hue.DefaultTimeout)
+//		// make sure linking button is pressed before invoking Authenticate
+//		hostname, _ := os.Hostnamee()
+//		deviceType := "MyApp#" + hostname
+//		generateClientKey := true
+//		request := hueapi.AuthenticateJSONRequestBody{
+//			Devicetype:        &deviceType,
+//			Generateclientkey: &generateClientKey,
+//		}
+//		response, _ := client.Authenticate(request)
+//		if response.response.HTTPResponse.StatusCode == http.StatusOK {
+//			success := (*rsp.JSON200)[0].Success
+//			fmt.Println("Bridge id: ", bridge.BridgeId)
+//			fmt.Println("Username: ", *rspSuccess.Username)
+//		}
+//		// Authentication username is automatically picked up by the client. All API calls are now possible.
+//		getDevicesResponse, _ := client.GetDevices()
+//	}
+//
+//	// If Bridge Id and Username are already known, this can be shortened to
+//
+//	locator, _ := hue.NewAddressBridgeLocator("196.168.1.127")
+//	bridge, _ := locator.Lookup("0123456789ABCDEF", hue.DefaultTimeout)
+//	client, _ := bridge.NewClient(hue.NewLocalAuthenticator("secret username token"), hue.DefaultTimeout)
+//	getDevicesResponse, _ := client.GetDevices()
+//
 // [well-known address]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Manual-ip
 func NewAddressBridgeLocator(address string) (*AddressBridgeLocator, error) {
 	logger := log.RootLogger().With().Str("locator", addressBridgeLocatorName).Logger()
@@ -45,7 +76,7 @@ const addressBridgeLocatorName string = "address"
 // AddressBridgeLocator locates a local bridge via a well-known address.
 //
 // Use [NewAddressBridgeLocator] to create a new instance. As this locator is looking at exactly one bridge,
-// a [BridgeLocator.Query] call will return not more than one brigde.
+// a Query call will return not more than one brigde.
 type AddressBridgeLocator struct {
 	url    *url.URL
 	logger *zerolog.Logger

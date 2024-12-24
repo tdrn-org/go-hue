@@ -33,7 +33,7 @@ import (
 	"github.com/tdrn-org/go-hue/hueapi"
 )
 
-// ErrBridgeNotAvailable indicates a bridge is currently not accessible.
+// ErrBridgeNotAvailable indicates a bridge is currently not available.
 var ErrBridgeNotAvailable = errors.New("bridge not available")
 
 // ErrBridgeClientFailure indicates a system error while invoking the bridge client.
@@ -50,7 +50,7 @@ const DefaultTimeout time.Duration = 60 * time.Second
 
 // Bridge contains the general bridge attributes as well the [BridgeLocator] instance used to locate this bridge.
 type Bridge struct {
-	// Locator refers to the [BridgeLocator] instance used to identify this bridge.
+	// Locator refers to the locator instance used to identify this bridge.
 	Locator BridgeLocator
 	// Name contains the name of the bridge.
 	Name string
@@ -86,7 +86,7 @@ type BridgeAuthenticator interface {
 	AuthenticateRequest(ctx context.Context, req *http.Request) error
 	// Authenticated is called with the response of an Authenticate API call and updates this instance's authentication credentials.
 	Authenticated(rsp *hueapi.AuthenticateResponse)
-	// Authentication returns the user name used to authenticate towards the bridge. Error [ErrNotAuthenticated] indicates, bridge access
+	// Authentication returns the user name used to authenticate towards the bridge. Error ErrNotAuthenticated indicates, bridge access
 	// has not yet been authenticated.
 	Authentication() (string, error)
 }
@@ -103,7 +103,7 @@ type BridgeLocator interface {
 	//
 	// An error is returned in case the bridge is not available.
 	Lookup(bridgeId string, timeout time.Duration) (*Bridge, error)
-	// NewClient create a new [BridgeClient] for accessing the given bridge's services.
+	// NewClient create a new bridge client for accessing the given bridge's services.
 	NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error)
 }
 
@@ -180,7 +180,7 @@ type BridgeClient interface {
 	Bridge() *Bridge
 	// Url gets URL used to access the bridge services.
 	Url() *url.URL
-	// HttpClient gets the underlying [http.Client] used to access the bridge.
+	// HttpClient gets the underlying http client used to access the bridge.
 	HttpClient() *http.Client
 	// Authenticate API call.
 	Authenticate(request hueapi.AuthenticateJSONRequestBody) (*hueapi.AuthenticateResponse, error)

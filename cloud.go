@@ -33,6 +33,37 @@ import (
 //
 // Only bridges registered in the cloud are locatable via this [BridgeLocator].
 //
+// Example:
+//
+//	locator := hue.NewCloudBridgeLocator()
+//	bridges, _ := locator.Locate(hue.DefaultTimeout)
+//	for _, bridge := range bridges {
+//		client, _ := bridge.NewClient(new hue.NewLocalAuthenticator(""), hue.DefaultTimeout)
+//		// make sure linking button is pressed before invoking Authenticate
+//		hostname, _ := os.Hostnamee()
+//		deviceType := "MyApp#" + hostname
+//		generateClientKey := true
+//		request := hueapi.AuthenticateJSONRequestBody{
+//			Devicetype:        &deviceType,
+//			Generateclientkey: &generateClientKey,
+//		}
+//		response, _ := client.Authenticate(request)
+//		if response.response.HTTPResponse.StatusCode == http.StatusOK {
+//			success := (*rsp.JSON200)[0].Success
+//			fmt.Println("Bridge id: ", bridge.BridgeId)
+//			fmt.Println("Username: ", *rspSuccess.Username)
+//		}
+//		// Authentication username is automatically picked up by the client. All API calls are now possible.
+//		getDevicesResponse, _ := client.GetDevices()
+//	}
+//
+//	// If Bridge Id and Username are already known, this can be shortened to
+//
+//	locator := hue.NewCloudBridgeLocator()
+//	bridge, _ := locator.Lookup("0123456789ABCDEF", hue.DefaultTimeout)
+//	client, _ := bridge.NewClient(hue.NewLocalAuthenticator("secret username token"), hue.DefaultTimeout)
+//	getDevicesResponse, _ := client.GetDevices()
+//
 // [Discovery endpoint]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Disocvery%20Endpoint
 func NewCloudBridgeLocator() *CloudBridgeLocator {
 	logger := log.RootLogger().With().Str("locator", cloudBridgeLocatorName).Logger()

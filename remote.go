@@ -74,7 +74,44 @@ var remoteDefaultEndpointUrl *url.URL = safeParseUrl("https://api.meethue.com/")
 //
 // If tokenFile is not empty, it must point to a file for storing authorization credentials. Such credentials
 // are automatically restored during next start avoiding the need for a new interactive authorization workflow (unless
-// the stored credentials have not expired)
+// the stored credentials have expired since last use).
+//
+// Example:
+//
+//	clientId := "..." // as defined in app registration
+//	clientSecret := "..." // as defined in app registration
+//	redirectUrl, _ := url.Parse("http://127.0.0.1:9123/authorize") // as defined in app registration
+//	locator, _ := hue.NewRemoteBridgeLocator(clientId, clientSecret, redirectUrl, "token.json")
+//	fmt.Println("Start authorization workflow in browser via: ", locator.AuthCodeURL())
+//	// After a successfull authorization workflow token.json contains a valid token for remote access
+//	bridges, _ := locator.Locate(hue.DefaultTimeout)
+//	for _, bridge := range bridges {
+//		authenticator := new hue.NewremoteAuthenticator(locator, "")
+//		client, _ := bridge.NewClient(authenticator, hue.DefaultTimeout)
+//		authenticator.EnableLinking()
+//		hostname, _ := os.Hostnamee()
+//		deviceType := "MyApp#" + hostname
+//		generateClientKey := true
+//		request := hueapi.AuthenticateJSONRequestBody{
+//			Devicetype:        &deviceType,
+//			Generateclientkey: &generateClientKey,
+//		}
+//		response, _ := client.Authenticate(request)
+//		if response.response.HTTPResponse.StatusCode == http.StatusOK {
+//			success := (*rsp.JSON200)[0].Success
+//			fmt.Println("Bridge id: ", bridge.BridgeId)
+//			fmt.Println("Username: ", *rspSuccess.Username)
+//		}
+//		// Authentication username is automatically picked up by the client. All API calls are now possible.
+//		getDevicesResponse, _ := client.GetDevices()
+//	}
+//
+//	// If Bridge Id and Username are already known and a valid token file is in place, this can be shortened to
+//
+//	locator, _ := hue.NewRemoteBridgeLocator(clientId, clientSecret, redirectUrl, "token.json")
+//	bridge, _ := locator.Lookup("0123456789ABCDEF", hue.DefaultTimeout)
+//	client, _ := bridge.NewClient(hue.NewRemoteAuthenticator(locator, "secret username token"), hue.DefaultTimeout)
+//	getDevicesResponse, _ := client.GetDevices()
 //
 // [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 // [Remote Hue API app]: https://developers.meethue.com/my-apps/
