@@ -52,7 +52,7 @@ func TestCloudBridgeLocator(t *testing.T) {
 	locator := hue.NewCloudBridgeLocator()
 	require.Equal(t, "cloud", locator.Name())
 	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("/discovery")
-	locator.InsecureSkipVerify = true
+	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
 	testBridgeLocator(t, locator)
 }
 
@@ -77,7 +77,7 @@ func TestRemoteBridgeLocator(t *testing.T) {
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, "")
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.InsecureSkipVerify = true
+	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
 	require.Equal(t, "remote", locator.Name())
 	httpClient := httpClient(true)
 	rsp, err := httpClient.Get(locator.AuthCodeURL())
@@ -134,7 +134,7 @@ func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenFil
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.InsecureSkipVerify = true
+	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
 	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaultTimeout)
 	require.NoError(t, err)
 	var authenticator *hue.RemoteBridgeAuthenticator

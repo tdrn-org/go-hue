@@ -149,9 +149,8 @@ type RemoteBridgeLocator struct {
 	//
 	// [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 	EndpointUrl *url.URL
-	// InsecureSkipVerify defines whether insecure certificates are ignored or not (default) while accessing the cloud endpoint.
-	// This may be set to true during local testing with self-signed certificates.
-	InsecureSkipVerify bool
+	// TlsConfig defines the TLS configuration to use for accessing the endpoint URL. If nil, the standard options are used.
+	TlsConfig *tls.Config
 	// ClientId defines the client id of the [Remote Hue API app] to use for remote access.
 	//
 	// [Remote Hue API app]: https://developers.meethue.com/my-apps/
@@ -258,13 +257,10 @@ func (locator *RemoteBridgeLocator) setAuthHeader(req *http.Request) error {
 }
 
 func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.Client {
-	tlsClientconfig := &tls.Config{
-		InsecureSkipVerify: locator.InsecureSkipVerify,
-	}
 	var transport http.RoundTripper
 	transport = &http.Transport{
 		ResponseHeaderTimeout: timeout,
-		TLSClientConfig:       tlsClientconfig,
+		TLSClientConfig:       locator.TlsConfig.Clone(),
 	}
 	token, _ := locator.oauth2TokenSource.Token()
 	if token.Valid() {
@@ -318,9 +314,7 @@ func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
 	if locator.cachedOauth2Context == nil {
 		client := &http.Client{
 			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: locator.InsecureSkipVerify,
-				},
+				TLSClientConfig: locator.TlsConfig.Clone(),
 			},
 		}
 		locator.cachedOauth2Context = context.WithValue(context.Background(), oauth2.HTTPClient, client)

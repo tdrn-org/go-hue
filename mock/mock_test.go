@@ -17,6 +17,7 @@
 package mock_test
 
 import (
+	"crypto/tls"
 	_ "embed"
 	"os"
 	"path/filepath"
@@ -62,7 +63,7 @@ func TestCloudLocator(t *testing.T) {
 	// Actual test
 	locator := hue.NewCloudBridgeLocator()
 	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("discovery")
-	locator.InsecureSkipVerify = true
+	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
 	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
@@ -96,7 +97,7 @@ func TestRemoteLocator(t *testing.T) {
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.InsecureSkipVerify = true
+	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
 	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)

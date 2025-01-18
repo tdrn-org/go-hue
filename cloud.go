@@ -17,6 +17,7 @@
 package hue
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net"
 	"net/url"
@@ -84,10 +85,9 @@ type CloudBridgeLocator struct {
 	// DiscoveryEndpointUrl defines the discovery endpoint URL to use. This URL defaults to https://discovery.meethue.com and may be
 	// overwritten for local testing.
 	DiscoveryEndpointUrl *url.URL
-	// InsecureSkipVerify defines whether insecure certificates are ignored or not (default) while accessing the discovery endpoint.
-	// This may be set to true during local testing with self-signed certificates.
-	InsecureSkipVerify bool
-	logger             *zerolog.Logger
+	// TlsConfig defines the TLS configuration to use for accessing the endpoint URL. If nil, the standard options are used.
+	TlsConfig *tls.Config
+	logger    *zerolog.Logger
 }
 
 func (locator *CloudBridgeLocator) Name() string {
@@ -158,7 +158,7 @@ func (locator *CloudBridgeLocator) NewClient(bridge *Bridge, authenticator Bridg
 
 func (locator *CloudBridgeLocator) queryDiscoveryEndpoint(timeout time.Duration) ([]cloudDiscoveryEndpointResponseEntry, error) {
 	response := make([]cloudDiscoveryEndpointResponseEntry, 0)
-	err := fetchJson(newDefaultClient(timeout, locator.InsecureSkipVerify), locator.DiscoveryEndpointUrl, &response)
+	err := fetchJson(newDefaultClient(timeout, locator.TlsConfig), locator.DiscoveryEndpointUrl, &response)
 	if err != nil {
 		return nil, err
 	}

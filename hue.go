@@ -160,12 +160,9 @@ func fetchJson(client *http.Client, url *url.URL, v interface{}) error {
 	return nil
 }
 
-func newDefaultClient(timeout time.Duration, skipVerify bool) *http.Client {
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: skipVerify,
-	}
+func newDefaultClient(timeout time.Duration, tlsConfig *tls.Config) *http.Client {
 	transport := &http.Transport{
-		TLSClientConfig:       tlsConfig,
+		TLSClientConfig:       tlsConfig.Clone(),
 		ResponseHeaderTimeout: timeout,
 	}
 	return &http.Client{
