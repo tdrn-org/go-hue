@@ -24,11 +24,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/mock"
-	"github.com/tdrn-org/go-log"
 )
 
 func TestStartStop(t *testing.T) {
@@ -101,8 +99,4 @@ func TestRemoteLocator(t *testing.T) {
 	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
-}
-
-func init() {
-	log.SetLevel(zerolog.InfoLevel)
 }

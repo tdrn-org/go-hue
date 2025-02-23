@@ -23,16 +23,14 @@ import (
 	_ "embed"
 	"encoding/pem"
 	"fmt"
+	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
-	stdlog "log"
-
-	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-hue/hueapi"
-	"github.com/tdrn-org/go-log"
 )
 
 // NewLocalBridgeAuthenticator creates a new [LocalBridgeAuthenticator] suitable for authenticating towards a local bridge.
@@ -42,10 +40,10 @@ import (
 //
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 func NewLocalBridgeAuthenticator(userName string) *LocalBridgeAuthenticator {
-	logger := log.RootLogger().With().Str("authenticator", "local").Logger()
+	logger := slog.With(slog.String("authenticator", "local"))
 	return &LocalBridgeAuthenticator{
 		UserName: userName,
-		logger:   &logger,
+		logger:   logger,
 	}
 }
 
@@ -58,12 +56,12 @@ type LocalBridgeAuthenticator struct {
 	//
 	// [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 	UserName string
-	logger   *zerolog.Logger
+	logger   *slog.Logger
 }
 
 func (authenticator *LocalBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
 	if authenticator.UserName != "" {
-		authenticator.logger.Debug().Msgf("authenticating request to '%s'", req.URL)
+		authenticator.logger.Debug("authenticating request", slog.Any("url", req.URL))
 		req.Header.Add(hueapi.ApplicationKeyHeader, authenticator.UserName)
 	}
 	return nil
@@ -76,10 +74,10 @@ func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.Authent
 		if rspSuccess != nil {
 			authenticator.ClientKey = *rspSuccess.Clientkey
 			authenticator.UserName = *rspSuccess.Username
-			authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+			authenticator.logger.Info("updating authentication", slog.String("client", authenticator.ClientKey))
 		}
 		if rspError != nil {
-			authenticator.logger.Warn().Msgf("authentication failed status: %d (%s)", *rspError.Type, *rspError.Description)
+			authenticator.logger.Warn("authentication failed", slog.Int("error_type", *rspError.Type), slog.String("error_description", *rspError.Description))
 		}
 	}
 }
@@ -182,11 +180,11 @@ func init() {
 func initDecodeCert(data []byte) *x509.Certificate {
 	block, rest := pem.Decode(data)
 	if block == nil || block.Type != "CERTIFICATE" || len(rest) > 0 {
-		stdlog.Fatal("invalid certificate data")
+		log.Fatal("invalid certificate data")
 	}
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
-		stdlog.Fatal(fmt.Errorf("failed to parse Hue CA certificate (cause: %w)", err))
+		log.Fatal(fmt.Errorf("failed to parse Hue CA certificate (cause: %w)", err))
 	}
 	return cert
 }

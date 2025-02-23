@@ -20,14 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/url"
 	"strconv"
 	"time"
 
 	"github.com/brutella/dnssd"
-	"github.com/rs/zerolog"
-	"github.com/tdrn-org/go-log"
 )
 
 // NewMDNSBridgeLocator creates a new [MdnsBridgeLocator] for discovering bridges via [Multicast DNS (mDNS)].
@@ -65,10 +64,10 @@ import (
 //
 // [Multicast DNS (mDNS)]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#mDNS
 func NewMDNSBridgeLocator() *MdnsBridgeLocator {
-	logger := log.RootLogger().With().Str("locator", mdnsBridgeLocatorName).Logger()
+	logger := slog.With(slog.String("locator", mdnsBridgeLocatorName))
 	return &MdnsBridgeLocator{
 		Limit:  0,
-		logger: &logger,
+		logger: logger,
 	}
 }
 
@@ -84,7 +83,7 @@ type MdnsBridgeLocator struct {
 	// As mDNS is working asynchronously, a query normally continues until the given timeout is reached. If a limit is
 	// set, a query is complete as soon as the limit is reached.
 	Limit  int
-	logger *zerolog.Logger
+	logger *slog.Logger
 }
 
 func (locator *MdnsBridgeLocator) Name() string {
@@ -94,23 +93,23 @@ func (locator *MdnsBridgeLocator) Name() string {
 const mdnsHueService string = "_hue._tcp.local."
 
 func (locator *MdnsBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error) {
-	locator.logger.Info().Msgf("discovering %s services...", mdnsHueService)
+	locator.logger.Info("discovering service...", slog.String("service", mdnsHueService))
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	bridges := make([]*Bridge, 0)
 	add := func(entry dnssd.BrowseEntry) {
-		locator.logger.Info().Msgf("detected service '%s' (%v)", entry.ServiceInstanceName(), entry.Text)
+		locator.logger.Info("detected service", slog.String("instance", entry.ServiceInstanceName()), slog.Any("text", entry.Text))
 		url, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
 		if err != nil {
-			locator.logger.Info().Err(err).Msgf("ignoring invalid service '%s'", entry.Name)
+			locator.logger.Info("ignoring invalid service", slog.String("name", entry.Name), slog.Any("err", err))
 			return
 		}
 		bridge, err := config.newBridge(locator, url)
 		if err != nil {
-			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
+			locator.logger.Info("failed to decode service", slog.String("name", entry.Name), slog.Any("err", err))
 			return
 		}
-		locator.logger.Info().Msgf("located bridge %s", bridge)
+		locator.logger.Info("located bridge", slog.Any("bridge", bridge))
 		bridges = append(bridges, bridge)
 		if locator.Limit > 0 && len(bridges) >= locator.Limit {
 			cancel()
@@ -127,27 +126,27 @@ func (locator *MdnsBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error
 }
 
 func (locator *MdnsBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	locator.logger.Info().Msgf("looking up bridge '%s' via %s service...", bridgeId, mdnsHueService)
+	locator.logger.Info("looking up bridge...", slog.String("bridge_id", bridgeId), slog.String("service", mdnsHueService))
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	var bridge *Bridge
 	add := func(entry dnssd.BrowseEntry) {
-		locator.logger.Info().Msgf("detected service '%s' (%v)", entry.ServiceInstanceName(), entry.Text)
+		locator.logger.Info("detected service", slog.String("instance", entry.ServiceInstanceName()), slog.Any("text", entry.Text))
 		serviceBridgeId := locator.browseEntryBridgeId(&entry)
 		if serviceBridgeId != bridgeId {
 			return
 		}
 		url, config, err := locator.queryAndValidateBridgeConfig(&entry, timeout)
 		if err != nil {
-			locator.logger.Info().Err(err).Msgf("ignoring invalid service '%s'", entry.Name)
+			locator.logger.Info("ignoring invalid service", slog.String("name", entry.Name), slog.Any("err", err))
 			return
 		}
 		bridge, err = config.newBridge(locator, url)
 		if err != nil {
-			locator.logger.Info().Err(err).Msgf("failed to decode service '%s'", entry.Name)
+			locator.logger.Info("failed to decode service", slog.String("name", entry.Name), slog.Any("err", err))
 			return
 		}
-		locator.logger.Info().Msgf("located bridge %s", bridge)
+		locator.logger.Info("located bridge", slog.Any("bridge", bridge))
 		cancel()
 	}
 	rmv := func(entry dnssd.BrowseEntry) {

@@ -19,15 +19,12 @@ package hue
 import (
 	"crypto/tls"
 	"fmt"
+	"log"
+	"log/slog"
 	"net"
 	"net/url"
 	"strconv"
 	"time"
-
-	stdlog "log"
-
-	"github.com/rs/zerolog"
-	"github.com/tdrn-org/go-log"
 )
 
 // NewCloudBridgeLocator creates a new [CloudBridgeLocator] for discovering local bridges via the Hue Cloud's [Discovery endpoint].
@@ -67,10 +64,10 @@ import (
 //
 // [Discovery endpoint]: https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/#Disocvery%20Endpoint
 func NewCloudBridgeLocator() *CloudBridgeLocator {
-	logger := log.RootLogger().With().Str("locator", cloudBridgeLocatorName).Logger()
+	logger := slog.With(slog.String("locator", cloudBridgeLocatorName))
 	return &CloudBridgeLocator{
 		DiscoveryEndpointUrl: cloudDefaultDiscoveryEndpointUrl,
-		logger:               &logger,
+		logger:               logger,
 	}
 }
 
@@ -87,7 +84,7 @@ type CloudBridgeLocator struct {
 	DiscoveryEndpointUrl *url.URL
 	// TlsConfig defines the TLS configuration to use for accessing the endpoint URL. If nil, the standard options are used.
 	TlsConfig *tls.Config
-	logger    *zerolog.Logger
+	logger    *slog.Logger
 }
 
 func (locator *CloudBridgeLocator) Name() string {
@@ -95,7 +92,7 @@ func (locator *CloudBridgeLocator) Name() string {
 }
 
 func (locator *CloudBridgeLocator) Query(timeout time.Duration) ([]*Bridge, error) {
-	locator.logger.Info().Msgf("discovering bridges via %s ...", locator.DiscoveryEndpointUrl)
+	locator.logger.Info("discovering bridges...", slog.Any("discovery_endpoint", locator.DiscoveryEndpointUrl))
 	discoveredEntries, err := locator.queryDiscoveryEndpoint(timeout)
 	if err != nil {
 		return nil, err
@@ -104,26 +101,26 @@ func (locator *CloudBridgeLocator) Query(timeout time.Duration) ([]*Bridge, erro
 	for _, discoveredEntry := range discoveredEntries {
 		url, err := discoveredEntry.toUrl()
 		if err != nil {
-			locator.logger.Error().Err(err).Msgf("ignoring invalid response entry '%v' (cause: %s)", discoveredEntry, err)
+			locator.logger.Error("ignoring invalid response entry", slog.Any("entry", discoveredEntry), slog.Any("err", err))
 			continue
 		}
 		config, err := queryAndValidateLocalBridgeConfig(url, discoveredEntry.Id, timeout)
 		if err != nil {
-			locator.logger.Error().Err(err).Msgf("ignoring response entry '%v' (cause: %s)", discoveredEntry, err)
+			locator.logger.Error("ignoring response entry", slog.Any("entry", discoveredEntry), slog.Any("err", err))
 			continue
 		}
 		bridge, err := config.newBridge(locator, url)
 		if err != nil {
 			return nil, err
 		}
-		locator.logger.Info().Msgf("located bridge %s", bridge)
+		locator.logger.Info("located bridge", slog.Any("bridge", bridge))
 		bridges = append(bridges, bridge)
 	}
 	return bridges, nil
 }
 
 func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
-	locator.logger.Info().Msgf("looking up bridge '%s' via %s ...", bridgeId, locator.DiscoveryEndpointUrl)
+	locator.logger.Info("looking up bridge...", slog.String("bridge_id", bridgeId), slog.Any("discovery_endpoint", locator.DiscoveryEndpointUrl))
 	discoveredEntries, err := locator.queryDiscoveryEndpoint(timeout)
 	if err != nil {
 		return nil, err
@@ -134,19 +131,19 @@ func (locator *CloudBridgeLocator) Lookup(bridgeId string, timeout time.Duration
 		}
 		url, err := discoveredEntry.toUrl()
 		if err != nil {
-			locator.logger.Info().Msgf("bridge '%s' entry not valide (cause: %s)", bridgeId, err)
+			locator.logger.Info("bridge entry not valid", slog.Any("entry", discoveredEntry), slog.Any("err", err))
 			return nil, ErrBridgeNotAvailable
 		}
 		config, err := queryAndValidateLocalBridgeConfig(url, discoveredEntry.Id, timeout)
 		if err != nil {
-			locator.logger.Info().Msgf("bridge '%s' not available (cause: %s)", bridgeId, err)
+			locator.logger.Info("bridge not available", slog.String("bridge_id", bridgeId), slog.Any("err", err))
 			return nil, ErrBridgeNotAvailable
 		}
 		bridge, err := config.newBridge(locator, url)
 		if err != nil {
 			return nil, err
 		}
-		locator.logger.Info().Msgf("located bridge %s", bridge)
+		locator.logger.Info("located bridge", slog.Any("bridge", bridge))
 		return bridge, nil
 	}
 	return nil, ErrBridgeNotAvailable
@@ -170,7 +167,7 @@ var cloudDefaultDiscoveryEndpointUrl *url.URL = initCloudDefaultDiscoveryEndpoin
 func initCloudDefaultDiscoveryEndpointUrl() *url.URL {
 	url, err := url.Parse("https://discovery.meethue.com/")
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	return url
 }

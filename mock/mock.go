@@ -24,6 +24,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/url"
@@ -33,13 +35,9 @@ import (
 	"sync"
 	"time"
 
-	stdlog "log"
-
 	"github.com/brutella/dnssd"
-	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-hue"
 	"github.com/tdrn-org/go-hue/hueapi"
-	"github.com/tdrn-org/go-log"
 	"golang.org/x/oauth2"
 )
 
@@ -86,40 +84,40 @@ type BridgeServer interface {
 func Start() BridgeServer {
 	ifaces, err := net.Interfaces()
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	bridgeInterface, err := determineBridgeInterface(ifaces)
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	httpListener, err := net.Listen("tcp", ":0")
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	address := httpListener.Addr().String()
-	logger := log.RootLogger().With().Str("bridge", address).Logger()
+	logger := slog.Default().With(slog.String("bridge", address))
 	server, err := url.Parse("https://" + address + "/")
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	mDNSServiceCtx, cancelMDNSService := context.WithCancel(context.Background())
 	mock := &mockServer{
 		server:            server,
 		httpListener:      httpListener,
 		cancelMDNSService: cancelMDNSService,
-		logger:            &logger,
+		logger:            logger,
 	}
 	mock.httpServer = mock.setupHttpServer()
 	mDNSService, err := mock.setupMDNSService(bridgeInterface)
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	mock.mDNSService = mDNSService
 	go mock.listenAndServe()
 	go mock.announceMDNSService(mDNSServiceCtx)
 	_, err = dnssd.ProbeService(context.Background(), *mock.mDNSService)
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	return mock
 }
@@ -158,7 +156,7 @@ type mockServer struct {
 	mDNSService       *dnssd.Service
 	cancelMDNSService context.CancelFunc
 	stoppedWG         sync.WaitGroup
-	logger            *zerolog.Logger
+	logger            *slog.Logger
 }
 
 func (mock *mockServer) Server() *url.URL {
@@ -169,16 +167,16 @@ func (mock *mockServer) WriteTokenFile(tokenFile string) {
 	tokeFileDir := filepath.Dir(tokenFile)
 	err := os.MkdirAll(tokeFileDir, 0700)
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	token := mock.newOAuth2Token()
 	tokenBytes, err := json.MarshalIndent(token, "", "  ")
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 	err = os.WriteFile(tokenFile, tokenBytes, 0600)
 	if err != nil {
-		stdlog.Fatal(err)
+		log.Fatal(err)
 	}
 }
 
@@ -188,11 +186,11 @@ func (mock *mockServer) Ping() error {
 }
 
 func (mock *mockServer) Shutdown() {
-	mock.logger.Info().Msg("shutting down mock server...")
+	mock.logger.Info("shutting down mock server...")
 	mock.cancelMDNSService()
 	err := mock.httpServer.Shutdown(context.Background())
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("http server shutdown failure (cause: %s)", err)
+		mock.logger.Error("http server shutdown failure", slog.Any("err", err))
 	}
 	mock.stoppedWG.Wait()
 }
@@ -267,7 +265,7 @@ func (mock *mockServer) defaultErrorHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (mock *mockServer) logOperationMiddleware(f hueapi.StrictHandlerFunc, operationID string) hueapi.StrictHandlerFunc {
-	mock.logger.Info().Msgf("mock: %s(...)", operationID)
+	mock.logger.Info("mock call", slog.String("operation", operationID))
 	return f
 }
 
@@ -292,15 +290,15 @@ func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f hueapi.S
 }
 
 func (mock *mockServer) listenAndServe() {
-	mock.logger.Info().Msg("http server starting...")
+	mock.logger.Info("http server starting...")
 	mock.stoppedWG.Add(1)
 	defer mock.stoppedWG.Done()
 	err := mock.httpServer.ServeTLS(mock.httpListener, "", "")
 	if !errors.Is(err, http.ErrServerClosed) {
-		mock.logger.Error().Err(err).Msgf("http server failure (cause: %s)", err)
+		mock.logger.Error("http server failure", slog.Any("err", err))
 		return
 	}
-	mock.logger.Info().Msg("http server stopped")
+	mock.logger.Info("http server stopped")
 }
 
 func (mock *mockServer) getServerCertificate(chi *tls.ClientHelloInfo) (*tls.Certificate, error) {
@@ -309,20 +307,20 @@ func (mock *mockServer) getServerCertificate(chi *tls.ClientHelloInfo) (*tls.Cer
 }
 
 func (mock *mockServer) announceMDNSService(ctx context.Context) {
-	mock.logger.Info().Msg("mDNS responder starting...")
+	mock.logger.Info("mDNS responder starting...")
 	mock.stoppedWG.Add(1)
 	defer mock.stoppedWG.Done()
 	responder, err := mock.setupMDNSResponder()
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to setup mDNS responder (cause: %s)", err)
+		mock.logger.Error("failed to setup mDNS responder", slog.Any("err", err))
 		return
 	}
 	err = responder.Respond(ctx)
 	if err != nil && !errors.Is(err, context.Canceled) {
-		mock.logger.Error().Err(err).Msgf("failed to run mDNS responder (cause: %s)", err)
+		mock.logger.Error("failed to run mDNS responder", slog.Any("err", err))
 		return
 	}
-	mock.logger.Info().Msg("mDNS responder stopped")
+	mock.logger.Info("mDNS responder stopped")
 }
 
 func (mock *mockServer) setupMDNSService(iface string) (*dnssd.Service, error) {
@@ -354,17 +352,18 @@ func (mock *mockServer) setupMDNSResponder() (dnssd.Responder, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to register mDNS service (cause: %w)", err)
 	}
-	mock.logger.Info().Msgf("service '%s' (%v) registered", handle.Service().ServiceInstanceName(), handle.Service().Text)
+	service := handle.Service()
+	mock.logger.Info("service registerted", slog.String("instance", service.ServiceInstanceName()), slog.Any("text", service.Text))
 	return responder, nil
 }
 
 func (mock *mockServer) handlePing(w http.ResponseWriter, req *http.Request) {
-	mock.logger.Info().Msg("/ping")
+	mock.logger.Info("/ping")
 	w.Write([]byte(MockBridgeId))
 }
 
 func (mock *mockServer) handleConfig(w http.ResponseWriter, req *http.Request) {
-	mock.logger.Info().Msg("/api/0/config")
+	mock.logger.Info("/api/0/config")
 	switch req.Method {
 	case http.MethodGet:
 		mock.handleConfigGet(w, req)
@@ -386,11 +385,11 @@ func (mock *mockServer) handleConfigPut(w http.ResponseWriter, req *http.Request
 }
 
 func (mock *mockServer) handleDiscovery(w http.ResponseWriter, req *http.Request) {
-	mock.logger.Info().Msg("/discovery")
+	mock.logger.Info("/discovery")
 	const responsePattern = `[{"id":"%s","internalipaddress":"%s","port":%d}]`
 	ip, port, err := mock.addressParts()
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to decode mock address (cause: %s)", err)
+		mock.logger.Error("failed to decode mock address", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -401,7 +400,7 @@ func (mock *mockServer) handleDiscovery(w http.ResponseWriter, req *http.Request
 func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.Request) {
 	reqParams, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to decode authorize request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
+		mock.logger.Error("failed to decode authorize request parameters", slog.String("query", req.URL.RawQuery), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -410,7 +409,7 @@ func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.R
 	state := reqParams.Get("state")
 	redirectUri := reqParams.Get("redirect_uri")
 	if clientId != MockClientId || responseType != "code" || state == "" || redirectUri == "" {
-		mock.logger.Error().Err(err).Msgf("invalid authorize request parameters '%s'", req.URL.RawQuery)
+		mock.logger.Error("invalid authorize request parameters", slog.String("query", req.URL.RawQuery))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -419,7 +418,7 @@ func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.R
 	rspParams.Add("state", state)
 	redirectUrl, err := url.Parse(redirectUri)
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("invalid redirect URI '%s' (cause: %s)", redirectUri, err)
+		mock.logger.Error("invalid redirect URI", slog.String("uri", redirectUri), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -430,13 +429,13 @@ func (mock *mockServer) handleOAuth2Authorize(w http.ResponseWriter, req *http.R
 func (mock *mockServer) handleOAuth2Token(w http.ResponseWriter, req *http.Request) {
 	authorization := req.Header.Get("Authorization")
 	if authorization != "Basic "+base64.StdEncoding.EncodeToString([]byte(MockClientId+":"+MockClientSecret)) {
-		mock.logger.Error().Msgf("missing or invalid authorization header '%s'", authorization)
+		mock.logger.Error("missing or invalid authorization header")
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 		return
 	}
 	err := req.ParseForm()
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to parse token request (cause: %s)", err)
+		mock.logger.Error("failed to parse token request", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -444,7 +443,7 @@ func (mock *mockServer) handleOAuth2Token(w http.ResponseWriter, req *http.Reque
 	code := req.FormValue("code")
 	redirectUri := req.FormValue("redirect_uri")
 	if grantType != "authorization_code" || code != MockOAuth2Code || redirectUri == "" {
-		mock.logger.Error().Err(err).Msgf("invalid token request")
+		mock.logger.Error("invalid token request")
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -452,7 +451,7 @@ func (mock *mockServer) handleOAuth2Token(w http.ResponseWriter, req *http.Reque
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(token)
 	if err != nil {
-		mock.logger.Error().Err(err).Msgf("failed to send token response (cause: %s)", err)
+		mock.logger.Error("failed to send token response", slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 }

@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/url"
@@ -33,9 +34,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/rs/zerolog"
 	"github.com/tdrn-org/go-hue/hueapi"
-	"github.com/tdrn-org/go-log"
 	"golang.org/x/oauth2"
 )
 
@@ -120,13 +119,13 @@ func NewRemoteBridgeLocator(clientId string, clientSecret string, redirectUrl *u
 	if err != nil {
 		return nil, err
 	}
-	logger := log.RootLogger().With().Str("locator", remoteBridgeLocatorName).Logger()
+	logger := slog.With(slog.String("locator", remoteBridgeLocatorName))
 	locator := &RemoteBridgeLocator{
 		EndpointUrl:       remoteDefaultEndpointUrl,
 		ClientId:          clientId,
 		ClientSecret:      clientSecret,
 		oauth2TokenSource: tokenSource,
-		logger:            &logger,
+		logger:            logger,
 	}
 	callback, err := remoteOauth2.listen(redirectUrl)
 	if err != nil {
@@ -166,7 +165,7 @@ type RemoteBridgeLocator struct {
 	oauth2TokenSource   *cachedTokenSource
 	cachedOauthConfig   *oauth2.Config
 	cachedOauth2Context context.Context
-	logger              *zerolog.Logger
+	logger              *slog.Logger
 }
 
 func (locator *RemoteBridgeLocator) Name() string {
@@ -184,7 +183,7 @@ func (locator *RemoteBridgeLocator) Query(timeout time.Duration) ([]*Bridge, err
 func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duration) (*Bridge, error) {
 	client := locator.authHttpClient(timeout)
 	url := locator.EndpointUrl.JoinPath("/route")
-	locator.logger.Info().Msgf("probing remote endpoint '%s' ...", url)
+	locator.logger.Info("probing remote endpoint...", slog.Any("url", url))
 	configUrl := configUrl(url)
 	config := &bridgeConfig{}
 	err := fetchJson(client, configUrl, config)
@@ -198,7 +197,7 @@ func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duratio
 	if err != nil {
 		return nil, err
 	}
-	locator.logger.Info().Msgf("located bridge %s", bridge)
+	locator.logger.Info("located bridge", slog.Any("bridge", bridge))
 	return bridge, nil
 }
 
@@ -283,7 +282,7 @@ func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter
 		ctx := locator.oauth2Context()
 		token, err := config.Exchange(ctx, code)
 		if err != nil {
-			locator.logger.Error().Err(err).Msgf("failed to retrieve token (cause: %s)", err)
+			locator.logger.Error("failed to retrieve token", slog.Any("err", err))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -337,11 +336,11 @@ func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
 // [Authenticate]: https://developers.meethue.com/develop/hue-api/7-configuration-api/#create-user
 // [Cloud API]: https://developers.meethue.com/develop/hue-api/remote-authentication-oauth/
 func NewRemoteBridgeAuthenticator(remoteSession RemoteSession, userName string) *RemoteBridgeAuthenticator {
-	logger := log.RootLogger().With().Str("authenticator", "remote").Logger()
+	logger := slog.With(slog.String("authenticator", "remote"))
 	return &RemoteBridgeAuthenticator{
 		remoteSession: remoteSession,
 		UserName:      userName,
-		logger:        &logger,
+		logger:        logger,
 	}
 }
 
@@ -350,7 +349,7 @@ type RemoteBridgeAuthenticator struct {
 	remoteSession RemoteSession
 	ClientKey     string
 	UserName      string
-	logger        *zerolog.Logger
+	logger        *slog.Logger
 }
 
 func (authenticator *RemoteBridgeAuthenticator) Authorization() (string, error) {
@@ -360,9 +359,9 @@ func (authenticator *RemoteBridgeAuthenticator) Authorization() (string, error) 
 func (authenticator *RemoteBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
 	err := authenticator.remoteSession.setAuthHeader(req)
 	if err == nil {
-		authenticator.logger.Debug().Msgf("authorizing remote request to '%s'", req.URL)
+		authenticator.logger.Debug("authorizing remote request", slog.Any("url", req.URL))
 		if authenticator.UserName != "" {
-			authenticator.logger.Debug().Msgf("authenticating request to '%s'", req.URL)
+			authenticator.logger.Debug("authenticating request", slog.Any("url", req.URL))
 			req.Header.Add(hueapi.ApplicationKeyHeader, authenticator.UserName)
 		}
 	}
@@ -376,10 +375,10 @@ func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.Authen
 		if rspSuccess != nil {
 			authenticator.ClientKey = *rspSuccess.Clientkey
 			authenticator.UserName = *rspSuccess.Username
-			authenticator.logger.Info().Msgf("updating authentication for client '%s'", authenticator.ClientKey)
+			authenticator.logger.Info("updating authentication", slog.String("client", authenticator.ClientKey))
 		}
 		if rspError != nil {
-			authenticator.logger.Warn().Msgf("authentication failed status: %d (%s)", *rspError.Type, *rspError.Description)
+			authenticator.logger.Warn("authentication failed", slog.Int("error_type", *rspError.Type), slog.String("error_description", *rspError.Description))
 		}
 	}
 }
@@ -435,9 +434,9 @@ type remoteOauth2State struct {
 	expiry  time.Time
 }
 
-func (callbacks *remoteOauth2Callbacks) logger(redirectUrl *url.URL) *zerolog.Logger {
-	logger := log.RootLogger().With().Str("oauth2-callback", redirectUrl.String()).Logger()
-	return &logger
+func (callbacks *remoteOauth2Callbacks) logger(redirectUrl *url.URL) *slog.Logger {
+	logger := slog.With(slog.Any("oauth2-callback", redirectUrl))
+	return logger
 }
 
 func (callbacks *remoteOauth2Callbacks) listen(redirectUrl *url.URL) (*remoteOauth2Callback, error) {
@@ -464,10 +463,10 @@ func (callbacks *remoteOauth2Callbacks) listen(redirectUrl *url.URL) (*remoteOau
 		}
 		go func() {
 			logger := callbacks.logger(listenAndRedirectUrl)
-			logger.Info().Msg("http server starting...")
+			logger.Info("http server starting...")
 			err := callback.httpServer.Serve(callback.listener)
 			if !errors.Is(err, http.ErrServerClosed) {
-				logger.Error().Err(err).Msgf("http server failure (cause: %s)", err)
+				logger.Error("http server failure", slog.Any("err", err))
 			}
 		}()
 		callbacks.entries[callbackKey] = callback
@@ -539,7 +538,7 @@ func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWr
 	logger := callbacks.logger(req.URL)
 	reqParams, err := url.ParseQuery(req.URL.RawQuery)
 	if err != nil {
-		logger.Error().Err(err).Msgf("failed to decode callback request parameters '%s' (cause: %s)", req.URL.RawQuery, err)
+		logger.Error("failed to decode callback request parameters", slog.String("query", req.URL.RawQuery), slog.Any("err", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -547,7 +546,7 @@ func (callbacks *remoteOauth2Callbacks) handleOauth2Authorized(w http.ResponseWr
 	state := reqParams.Get("state")
 	session := callbacks.stateSession(state)
 	if session == nil {
-		logger.Error().Err(err).Msgf("authorization workflow failed (callback request parameters '%s')", req.URL.RawQuery)
+		logger.Error("authorization workflow failed", slog.String("query", req.URL.RawQuery))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -568,17 +567,17 @@ func loadRemoteTokenSource(tokenFile string) (*cachedTokenSource, error) {
 		}
 		validatedTokenFile = absoluteTokenFile
 	}
-	logger := log.RootLogger().With().Str("token", validatedTokenFile).Logger()
+	logger := slog.With(slog.String("token", validatedTokenFile))
 	var cachedToken *oauth2.Token
 	var liveSource oauth2.TokenSource
 	if validatedTokenFile != "" {
-		logger.Info().Msgf("using token file")
+		logger.Info("using token file")
 		tokenBytes, err := os.ReadFile(validatedTokenFile)
 		if err != nil && !errors.Is(err, os.ErrNotExist) {
 			return nil, fmt.Errorf("failed to read token file '%s' (cause: %w)", validatedTokenFile, err)
 		}
 		if err == nil {
-			logger.Info().Msgf("reading token file...")
+			logger.Info("reading token file...")
 			cachedToken = &oauth2.Token{}
 			err = json.Unmarshal(tokenBytes, cachedToken)
 			if err != nil {
@@ -586,14 +585,14 @@ func loadRemoteTokenSource(tokenFile string) (*cachedTokenSource, error) {
 			}
 			liveSource = oauth2.StaticTokenSource(cachedToken)
 		} else {
-			logger.Info().Msgf("token file not yet available")
+			logger.Info("token file not yet available")
 		}
 	}
 	tokenSource := &cachedTokenSource{
 		tokenFile:   validatedTokenFile,
 		cachedToken: cachedToken,
 		liveSource:  liveSource,
-		logger:      &logger,
+		logger:      logger,
 	}
 	return tokenSource, nil
 }
@@ -602,7 +601,7 @@ type cachedTokenSource struct {
 	tokenFile   string
 	cachedToken *oauth2.Token
 	liveSource  oauth2.TokenSource
-	logger      *zerolog.Logger
+	logger      *slog.Logger
 }
 
 func (tokenSource *cachedTokenSource) Token() (*oauth2.Token, error) {
@@ -616,21 +615,21 @@ func (tokenSource *cachedTokenSource) Token() (*oauth2.Token, error) {
 	if tokenSource.cachedToken == nil || tokenSource.cachedToken.AccessToken != token.AccessToken || tokenSource.cachedToken.TokenType != token.TokenType || tokenSource.cachedToken.RefreshToken != token.RefreshToken {
 		tokenSource.cachedToken = token
 		if tokenSource.tokenFile != "" {
-			tokenSource.logger.Info().Msgf("updating token file '%s'...", tokenSource.tokenFile)
+			tokenSource.logger.Info("updating token file...", slog.String("file", tokenSource.tokenFile))
 			tokenFileDir := filepath.Dir(tokenSource.tokenFile)
 			err := os.MkdirAll(tokenFileDir, 0700)
 			if err != nil {
-				tokenSource.logger.Error().Err(err).Msgf("failed to create token directory '%s' (cause: %s)", tokenFileDir, err)
+				tokenSource.logger.Error("failed to create token directory", slog.String("dir", tokenFileDir), slog.Any("err", err))
 				return token, nil
 			}
 			tokenBytes, err := json.Marshal(token)
 			if err != nil {
-				tokenSource.logger.Error().Err(err).Msgf("failed to marshal token (cause: %s)", err)
+				tokenSource.logger.Error("failed to marshal token", slog.Any("err", err))
 				return token, nil
 			}
 			err = os.WriteFile(tokenSource.tokenFile, tokenBytes, 0600)
 			if err != nil {
-				tokenSource.logger.Error().Err(err).Msgf("failed to write token file '%s' (cause: %s)", tokenSource.tokenFile, err)
+				tokenSource.logger.Error("failed to write token file", slog.String("file", tokenSource.tokenFile), slog.Any("err", err))
 				return token, nil
 			}
 		}
