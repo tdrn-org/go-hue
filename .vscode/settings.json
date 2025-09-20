@@ -1,3 +1,7 @@
 {
-    "go.buildTags": "tools"
+    "go.buildTags": "tools",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "tdrn-org",
+        "projectKey": "tdrn-org_go-hue"
+    }
 }
