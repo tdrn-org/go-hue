@@ -25,7 +25,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/tdrn-org/go-hue"
-	"github.com/tdrn-org/go-hue/hueapi"
+	"github.com/tdrn-org/go-hue/api"
 	"github.com/tdrn-org/go-hue/mock"
 )
 
@@ -224,7 +224,7 @@ func testGetResourcesForbidden(t *testing.T, client hue.BridgeClient) {
 func testAuthenticate(t *testing.T, client hue.BridgeClient) {
 	deviceType := "HueTest#1"
 	generateClientKey := true
-	request := hueapi.AuthenticateJSONRequestBody{
+	request := api.AuthenticateJSONRequestBody{
 		Devicetype:        &deviceType,
 		Generateclientkey: &generateClientKey,
 	}
@@ -254,7 +254,7 @@ func testGetBridge(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateBridge(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateBridgeJSONRequestBody{}
+	body := api.UpdateBridgeJSONRequestBody{}
 	response, err := client.UpdateBridge(mock.MockBridgeId, body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -285,7 +285,7 @@ func testGetDevice(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateDevice(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateDeviceJSONRequestBody{}
+	body := api.UpdateDeviceJSONRequestBody{}
 	response, err := client.UpdateDevice("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -316,7 +316,7 @@ func testGetGroupedLight(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateGroupedLight(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateGroupedLightJSONRequestBody{}
+	body := api.UpdateGroupedLightJSONRequestBody{}
 	response, err := client.UpdateGroupedLight("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -335,7 +335,7 @@ func testGetLight(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateLight(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateLightJSONRequestBody{}
+	body := api.UpdateLightJSONRequestBody{}
 	response, err := client.UpdateLight("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -354,7 +354,7 @@ func testGetLightLevel(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateLightLevel(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateLightLevelJSONRequestBody{}
+	body := api.UpdateLightLevelJSONRequestBody{}
 	response, err := client.UpdateLightLevel("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -373,7 +373,7 @@ func testGetMotionSensor(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateMotionSensor(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateMotionSensorJSONRequestBody{}
+	body := api.UpdateMotionSensorJSONRequestBody{}
 	response, err := client.UpdateMotionSensor("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -386,7 +386,7 @@ func testGetRooms(t *testing.T, client hue.BridgeClient) {
 }
 
 func testCreateRoom(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.CreateRoomJSONRequestBody{}
+	body := api.CreateRoomJSONRequestBody{}
 	response, err := client.CreateRoom(body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -405,7 +405,7 @@ func testGetRoom(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateRoom(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateRoomJSONRequestBody{}
+	body := api.UpdateRoomJSONRequestBody{}
 	response, err := client.UpdateRoom("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -418,7 +418,7 @@ func testGetScenes(t *testing.T, client hue.BridgeClient) {
 }
 
 func testCreateScene(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.CreateSceneJSONRequestBody{}
+	body := api.CreateSceneJSONRequestBody{}
 	response, err := client.CreateScene(body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -437,7 +437,7 @@ func testGetScene(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateScene(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateSceneJSONRequestBody{}
+	body := api.UpdateSceneJSONRequestBody{}
 	response, err := client.UpdateScene("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -450,7 +450,7 @@ func testGetSmartScenes(t *testing.T, client hue.BridgeClient) {
 }
 
 func testCreateSmartScene(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.CreateSmartSceneJSONRequestBody{}
+	body := api.CreateSmartSceneJSONRequestBody{}
 	response, err := client.CreateSmartScene(body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -469,7 +469,7 @@ func testGetSmartScene(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateSmartScene(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateSmartSceneJSONRequestBody{}
+	body := api.UpdateSmartSceneJSONRequestBody{}
 	response, err := client.UpdateSmartScene("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -488,7 +488,7 @@ func testGetTemperature(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateTemperature(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateTemperatureJSONRequestBody{}
+	body := api.UpdateTemperatureJSONRequestBody{}
 	response, err := client.UpdateTemperature("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -501,7 +501,7 @@ func testGetZones(t *testing.T, client hue.BridgeClient) {
 }
 
 func testCreateZone(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.CreateZoneJSONRequestBody{}
+	body := api.CreateZoneJSONRequestBody{}
 	response, err := client.CreateZone(body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
@@ -520,7 +520,7 @@ func testGetZone(t *testing.T, client hue.BridgeClient) {
 }
 
 func testUpdateZone(t *testing.T, client hue.BridgeClient) {
-	body := hueapi.UpdateZoneJSONRequestBody{}
+	body := api.UpdateZoneJSONRequestBody{}
 	response, err := client.UpdateZone("1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)

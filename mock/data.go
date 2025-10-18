@@ -21,66 +21,66 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/tdrn-org/go-hue/hueapi"
+	"github.com/tdrn-org/go-hue/api"
 )
 
 // Data contains a Bridge's state as returned by the different Get*s API calls.
 type Data struct {
 	GetResources *struct {
-		Data   *[]hueapi.ResourceGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error       `json:"errors,omitempty"`
+		Data   *[]api.ResourceGet `json:"data,omitempty"`
+		Errors *[]api.Error       `json:"errors,omitempty"`
 	} `json:"resources"`
 	GetBridges *struct {
-		Data   *[]hueapi.BridgeGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error     `json:"errors,omitempty"`
+		Data   *[]api.BridgeGet `json:"data,omitempty"`
+		Errors *[]api.Error     `json:"errors,omitempty"`
 	} `json:"bridges"`
 	GetBridgeHomes *struct {
-		Data   *[]hueapi.BridgeHomeGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error         `json:"errors,omitempty"`
+		Data   *[]api.BridgeHomeGet `json:"data,omitempty"`
+		Errors *[]api.Error         `json:"errors,omitempty"`
 	} `json:"bridge_homes"`
 	GetDevices *struct {
-		Data   *[]hueapi.DeviceGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error     `json:"errors,omitempty"`
+		Data   *[]api.DeviceGet `json:"data,omitempty"`
+		Errors *[]api.Error     `json:"errors,omitempty"`
 	} `json:"devices"`
 	GetDevicePowers *struct {
-		Data   *[]hueapi.DevicePowerGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error          `json:"errors,omitempty"`
+		Data   *[]api.DevicePowerGet `json:"data,omitempty"`
+		Errors *[]api.Error          `json:"errors,omitempty"`
 	} `json:"device_powers"`
 	GetGroupedLights *struct {
-		Data   *[]hueapi.GroupedLightGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error           `json:"errors,omitempty"`
+		Data   *[]api.GroupedLightGet `json:"data,omitempty"`
+		Errors *[]api.Error           `json:"errors,omitempty"`
 	} `json:"grouped_lights"`
 	GetLights *struct {
-		Data   *[]hueapi.LightGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error    `json:"errors,omitempty"`
+		Data   *[]api.LightGet `json:"data,omitempty"`
+		Errors *[]api.Error    `json:"errors,omitempty"`
 	} `json:"lights"`
 	GetLightLevels *struct {
-		Data   *[]hueapi.LightLevelGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error         `json:"errors,omitempty"`
+		Data   *[]api.LightLevelGet `json:"data,omitempty"`
+		Errors *[]api.Error         `json:"errors,omitempty"`
 	} `json:"light_levels"`
 	GetMotionSensors *struct {
-		Data   *[]hueapi.MotionGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error     `json:"errors,omitempty"`
+		Data   *[]api.MotionGet `json:"data,omitempty"`
+		Errors *[]api.Error     `json:"errors,omitempty"`
 	} `json:"motion_sensors"`
 	GetRooms *struct {
-		Data   *[]hueapi.RoomGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error   `json:"errors,omitempty"`
+		Data   *[]api.RoomGet `json:"data,omitempty"`
+		Errors *[]api.Error   `json:"errors,omitempty"`
 	} `json:"rooms"`
 	GetScenes *struct {
-		Data   *[]hueapi.SceneGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error    `json:"errors,omitempty"`
+		Data   *[]api.SceneGet `json:"data,omitempty"`
+		Errors *[]api.Error    `json:"errors,omitempty"`
 	} `json:"scenes"`
 	GetSmartScenes *struct {
-		Data   *[]hueapi.SmartSceneGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error         `json:"errors,omitempty"`
+		Data   *[]api.SmartSceneGet `json:"data,omitempty"`
+		Errors *[]api.Error         `json:"errors,omitempty"`
 	} `json:"smart_scenes"`
 	GetTemperatures *struct {
-		Data   *[]hueapi.TemperatureGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error          `json:"errors,omitempty"`
+		Data   *[]api.TemperatureGet `json:"data,omitempty"`
+		Errors *[]api.Error          `json:"errors,omitempty"`
 	} `json:"temperatures"`
 	GetZones *struct {
-		Data   *[]hueapi.RoomGet `json:"data,omitempty"`
-		Errors *[]hueapi.Error   `json:"errors,omitempty"`
+		Data   *[]api.RoomGet `json:"data,omitempty"`
+		Errors *[]api.Error   `json:"errors,omitempty"`
 	} `json:"zones"`
 }
 

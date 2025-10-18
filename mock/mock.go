@@ -37,7 +37,7 @@ import (
 
 	"github.com/brutella/dnssd"
 	"github.com/tdrn-org/go-hue"
-	"github.com/tdrn-org/go-hue/hueapi"
+	"github.com/tdrn-org/go-hue/api"
 	"golang.org/x/oauth2"
 )
 
@@ -235,14 +235,14 @@ func (mock *mockServer) setupHttpServer() *http.Server {
 	baseHandler.HandleFunc("GET /v2/oauth2/authorize", mock.handleOAuth2Authorize)
 	baseHandler.HandleFunc("POST /v2/oauth2/token", mock.handleOAuth2Token)
 	baseHandler.HandleFunc("/", mock.handleRoute)
-	middlewares := make([]hueapi.StrictMiddlewareFunc, 0)
+	middlewares := make([]api.StrictMiddlewareFunc, 0)
 	middlewares = append(middlewares, mock.logOperationMiddleware)
 	middlewares = append(middlewares, mock.checkAuthorizationAndAuthenticationMiddleware)
-	strictHandler := hueapi.NewStrictHandlerWithOptions(mock, middlewares, hueapi.StrictHTTPServerOptions{
+	strictHandler := api.NewStrictHandlerWithOptions(mock, middlewares, api.StrictHTTPServerOptions{
 		RequestErrorHandlerFunc:  mock.defaultErrorHandler,
 		ResponseErrorHandlerFunc: mock.defaultErrorHandler,
 	})
-	handler := hueapi.HandlerWithOptions(strictHandler, hueapi.StdHTTPServerOptions{
+	handler := api.HandlerWithOptions(strictHandler, api.StdHTTPServerOptions{
 		BaseURL:          "",
 		BaseRouter:       baseHandler,
 		ErrorHandlerFunc: mock.defaultErrorHandler,
@@ -264,12 +264,12 @@ func (mock *mockServer) defaultErrorHandler(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusInternalServerError)
 }
 
-func (mock *mockServer) logOperationMiddleware(f hueapi.StrictHandlerFunc, operationID string) hueapi.StrictHandlerFunc {
+func (mock *mockServer) logOperationMiddleware(f api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
 	mock.logger.Info("mock call", slog.String("operation", operationID))
 	return f
 }
 
-func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f hueapi.StrictHandlerFunc, operationID string) hueapi.StrictHandlerFunc {
+func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
 	if operationID == "Authenticate" {
 		return f
 	}
@@ -281,7 +281,7 @@ func (mock *mockServer) checkAuthorizationAndAuthenticationMiddleware(f hueapi.S
 				return nil, hue.ErrNotAuthenticated
 			}
 		}
-		authentication := req.Header.Get(hueapi.ApplicationKeyHeader)
+		authentication := req.Header.Get(api.ApplicationKeyHeader)
 		if authentication != MockBridgeUsername {
 			return nil, hue.ErrNotAuthenticated
 		}
@@ -477,7 +477,7 @@ func (mock *mockServer) handleRoute(w http.ResponseWriter, req *http.Request) {
 
 // Authenticate
 // (POST /api)
-func (mock *mockServer) Authenticate(ctx context.Context, request hueapi.AuthenticateRequestObject) (hueapi.AuthenticateResponseObject, error) {
+func (mock *mockServer) Authenticate(ctx context.Context, request api.AuthenticateRequestObject) (api.AuthenticateResponseObject, error) {
 	clientkey := MockBridgeClientkey
 	username := MockBridgeUsername
 	success := &struct {
@@ -500,15 +500,15 @@ func (mock *mockServer) Authenticate(ctx context.Context, request hueapi.Authent
 	}{
 		Success: success,
 	}
-	response := hueapi.Authenticate200JSONResponse{}
+	response := api.Authenticate200JSONResponse{}
 	response = append(response, responseElement)
 	return response, nil
 }
 
 // List resources
 // (GET /clip/v2/resource)
-func (mock *mockServer) GetResources(ctx context.Context, request hueapi.GetResourcesRequestObject) (hueapi.GetResourcesResponseObject, error) {
-	response := hueapi.GetResources200JSONResponse{
+func (mock *mockServer) GetResources(ctx context.Context, request api.GetResourcesRequestObject) (api.GetResourcesResponseObject, error) {
+	response := api.GetResources200JSONResponse{
 		Data:   mockData.GetResources.Data,
 		Errors: mockData.GetResources.Errors,
 	}
@@ -517,8 +517,8 @@ func (mock *mockServer) GetResources(ctx context.Context, request hueapi.GetReso
 
 // List bridges
 // (GET /clip/v2/resource/bridge)
-func (mock *mockServer) GetBridges(ctx context.Context, request hueapi.GetBridgesRequestObject) (hueapi.GetBridgesResponseObject, error) {
-	response := hueapi.GetBridges200JSONResponse{
+func (mock *mockServer) GetBridges(ctx context.Context, request api.GetBridgesRequestObject) (api.GetBridgesResponseObject, error) {
+	response := api.GetBridges200JSONResponse{
 		Data:   mockData.GetBridges.Data,
 		Errors: mockData.GetBridges.Errors,
 	}
@@ -527,22 +527,22 @@ func (mock *mockServer) GetBridges(ctx context.Context, request hueapi.GetBridge
 
 // Get bridge
 // (GET /clip/v2/resource/bridge/{bridgeId})
-func (mock *mockServer) GetBridge(ctx context.Context, request hueapi.GetBridgeRequestObject) (hueapi.GetBridgeResponseObject, error) {
-	response := hueapi.GetBridge200JSONResponse{}
+func (mock *mockServer) GetBridge(ctx context.Context, request api.GetBridgeRequestObject) (api.GetBridgeResponseObject, error) {
+	response := api.GetBridge200JSONResponse{}
 	return response, nil
 }
 
 // Update bridge
 // (PUT /clip/v2/resource/bridge/{bridgeId})
-func (mock *mockServer) UpdateBridge(ctx context.Context, request hueapi.UpdateBridgeRequestObject) (hueapi.UpdateBridgeResponseObject, error) {
-	response := hueapi.UpdateBridge200JSONResponse{}
+func (mock *mockServer) UpdateBridge(ctx context.Context, request api.UpdateBridgeRequestObject) (api.UpdateBridgeResponseObject, error) {
+	response := api.UpdateBridge200JSONResponse{}
 	return response, nil
 }
 
 // List bridge homes.
 // (GET /clip/v2/resource/bridge_home)
-func (mock *mockServer) GetBridgeHomes(ctx context.Context, request hueapi.GetBridgeHomesRequestObject) (hueapi.GetBridgeHomesResponseObject, error) {
-	response := hueapi.GetBridgeHomes200JSONResponse{
+func (mock *mockServer) GetBridgeHomes(ctx context.Context, request api.GetBridgeHomesRequestObject) (api.GetBridgeHomesResponseObject, error) {
+	response := api.GetBridgeHomes200JSONResponse{
 		Data:   mockData.GetBridgeHomes.Data,
 		Errors: mockData.GetBridgeHomes.Errors,
 	}
@@ -551,15 +551,15 @@ func (mock *mockServer) GetBridgeHomes(ctx context.Context, request hueapi.GetBr
 
 // Get bridge home.
 // (GET /clip/v2/resource/bridge_home/{bridgeHomeId})
-func (mock *mockServer) GetBridgeHome(ctx context.Context, request hueapi.GetBridgeHomeRequestObject) (hueapi.GetBridgeHomeResponseObject, error) {
-	response := hueapi.GetBridgeHome200JSONResponse{}
+func (mock *mockServer) GetBridgeHome(ctx context.Context, request api.GetBridgeHomeRequestObject) (api.GetBridgeHomeResponseObject, error) {
+	response := api.GetBridgeHome200JSONResponse{}
 	return response, nil
 }
 
 // List devices
 // (GET /clip/v2/resource/device)
-func (mock *mockServer) GetDevices(ctx context.Context, request hueapi.GetDevicesRequestObject) (hueapi.GetDevicesResponseObject, error) {
-	response := hueapi.GetDevices200JSONResponse{
+func (mock *mockServer) GetDevices(ctx context.Context, request api.GetDevicesRequestObject) (api.GetDevicesResponseObject, error) {
+	response := api.GetDevices200JSONResponse{
 		Data:   mockData.GetDevices.Data,
 		Errors: mockData.GetDevices.Errors,
 	}
@@ -568,29 +568,29 @@ func (mock *mockServer) GetDevices(ctx context.Context, request hueapi.GetDevice
 
 // Delete Device
 // (DELETE /clip/v2/resource/device/{deviceId})
-func (mock *mockServer) DeleteDevice(ctx context.Context, request hueapi.DeleteDeviceRequestObject) (hueapi.DeleteDeviceResponseObject, error) {
-	response := hueapi.DeleteDevice200JSONResponse{}
+func (mock *mockServer) DeleteDevice(ctx context.Context, request api.DeleteDeviceRequestObject) (api.DeleteDeviceResponseObject, error) {
+	response := api.DeleteDevice200JSONResponse{}
 	return response, nil
 }
 
 // Get device
 // (GET /clip/v2/resource/device/{deviceId})
-func (mock *mockServer) GetDevice(ctx context.Context, request hueapi.GetDeviceRequestObject) (hueapi.GetDeviceResponseObject, error) {
-	response := hueapi.GetDevice200JSONResponse{}
+func (mock *mockServer) GetDevice(ctx context.Context, request api.GetDeviceRequestObject) (api.GetDeviceResponseObject, error) {
+	response := api.GetDevice200JSONResponse{}
 	return response, nil
 }
 
 // Update device
 // (PUT /clip/v2/resource/device/{deviceId})
-func (mock *mockServer) UpdateDevice(ctx context.Context, request hueapi.UpdateDeviceRequestObject) (hueapi.UpdateDeviceResponseObject, error) {
-	response := hueapi.UpdateDevice200JSONResponse{}
+func (mock *mockServer) UpdateDevice(ctx context.Context, request api.UpdateDeviceRequestObject) (api.UpdateDeviceResponseObject, error) {
+	response := api.UpdateDevice200JSONResponse{}
 	return response, nil
 }
 
 // List device powers
 // (GET /clip/v2/resource/device_power)
-func (mock *mockServer) GetDevicePowers(ctx context.Context, request hueapi.GetDevicePowersRequestObject) (hueapi.GetDevicePowersResponseObject, error) {
-	response := hueapi.GetDevicePowers200JSONResponse{
+func (mock *mockServer) GetDevicePowers(ctx context.Context, request api.GetDevicePowersRequestObject) (api.GetDevicePowersResponseObject, error) {
+	response := api.GetDevicePowers200JSONResponse{
 		Data:   mockData.GetDevicePowers.Data,
 		Errors: mockData.GetDevicePowers.Errors,
 	}
@@ -599,15 +599,15 @@ func (mock *mockServer) GetDevicePowers(ctx context.Context, request hueapi.GetD
 
 // Get device power
 // (GET /clip/v2/resource/device_power/{deviceId})
-func (mock *mockServer) GetDevicePower(ctx context.Context, request hueapi.GetDevicePowerRequestObject) (hueapi.GetDevicePowerResponseObject, error) {
-	response := hueapi.GetDevicePower200JSONResponse{}
+func (mock *mockServer) GetDevicePower(ctx context.Context, request api.GetDevicePowerRequestObject) (api.GetDevicePowerResponseObject, error) {
+	response := api.GetDevicePower200JSONResponse{}
 	return response, nil
 }
 
 // List grouped lights
 // (GET /clip/v2/resource/grouped_light)
-func (mock *mockServer) GetGroupedLights(ctx context.Context, request hueapi.GetGroupedLightsRequestObject) (hueapi.GetGroupedLightsResponseObject, error) {
-	response := hueapi.GetGroupedLights200JSONResponse{
+func (mock *mockServer) GetGroupedLights(ctx context.Context, request api.GetGroupedLightsRequestObject) (api.GetGroupedLightsResponseObject, error) {
+	response := api.GetGroupedLights200JSONResponse{
 		Data:   mockData.GetGroupedLights.Data,
 		Errors: mockData.GetGroupedLights.Errors,
 	}
@@ -616,22 +616,22 @@ func (mock *mockServer) GetGroupedLights(ctx context.Context, request hueapi.Get
 
 // Get grouped light
 // (GET /clip/v2/resource/grouped_light/{groupedLightId})
-func (mock *mockServer) GetGroupedLight(ctx context.Context, request hueapi.GetGroupedLightRequestObject) (hueapi.GetGroupedLightResponseObject, error) {
-	response := hueapi.GetGroupedLight200JSONResponse{}
+func (mock *mockServer) GetGroupedLight(ctx context.Context, request api.GetGroupedLightRequestObject) (api.GetGroupedLightResponseObject, error) {
+	response := api.GetGroupedLight200JSONResponse{}
 	return response, nil
 }
 
 // Update grouped light
 // (PUT /clip/v2/resource/grouped_light/{groupedLightId})
-func (mock *mockServer) UpdateGroupedLight(ctx context.Context, request hueapi.UpdateGroupedLightRequestObject) (hueapi.UpdateGroupedLightResponseObject, error) {
-	response := hueapi.UpdateGroupedLight200JSONResponse{}
+func (mock *mockServer) UpdateGroupedLight(ctx context.Context, request api.UpdateGroupedLightRequestObject) (api.UpdateGroupedLightResponseObject, error) {
+	response := api.UpdateGroupedLight200JSONResponse{}
 	return response, nil
 }
 
 // List lights.
 // (GET /clip/v2/resource/light)
-func (mock *mockServer) GetLights(ctx context.Context, request hueapi.GetLightsRequestObject) (hueapi.GetLightsResponseObject, error) {
-	response := hueapi.GetLights200JSONResponse{
+func (mock *mockServer) GetLights(ctx context.Context, request api.GetLightsRequestObject) (api.GetLightsResponseObject, error) {
+	response := api.GetLights200JSONResponse{
 		Data:   mockData.GetLights.Data,
 		Errors: mockData.GetLights.Errors,
 	}
@@ -640,22 +640,22 @@ func (mock *mockServer) GetLights(ctx context.Context, request hueapi.GetLightsR
 
 // Get light
 // (GET /clip/v2/resource/light/{lightId})
-func (mock *mockServer) GetLight(ctx context.Context, request hueapi.GetLightRequestObject) (hueapi.GetLightResponseObject, error) {
-	response := hueapi.GetLight200JSONResponse{}
+func (mock *mockServer) GetLight(ctx context.Context, request api.GetLightRequestObject) (api.GetLightResponseObject, error) {
+	response := api.GetLight200JSONResponse{}
 	return response, nil
 }
 
 // Update light
 // (PUT /clip/v2/resource/light/{lightId})
-func (mock *mockServer) UpdateLight(ctx context.Context, request hueapi.UpdateLightRequestObject) (hueapi.UpdateLightResponseObject, error) {
-	response := hueapi.UpdateLight200JSONResponse{}
+func (mock *mockServer) UpdateLight(ctx context.Context, request api.UpdateLightRequestObject) (api.UpdateLightResponseObject, error) {
+	response := api.UpdateLight200JSONResponse{}
 	return response, nil
 }
 
 // List light levels.
 // (GET /clip/v2/resource/light_level)
-func (mock *mockServer) GetLightLevels(ctx context.Context, request hueapi.GetLightLevelsRequestObject) (hueapi.GetLightLevelsResponseObject, error) {
-	response := hueapi.GetLightLevels200JSONResponse{
+func (mock *mockServer) GetLightLevels(ctx context.Context, request api.GetLightLevelsRequestObject) (api.GetLightLevelsResponseObject, error) {
+	response := api.GetLightLevels200JSONResponse{
 		Data:   mockData.GetLightLevels.Data,
 		Errors: mockData.GetLightLevels.Errors,
 	}
@@ -664,22 +664,22 @@ func (mock *mockServer) GetLightLevels(ctx context.Context, request hueapi.GetLi
 
 // Get light
 // (GET /clip/v2/resource/light_level/{lightId})
-func (mock *mockServer) GetLightLevel(ctx context.Context, request hueapi.GetLightLevelRequestObject) (hueapi.GetLightLevelResponseObject, error) {
-	response := hueapi.GetLightLevel200JSONResponse{}
+func (mock *mockServer) GetLightLevel(ctx context.Context, request api.GetLightLevelRequestObject) (api.GetLightLevelResponseObject, error) {
+	response := api.GetLightLevel200JSONResponse{}
 	return response, nil
 }
 
 // Update light
 // (PUT /clip/v2/resource/light_level/{lightId})
-func (mock *mockServer) UpdateLightLevel(ctx context.Context, request hueapi.UpdateLightLevelRequestObject) (hueapi.UpdateLightLevelResponseObject, error) {
-	response := hueapi.UpdateLightLevel200JSONResponse{}
+func (mock *mockServer) UpdateLightLevel(ctx context.Context, request api.UpdateLightLevelRequestObject) (api.UpdateLightLevelResponseObject, error) {
+	response := api.UpdateLightLevel200JSONResponse{}
 	return response, nil
 }
 
 // List motion sensors.
 // (GET /clip/v2/resource/motion)
-func (mock *mockServer) GetMotionSensors(ctx context.Context, request hueapi.GetMotionSensorsRequestObject) (hueapi.GetMotionSensorsResponseObject, error) {
-	response := hueapi.GetMotionSensors200JSONResponse{
+func (mock *mockServer) GetMotionSensors(ctx context.Context, request api.GetMotionSensorsRequestObject) (api.GetMotionSensorsResponseObject, error) {
+	response := api.GetMotionSensors200JSONResponse{
 		Data:   mockData.GetMotionSensors.Data,
 		Errors: mockData.GetMotionSensors.Errors,
 	}
@@ -688,22 +688,22 @@ func (mock *mockServer) GetMotionSensors(ctx context.Context, request hueapi.Get
 
 // Get motion sensor.
 // (GET /clip/v2/resource/motion/{motionId})
-func (mock *mockServer) GetMotionSensor(ctx context.Context, request hueapi.GetMotionSensorRequestObject) (hueapi.GetMotionSensorResponseObject, error) {
-	response := hueapi.GetMotionSensor200JSONResponse{}
+func (mock *mockServer) GetMotionSensor(ctx context.Context, request api.GetMotionSensorRequestObject) (api.GetMotionSensorResponseObject, error) {
+	response := api.GetMotionSensor200JSONResponse{}
 	return response, nil
 }
 
 // Update Motion Sensor
 // (PUT /clip/v2/resource/motion/{motionId})
-func (mock *mockServer) UpdateMotionSensor(ctx context.Context, request hueapi.UpdateMotionSensorRequestObject) (hueapi.UpdateMotionSensorResponseObject, error) {
-	response := hueapi.UpdateMotionSensor200JSONResponse{}
+func (mock *mockServer) UpdateMotionSensor(ctx context.Context, request api.UpdateMotionSensorRequestObject) (api.UpdateMotionSensorResponseObject, error) {
+	response := api.UpdateMotionSensor200JSONResponse{}
 	return response, nil
 }
 
 // List rooms
 // (GET /clip/v2/resource/room)
-func (mock *mockServer) GetRooms(ctx context.Context, request hueapi.GetRoomsRequestObject) (hueapi.GetRoomsResponseObject, error) {
-	response := hueapi.GetRooms200JSONResponse{
+func (mock *mockServer) GetRooms(ctx context.Context, request api.GetRoomsRequestObject) (api.GetRoomsResponseObject, error) {
+	response := api.GetRooms200JSONResponse{
 		Data:   mockData.GetRooms.Data,
 		Errors: mockData.GetRooms.Errors,
 	}
@@ -712,36 +712,36 @@ func (mock *mockServer) GetRooms(ctx context.Context, request hueapi.GetRoomsReq
 
 // Create room
 // (POST /clip/v2/resource/room)
-func (mock *mockServer) CreateRoom(ctx context.Context, request hueapi.CreateRoomRequestObject) (hueapi.CreateRoomResponseObject, error) {
-	response := hueapi.CreateRoom200JSONResponse{}
+func (mock *mockServer) CreateRoom(ctx context.Context, request api.CreateRoomRequestObject) (api.CreateRoomResponseObject, error) {
+	response := api.CreateRoom200JSONResponse{}
 	return response, nil
 }
 
 // Delete room
 // (DELETE /clip/v2/resource/room/{roomId})
-func (mock *mockServer) DeleteRoom(ctx context.Context, request hueapi.DeleteRoomRequestObject) (hueapi.DeleteRoomResponseObject, error) {
-	response := hueapi.DeleteRoom200JSONResponse{}
+func (mock *mockServer) DeleteRoom(ctx context.Context, request api.DeleteRoomRequestObject) (api.DeleteRoomResponseObject, error) {
+	response := api.DeleteRoom200JSONResponse{}
 	return response, nil
 }
 
 // Get room.
 // (GET /clip/v2/resource/room/{roomId})
-func (mock *mockServer) GetRoom(ctx context.Context, request hueapi.GetRoomRequestObject) (hueapi.GetRoomResponseObject, error) {
-	response := hueapi.GetRoom200JSONResponse{}
+func (mock *mockServer) GetRoom(ctx context.Context, request api.GetRoomRequestObject) (api.GetRoomResponseObject, error) {
+	response := api.GetRoom200JSONResponse{}
 	return response, nil
 }
 
 // Update room
 // (PUT /clip/v2/resource/room/{roomId})
-func (mock *mockServer) UpdateRoom(ctx context.Context, request hueapi.UpdateRoomRequestObject) (hueapi.UpdateRoomResponseObject, error) {
-	response := hueapi.UpdateRoom200JSONResponse{}
+func (mock *mockServer) UpdateRoom(ctx context.Context, request api.UpdateRoomRequestObject) (api.UpdateRoomResponseObject, error) {
+	response := api.UpdateRoom200JSONResponse{}
 	return response, nil
 }
 
 // List scenes
 // (GET /clip/v2/resource/scene)
-func (mock *mockServer) GetScenes(ctx context.Context, request hueapi.GetScenesRequestObject) (hueapi.GetScenesResponseObject, error) {
-	response := hueapi.GetScenes200JSONResponse{
+func (mock *mockServer) GetScenes(ctx context.Context, request api.GetScenesRequestObject) (api.GetScenesResponseObject, error) {
+	response := api.GetScenes200JSONResponse{
 		Data:   mockData.GetScenes.Data,
 		Errors: mockData.GetScenes.Errors,
 	}
@@ -750,36 +750,36 @@ func (mock *mockServer) GetScenes(ctx context.Context, request hueapi.GetScenesR
 
 // Create a new scene
 // (POST /clip/v2/resource/scene)
-func (mock *mockServer) CreateScene(ctx context.Context, request hueapi.CreateSceneRequestObject) (hueapi.CreateSceneResponseObject, error) {
-	response := hueapi.CreateScene200JSONResponse{}
+func (mock *mockServer) CreateScene(ctx context.Context, request api.CreateSceneRequestObject) (api.CreateSceneResponseObject, error) {
+	response := api.CreateScene200JSONResponse{}
 	return response, nil
 }
 
 // Delete a scene
 // (DELETE /clip/v2/resource/scene/{sceneId})
-func (mock *mockServer) DeleteScene(ctx context.Context, request hueapi.DeleteSceneRequestObject) (hueapi.DeleteSceneResponseObject, error) {
-	response := hueapi.DeleteScene200JSONResponse{}
+func (mock *mockServer) DeleteScene(ctx context.Context, request api.DeleteSceneRequestObject) (api.DeleteSceneResponseObject, error) {
+	response := api.DeleteScene200JSONResponse{}
 	return response, nil
 }
 
 // Get a scene
 // (GET /clip/v2/resource/scene/{sceneId})
-func (mock *mockServer) GetScene(ctx context.Context, request hueapi.GetSceneRequestObject) (hueapi.GetSceneResponseObject, error) {
-	response := hueapi.GetScene200JSONResponse{}
+func (mock *mockServer) GetScene(ctx context.Context, request api.GetSceneRequestObject) (api.GetSceneResponseObject, error) {
+	response := api.GetScene200JSONResponse{}
 	return response, nil
 }
 
 // Update a scene
 // (PUT /clip/v2/resource/scene/{sceneId})
-func (mock *mockServer) UpdateScene(ctx context.Context, request hueapi.UpdateSceneRequestObject) (hueapi.UpdateSceneResponseObject, error) {
-	response := hueapi.UpdateScene200JSONResponse{}
+func (mock *mockServer) UpdateScene(ctx context.Context, request api.UpdateSceneRequestObject) (api.UpdateSceneResponseObject, error) {
+	response := api.UpdateScene200JSONResponse{}
 	return response, nil
 }
 
 // List smart scenes
 // (GET /clip/v2/resource/smart_scene)
-func (mock *mockServer) GetSmartScenes(ctx context.Context, request hueapi.GetSmartScenesRequestObject) (hueapi.GetSmartScenesResponseObject, error) {
-	response := hueapi.GetSmartScenes200JSONResponse{
+func (mock *mockServer) GetSmartScenes(ctx context.Context, request api.GetSmartScenesRequestObject) (api.GetSmartScenesResponseObject, error) {
+	response := api.GetSmartScenes200JSONResponse{
 		Data:   mockData.GetSmartScenes.Data,
 		Errors: mockData.GetSmartScenes.Errors,
 	}
@@ -788,36 +788,36 @@ func (mock *mockServer) GetSmartScenes(ctx context.Context, request hueapi.GetSm
 
 // Create a new smart scene
 // (POST /clip/v2/resource/smart_scene)
-func (mock *mockServer) CreateSmartScene(ctx context.Context, request hueapi.CreateSmartSceneRequestObject) (hueapi.CreateSmartSceneResponseObject, error) {
-	response := hueapi.CreateSmartScene200JSONResponse{}
+func (mock *mockServer) CreateSmartScene(ctx context.Context, request api.CreateSmartSceneRequestObject) (api.CreateSmartSceneResponseObject, error) {
+	response := api.CreateSmartScene200JSONResponse{}
 	return response, nil
 }
 
 // Delete a smart scene
 // (DELETE /clip/v2/resource/smart_scene/{sceneId})
-func (mock *mockServer) DeleteSmartScene(ctx context.Context, request hueapi.DeleteSmartSceneRequestObject) (hueapi.DeleteSmartSceneResponseObject, error) {
-	response := hueapi.DeleteSmartScene200JSONResponse{}
+func (mock *mockServer) DeleteSmartScene(ctx context.Context, request api.DeleteSmartSceneRequestObject) (api.DeleteSmartSceneResponseObject, error) {
+	response := api.DeleteSmartScene200JSONResponse{}
 	return response, nil
 }
 
 // Get a smart scene
 // (GET /clip/v2/resource/smart_scene/{sceneId})
-func (mock *mockServer) GetSmartScene(ctx context.Context, request hueapi.GetSmartSceneRequestObject) (hueapi.GetSmartSceneResponseObject, error) {
-	response := hueapi.GetSmartScene200JSONResponse{}
+func (mock *mockServer) GetSmartScene(ctx context.Context, request api.GetSmartSceneRequestObject) (api.GetSmartSceneResponseObject, error) {
+	response := api.GetSmartScene200JSONResponse{}
 	return response, nil
 }
 
 // Update a smart scene
 // (PUT /clip/v2/resource/smart_scene/{sceneId})
-func (mock *mockServer) UpdateSmartScene(ctx context.Context, request hueapi.UpdateSmartSceneRequestObject) (hueapi.UpdateSmartSceneResponseObject, error) {
-	response := hueapi.UpdateSmartScene200JSONResponse{}
+func (mock *mockServer) UpdateSmartScene(ctx context.Context, request api.UpdateSmartSceneRequestObject) (api.UpdateSmartSceneResponseObject, error) {
+	response := api.UpdateSmartScene200JSONResponse{}
 	return response, nil
 }
 
 // List temperatures
 // (GET /clip/v2/resource/temperature)
-func (mock *mockServer) GetTemperatures(ctx context.Context, request hueapi.GetTemperaturesRequestObject) (hueapi.GetTemperaturesResponseObject, error) {
-	response := hueapi.GetTemperatures200JSONResponse{
+func (mock *mockServer) GetTemperatures(ctx context.Context, request api.GetTemperaturesRequestObject) (api.GetTemperaturesResponseObject, error) {
+	response := api.GetTemperatures200JSONResponse{
 		Data:   mockData.GetTemperatures.Data,
 		Errors: mockData.GetTemperatures.Errors,
 	}
@@ -826,22 +826,22 @@ func (mock *mockServer) GetTemperatures(ctx context.Context, request hueapi.GetT
 
 // Get temperature sensor information
 // (GET /clip/v2/resource/temperature/{temperatureId})
-func (mock *mockServer) GetTemperature(ctx context.Context, request hueapi.GetTemperatureRequestObject) (hueapi.GetTemperatureResponseObject, error) {
-	response := hueapi.GetTemperature200JSONResponse{}
+func (mock *mockServer) GetTemperature(ctx context.Context, request api.GetTemperatureRequestObject) (api.GetTemperatureResponseObject, error) {
+	response := api.GetTemperature200JSONResponse{}
 	return response, nil
 }
 
 // Update temperature sensor
 // (PUT /clip/v2/resource/temperature/{temperatureId})
-func (mock *mockServer) UpdateTemperature(ctx context.Context, request hueapi.UpdateTemperatureRequestObject) (hueapi.UpdateTemperatureResponseObject, error) {
-	response := hueapi.UpdateTemperature200JSONResponse{}
+func (mock *mockServer) UpdateTemperature(ctx context.Context, request api.UpdateTemperatureRequestObject) (api.UpdateTemperatureResponseObject, error) {
+	response := api.UpdateTemperature200JSONResponse{}
 	return response, nil
 }
 
 // List zones
 // (GET /clip/v2/resource/zone)
-func (mock *mockServer) GetZones(ctx context.Context, request hueapi.GetZonesRequestObject) (hueapi.GetZonesResponseObject, error) {
-	response := hueapi.GetZones200JSONResponse{
+func (mock *mockServer) GetZones(ctx context.Context, request api.GetZonesRequestObject) (api.GetZonesResponseObject, error) {
+	response := api.GetZones200JSONResponse{
 		Data:   mockData.GetZones.Data,
 		Errors: mockData.GetZones.Errors,
 	}
@@ -850,28 +850,28 @@ func (mock *mockServer) GetZones(ctx context.Context, request hueapi.GetZonesReq
 
 // Create zone
 // (POST /clip/v2/resource/zone)
-func (mock *mockServer) CreateZone(ctx context.Context, request hueapi.CreateZoneRequestObject) (hueapi.CreateZoneResponseObject, error) {
-	response := hueapi.CreateZone200JSONResponse{}
+func (mock *mockServer) CreateZone(ctx context.Context, request api.CreateZoneRequestObject) (api.CreateZoneResponseObject, error) {
+	response := api.CreateZone200JSONResponse{}
 	return response, nil
 }
 
 // Delete Zone
 // (DELETE /clip/v2/resource/zone/{zoneId})
-func (mock *mockServer) DeleteZone(ctx context.Context, request hueapi.DeleteZoneRequestObject) (hueapi.DeleteZoneResponseObject, error) {
-	response := hueapi.DeleteZone200JSONResponse{}
+func (mock *mockServer) DeleteZone(ctx context.Context, request api.DeleteZoneRequestObject) (api.DeleteZoneResponseObject, error) {
+	response := api.DeleteZone200JSONResponse{}
 	return response, nil
 }
 
 // Get Zone.
 // (GET /clip/v2/resource/zone/{zoneId})
-func (mock *mockServer) GetZone(ctx context.Context, request hueapi.GetZoneRequestObject) (hueapi.GetZoneResponseObject, error) {
-	response := hueapi.GetZone200JSONResponse{}
+func (mock *mockServer) GetZone(ctx context.Context, request api.GetZoneRequestObject) (api.GetZoneResponseObject, error) {
+	response := api.GetZone200JSONResponse{}
 	return response, nil
 }
 
 // Update Zone
 // (PUT /clip/v2/resource/zone/{zoneId})
-func (mock *mockServer) UpdateZone(ctx context.Context, request hueapi.UpdateZoneRequestObject) (hueapi.UpdateZoneResponseObject, error) {
-	response := hueapi.UpdateZone200JSONResponse{}
+func (mock *mockServer) UpdateZone(ctx context.Context, request api.UpdateZoneRequestObject) (api.UpdateZoneResponseObject, error) {
+	response := api.UpdateZone200JSONResponse{}
 	return response, nil
 }

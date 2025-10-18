@@ -34,7 +34,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/tdrn-org/go-hue/hueapi"
+	"github.com/tdrn-org/go-hue/api"
 	"golang.org/x/oauth2"
 )
 
@@ -91,7 +91,7 @@ var remoteDefaultEndpointUrl *url.URL = safeParseUrl("https://api.meethue.com/")
 //		hostname, _ := os.Hostnamee()
 //		deviceType := "MyApp#" + hostname
 //		generateClientKey := true
-//		request := hueapi.AuthenticateJSONRequestBody{
+//		request := api.AuthenticateJSONRequestBody{
 //			Devicetype:        &deviceType,
 //			Generateclientkey: &generateClientKey,
 //		}
@@ -203,11 +203,11 @@ func (locator *RemoteBridgeLocator) Lookup(bridgeId string, timeout time.Duratio
 
 func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
 	httpClient := locator.authHttpClient(timeout)
-	httpClientOpt := func(c *hueapi.Client) error {
+	httpClientOpt := func(c *api.Client) error {
 		c.Client = httpClient
 		return nil
 	}
-	apiClient, err := hueapi.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
+	apiClient, err := api.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
@@ -362,13 +362,13 @@ func (authenticator *RemoteBridgeAuthenticator) AuthenticateRequest(ctx context.
 		authenticator.logger.Debug("authorizing remote request", slog.Any("url", req.URL))
 		if authenticator.UserName != "" {
 			authenticator.logger.Debug("authenticating request", slog.Any("url", req.URL))
-			req.Header.Add(hueapi.ApplicationKeyHeader, authenticator.UserName)
+			req.Header.Add(api.ApplicationKeyHeader, authenticator.UserName)
 		}
 	}
 	return nil
 }
 
-func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
+func (authenticator *RemoteBridgeAuthenticator) Authenticated(rsp *api.AuthenticateResponse) {
 	if rsp.StatusCode() == http.StatusOK {
 		rspSuccess := (*rsp.JSON200)[0].Success
 		rspError := (*rsp.JSON200)[0].Error

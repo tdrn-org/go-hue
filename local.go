@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tdrn-org/go-hue/hueapi"
+	"github.com/tdrn-org/go-hue/api"
 )
 
 // NewLocalBridgeAuthenticator creates a new [LocalBridgeAuthenticator] suitable for authenticating towards a local bridge.
@@ -62,12 +62,12 @@ type LocalBridgeAuthenticator struct {
 func (authenticator *LocalBridgeAuthenticator) AuthenticateRequest(ctx context.Context, req *http.Request) error {
 	if authenticator.UserName != "" {
 		authenticator.logger.Debug("authenticating request", slog.Any("url", req.URL))
-		req.Header.Add(hueapi.ApplicationKeyHeader, authenticator.UserName)
+		req.Header.Add(api.ApplicationKeyHeader, authenticator.UserName)
 	}
 	return nil
 }
 
-func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *hueapi.AuthenticateResponse) {
+func (authenticator *LocalBridgeAuthenticator) Authenticated(rsp *api.AuthenticateResponse) {
 	if rsp.StatusCode() == http.StatusOK {
 		rspSuccess := (*rsp.JSON200)[0].Success
 		rspError := (*rsp.JSON200)[0].Error
@@ -152,11 +152,11 @@ func localBridgeHttpClient(bridgeId string, timeout time.Duration) *localBridgeC
 
 func newLocalBridgeHueClient(bridge *Bridge, authenticator BridgeAuthenticator, timeout time.Duration) (BridgeClient, error) {
 	httpClient := localBridgeHttpClient(bridge.BridgeId, timeout)
-	httpClientOpt := func(c *hueapi.Client) error {
+	httpClientOpt := func(c *api.Client) error {
 		c.Client = httpClient
 		return nil
 	}
-	apiClient, err := hueapi.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
+	apiClient, err := api.NewClientWithResponses(bridge.Url.String(), httpClientOpt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}

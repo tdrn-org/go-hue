@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hueapi
+package api
 
 //go:generate go run ../cmd/build/build.go fetch https://github.com/openhue/openhue-api/releases/download/0.17/openhue.yaml openhue.gen.yaml
 //go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=oapi-codegen-openhue.yaml openhue.gen.yaml
