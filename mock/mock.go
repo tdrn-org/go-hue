@@ -515,6 +515,74 @@ func (mock *mockServer) GetResources(ctx context.Context, request api.GetResourc
 	return response, nil
 }
 
+// List behavior instance.
+// (GET /clip/v2/resource/behavior_instance)
+func (mock *mockServer) GetBehaviorInstances(ctx context.Context, request api.GetBehaviorInstancesRequestObject) (api.GetBehaviorInstancesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get behavior instance.
+// (GET /clip/v2/resource/behavior_instance/{behaviorInstanceId})
+func (mock *mockServer) GetBehaviorInstance(ctx context.Context, request api.GetBehaviorInstanceRequestObject) (api.GetBehaviorInstanceResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update behavior instance.
+// (PUT /clip/v2/resource/behavior_instance/{behaviorInstanceId})
+func (mock *mockServer) UpdateBehaviorInstance(ctx context.Context, request api.UpdateBehaviorInstanceRequestObject) (api.UpdateBehaviorInstanceResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
+// List behavior script.
+// (GET /clip/v2/resource/behavior_script)
+func (mock *mockServer) GetBehaviorScripts(ctx context.Context, request api.GetBehaviorScriptsRequestObject) (api.GetBehaviorScriptsResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
+// Get behavior script.
+// (GET /clip/v2/resource/behavior_script/{behaviorScriptId})
+func (mock *mockServer) GetBehaviorScript(ctx context.Context, request api.GetBehaviorScriptRequestObject) (api.GetBehaviorScriptResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
+// Update behavior script.
+// (PUT /clip/v2/resource/behavior_script/{behaviorScriptId})
+func (mock *mockServer) UpdateBehaviorScript(ctx context.Context, request api.UpdateBehaviorScriptRequestObject) (api.UpdateBehaviorScriptResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
+// List bell buttons.
+// (GET /clip/v2/resource/bell_button)
+func (mock *mockServer) GetBellButtons(ctx context.Context, request api.GetBellButtonsRequestObject) (api.GetBellButtonsResponseObject, error) { //TODO
+	return nil, nil
+}
+
+// Get bell button.
+// (GET /clip/v2/resource/bell_button/{bellButtonId})
+func (mock *mockServer) GetBellButton(ctx context.Context, request api.GetBellButtonRequestObject) (api.GetBellButtonResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
+// Update bell button.
+// (PUT /clip/v2/resource/bell_button/{bellButtonId})
+func (mock *mockServer) UpdateBellButton(ctx context.Context, request api.UpdateBellButtonRequestObject) (api.UpdateBellButtonResponseObject, error) {
+	//TODO
+	return nil, nil
+
+}
+
 // List bridges
 // (GET /clip/v2/resource/bridge)
 func (mock *mockServer) GetBridges(ctx context.Context, request api.GetBridgesRequestObject) (api.GetBridgesResponseObject, error) {
@@ -554,6 +622,78 @@ func (mock *mockServer) GetBridgeHomes(ctx context.Context, request api.GetBridg
 func (mock *mockServer) GetBridgeHome(ctx context.Context, request api.GetBridgeHomeRequestObject) (api.GetBridgeHomeResponseObject, error) {
 	response := api.GetBridgeHome200JSONResponse{}
 	return response, nil
+}
+
+// List buttons.
+// (GET /clip/v2/resource/button)
+func (mock *mockServer) GetButtons(ctx context.Context, request api.GetButtonsRequestObject) (api.GetButtonsResponseObject, error) {
+	return nil, nil
+}
+
+// Get button.
+// (GET /clip/v2/resource/button/{buttonId})
+func (mock *mockServer) GetButton(ctx context.Context, request api.GetButtonRequestObject) (api.GetButtonResponseObject, error) {
+	return nil, nil
+}
+
+// Update button.
+// (PUT /clip/v2/resource/button/{buttonId})
+func (mock *mockServer) UpdateButton(ctx context.Context, request api.UpdateButtonRequestObject) (api.UpdateButtonResponseObject, error) {
+	return nil, nil
+}
+
+// List camera motion sensors.
+// (GET /clip/v2/resource/camera_motion)
+func (mock *mockServer) GetCameraMotions(ctx context.Context, request api.GetCameraMotionsRequestObject) (api.GetCameraMotionsResponseObject, error) {
+	return nil, nil
+}
+
+// Get camera motion.
+// (GET /clip/v2/resource/camera_motion/{cameraMotionId})
+func (mock *mockServer) GetCameraMotion(ctx context.Context, request api.GetCameraMotionRequestObject) (api.GetCameraMotionResponseObject, error) {
+	return nil, nil
+}
+
+// Update camera motion.
+// (PUT /clip/v2/resource/camera_motion/{cameraMotionId})
+func (mock *mockServer) UpdateCameraMotion(ctx context.Context, request api.UpdateCameraMotionRequestObject) (api.UpdateCameraMotionResponseObject, error) {
+	return nil, nil
+}
+
+// List contact sensors.
+// (GET /clip/v2/resource/contact)
+func (mock *mockServer) GetContacts(ctx context.Context, request api.GetContactsRequestObject) (api.GetContactsResponseObject, error) {
+	return nil, nil
+}
+
+// Get contact sensor.
+// (GET /clip/v2/resource/contact/{contactId})
+func (mock *mockServer) GetContact(ctx context.Context, request api.GetContactRequestObject) (api.GetContactResponseObject, error) {
+	return nil, nil
+}
+
+// Update contact sensor.
+// (PUT /clip/v2/resource/contact/{contactId})
+func (mock *mockServer) UpdateContact(ctx context.Context, request api.UpdateContactRequestObject) (api.UpdateContactResponseObject, error) {
+	return nil, nil
+}
+
+// List convenience area motion sensors.
+// (GET /clip/v2/resource/convenience_area_motion)
+func (mock *mockServer) GetConvenienceAreaMotions(ctx context.Context, request api.GetConvenienceAreaMotionsRequestObject) (api.GetConvenienceAreaMotionsResponseObject, error) {
+	return nil, nil
+}
+
+// Get convenience area motion.
+// (GET /clip/v2/resource/convenience_area_motion/{convenienceAreaMotionId})
+func (mock *mockServer) GetConvenienceAreaMotion(ctx context.Context, request api.GetConvenienceAreaMotionRequestObject) (api.GetConvenienceAreaMotionResponseObject, error) {
+	return nil, nil
+}
+
+// Update convenience area motion.
+// (PUT /clip/v2/resource/convenience_area_motion/{convenienceAreaMotionId})
+func (mock *mockServer) UpdateConvenienceAreaMotion(ctx context.Context, request api.UpdateConvenienceAreaMotionRequestObject) (api.UpdateConvenienceAreaMotionResponseObject, error) {
+	return nil, nil
 }
 
 // List devices
@@ -604,6 +744,111 @@ func (mock *mockServer) GetDevicePower(ctx context.Context, request api.GetDevic
 	return response, nil
 }
 
+// List device software update.
+// (GET /clip/v2/resource/device_software_update)
+func (mock *mockServer) GetDeviceSoftwareUpdates(ctx context.Context, request api.GetDeviceSoftwareUpdatesRequestObject) (api.GetDeviceSoftwareUpdatesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get device software update.
+// (GET /clip/v2/resource/device_software_update/{deviceSoftwareUpdateId})
+func (mock *mockServer) GetDeviceSoftwareUpdate(ctx context.Context, request api.GetDeviceSoftwareUpdateRequestObject) (api.GetDeviceSoftwareUpdateResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update device software update.
+// (PUT /clip/v2/resource/device_software_update/{deviceSoftwareUpdateId})
+func (mock *mockServer) UpdateDeviceSoftwareUpdate(ctx context.Context, request api.UpdateDeviceSoftwareUpdateRequestObject) (api.UpdateDeviceSoftwareUpdateResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List entertainment.
+// (GET /clip/v2/resource/entertainment)
+func (mock *mockServer) GetEntertainments(ctx context.Context, request api.GetEntertainmentsRequestObject) (api.GetEntertainmentsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get entertainment.
+// (GET /clip/v2/resource/entertainment/{entertainmentId})
+func (mock *mockServer) GetEntertainment(ctx context.Context, request api.GetEntertainmentRequestObject) (api.GetEntertainmentResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update entertainment.
+// (PUT /clip/v2/resource/entertainment/{entertainmentId})
+func (mock *mockServer) UpdateEntertainment(ctx context.Context, request api.UpdateEntertainmentRequestObject) (api.UpdateEntertainmentResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List entertainment configuration.
+// (GET /clip/v2/resource/entertainment_configuration)
+func (mock *mockServer) GetEntertainmentConfigurations(ctx context.Context, request api.GetEntertainmentConfigurationsRequestObject) (api.GetEntertainmentConfigurationsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get entertainment configuration.
+// (GET /clip/v2/resource/entertainment_configuration/{entertainmentConfigurationId})
+func (mock *mockServer) GetEntertainmentConfiguration(ctx context.Context, request api.GetEntertainmentConfigurationRequestObject) (api.GetEntertainmentConfigurationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update entertainment configuration.
+// (PUT /clip/v2/resource/entertainment_configuration/{entertainmentConfigurationId})
+func (mock *mockServer) UpdateEntertainmentConfiguration(ctx context.Context, request api.UpdateEntertainmentConfigurationRequestObject) (api.UpdateEntertainmentConfigurationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List geofence client.
+// (GET /clip/v2/resource/geofence_client)
+func (mock *mockServer) GetGeofenceClients(ctx context.Context, request api.GetGeofenceClientsRequestObject) (api.GetGeofenceClientsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get geofence client.
+// (GET /clip/v2/resource/geofence_client/{geofenceClientId})
+func (mock *mockServer) GetGeofenceClient(ctx context.Context, request api.GetGeofenceClientRequestObject) (api.GetGeofenceClientResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update geofence client.
+// (PUT /clip/v2/resource/geofence_client/{geofenceClientId})
+func (mock *mockServer) UpdateGeofenceClient(ctx context.Context, request api.UpdateGeofenceClientRequestObject) (api.UpdateGeofenceClientResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List geolocation.
+// (GET /clip/v2/resource/geolocation)
+func (mock *mockServer) GetGeolocations(ctx context.Context, request api.GetGeolocationsRequestObject) (api.GetGeolocationsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get geolocation.
+// (GET /clip/v2/resource/geolocation/{geolocationId})
+func (mock *mockServer) GetGeolocation(ctx context.Context, request api.GetGeolocationRequestObject) (api.GetGeolocationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update geolocation.
+// (PUT /clip/v2/resource/geolocation/{geolocationId})
+func (mock *mockServer) UpdateGeolocation(ctx context.Context, request api.UpdateGeolocationRequestObject) (api.UpdateGeolocationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
 // List grouped lights
 // (GET /clip/v2/resource/grouped_light)
 func (mock *mockServer) GetGroupedLights(ctx context.Context, request api.GetGroupedLightsRequestObject) (api.GetGroupedLightsResponseObject, error) {
@@ -626,6 +871,69 @@ func (mock *mockServer) GetGroupedLight(ctx context.Context, request api.GetGrou
 func (mock *mockServer) UpdateGroupedLight(ctx context.Context, request api.UpdateGroupedLightRequestObject) (api.UpdateGroupedLightResponseObject, error) {
 	response := api.UpdateGroupedLight200JSONResponse{}
 	return response, nil
+}
+
+// List grouped light level sensors.
+// (GET /clip/v2/resource/grouped_light_level)
+func (mock *mockServer) GetGroupedLightLevels(ctx context.Context, request api.GetGroupedLightLevelsRequestObject) (api.GetGroupedLightLevelsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get grouped light level.
+// (GET /clip/v2/resource/grouped_light_level/{groupedLightLevelId})
+func (mock *mockServer) GetGroupedLightLevel(ctx context.Context, request api.GetGroupedLightLevelRequestObject) (api.GetGroupedLightLevelResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update grouped light level.
+// (PUT /clip/v2/resource/grouped_light_level/{groupedLightLevelId})
+func (mock *mockServer) UpdateGroupedLightLevel(ctx context.Context, request api.UpdateGroupedLightLevelRequestObject) (api.UpdateGroupedLightLevelResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List grouped motion sensors.
+// (GET /clip/v2/resource/grouped_motion)
+func (mock *mockServer) GetGroupedMotions(ctx context.Context, request api.GetGroupedMotionsRequestObject) (api.GetGroupedMotionsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get grouped motion.
+// (GET /clip/v2/resource/grouped_motion/{groupedMotionId})
+func (mock *mockServer) GetGroupedMotion(ctx context.Context, request api.GetGroupedMotionRequestObject) (api.GetGroupedMotionResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update grouped motion.
+// (PUT /clip/v2/resource/grouped_motion/{groupedMotionId})
+func (mock *mockServer) UpdateGroupedMotion(ctx context.Context, request api.UpdateGroupedMotionRequestObject) (api.UpdateGroupedMotionResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List HomeKit.
+// (GET /clip/v2/resource/homekit)
+func (mock *mockServer) GetHomekits(ctx context.Context, request api.GetHomekitsRequestObject) (api.GetHomekitsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get homekit.
+// (GET /clip/v2/resource/homekit/{homekitId})
+func (mock *mockServer) GetHomekit(ctx context.Context, request api.GetHomekitRequestObject) (api.GetHomekitResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update homekit.
+// (PUT /clip/v2/resource/homekit/{homekitId})
+func (mock *mockServer) UpdateHomekit(ctx context.Context, request api.UpdateHomekitRequestObject) (api.UpdateHomekitResponseObject, error) {
+	//TODO
+	return nil, nil
 }
 
 // List lights.
@@ -676,6 +984,48 @@ func (mock *mockServer) UpdateLightLevel(ctx context.Context, request api.Update
 	return response, nil
 }
 
+// List Matter.
+// (GET /clip/v2/resource/matter)
+func (mock *mockServer) GetMatters(ctx context.Context, request api.GetMattersRequestObject) (api.GetMattersResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get matter.
+// (GET /clip/v2/resource/matter/{matterId})
+func (mock *mockServer) GetMatter(ctx context.Context, request api.GetMatterRequestObject) (api.GetMatterResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update matter.
+// (PUT /clip/v2/resource/matter/{matterId})
+func (mock *mockServer) UpdateMatter(ctx context.Context, request api.UpdateMatterRequestObject) (api.UpdateMatterResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List Matter fabric.
+// (GET /clip/v2/resource/matter_fabric)
+func (mock *mockServer) GetMatterFabrics(ctx context.Context, request api.GetMatterFabricsRequestObject) (api.GetMatterFabricsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get matter fabric.
+// (GET /clip/v2/resource/matter_fabric/{matterFabricId})
+func (mock *mockServer) GetMatterFabric(ctx context.Context, request api.GetMatterFabricRequestObject) (api.GetMatterFabricResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update matter fabric.
+// (PUT /clip/v2/resource/matter_fabric/{matterFabricId})
+func (mock *mockServer) UpdateMatterFabric(ctx context.Context, request api.UpdateMatterFabricRequestObject) (api.UpdateMatterFabricResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
 // List motion sensors.
 // (GET /clip/v2/resource/motion)
 func (mock *mockServer) GetMotionSensors(ctx context.Context, request api.GetMotionSensorsRequestObject) (api.GetMotionSensorsResponseObject, error) {
@@ -698,6 +1048,69 @@ func (mock *mockServer) GetMotionSensor(ctx context.Context, request api.GetMoti
 func (mock *mockServer) UpdateMotionSensor(ctx context.Context, request api.UpdateMotionSensorRequestObject) (api.UpdateMotionSensorResponseObject, error) {
 	response := api.UpdateMotionSensor200JSONResponse{}
 	return response, nil
+}
+
+// List motion area candidates.
+// (GET /clip/v2/resource/motion_area_candidate)
+func (mock *mockServer) GetMotionAreaCandidates(ctx context.Context, request api.GetMotionAreaCandidatesRequestObject) (api.GetMotionAreaCandidatesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get motion area candidate.
+// (GET /clip/v2/resource/motion_area_candidate/{motionAreaCandidateId})
+func (mock *mockServer) GetMotionAreaCandidate(ctx context.Context, request api.GetMotionAreaCandidateRequestObject) (api.GetMotionAreaCandidateResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update motion area candidate.
+// (PUT /clip/v2/resource/motion_area_candidate/{motionAreaCandidateId})
+func (mock *mockServer) UpdateMotionAreaCandidate(ctx context.Context, request api.UpdateMotionAreaCandidateRequestObject) (api.UpdateMotionAreaCandidateResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List motion area configurations.
+// (GET /clip/v2/resource/motion_area_configuration)
+func (mock *mockServer) GetMotionAreaConfigurations(ctx context.Context, request api.GetMotionAreaConfigurationsRequestObject) (api.GetMotionAreaConfigurationsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get motion area configuration.
+// (GET /clip/v2/resource/motion_area_configuration/{motionAreaConfigurationId})
+func (mock *mockServer) GetMotionAreaConfiguration(ctx context.Context, request api.GetMotionAreaConfigurationRequestObject) (api.GetMotionAreaConfigurationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update motion area configuration.
+// (PUT /clip/v2/resource/motion_area_configuration/{motionAreaConfigurationId})
+func (mock *mockServer) UpdateMotionAreaConfiguration(ctx context.Context, request api.UpdateMotionAreaConfigurationRequestObject) (api.UpdateMotionAreaConfigurationResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List relative rotary controls.
+// (GET /clip/v2/resource/relative_rotary)
+func (mock *mockServer) GetRelativeRotaries(ctx context.Context, request api.GetRelativeRotariesRequestObject) (api.GetRelativeRotariesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get relative rotary.
+// (GET /clip/v2/resource/relative_rotary/{relativeRotaryId})
+func (mock *mockServer) GetRelativeRotary(ctx context.Context, request api.GetRelativeRotaryRequestObject) (api.GetRelativeRotaryResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update relative rotary.
+// (PUT /clip/v2/resource/relative_rotary/{relativeRotaryId})
+func (mock *mockServer) UpdateRelativeRotary(ctx context.Context, request api.UpdateRelativeRotaryRequestObject) (api.UpdateRelativeRotaryResponseObject, error) {
+	//TODO
+	return nil, nil
 }
 
 // List rooms
@@ -776,6 +1189,48 @@ func (mock *mockServer) UpdateScene(ctx context.Context, request api.UpdateScene
 	return response, nil
 }
 
+// List security area motion sensors.
+// (GET /clip/v2/resource/security_area_motion)
+func (mock *mockServer) GetSecurityAreaMotions(ctx context.Context, request api.GetSecurityAreaMotionsRequestObject) (api.GetSecurityAreaMotionsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get security area motion.
+// (GET /clip/v2/resource/security_area_motion/{securityAreaMotionId})
+func (mock *mockServer) GetSecurityAreaMotion(ctx context.Context, request api.GetSecurityAreaMotionRequestObject) (api.GetSecurityAreaMotionResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update security area motion.
+// (PUT /clip/v2/resource/security_area_motion/{securityAreaMotionId})
+func (mock *mockServer) UpdateSecurityAreaMotion(ctx context.Context, request api.UpdateSecurityAreaMotionRequestObject) (api.UpdateSecurityAreaMotionResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List service group.
+// (GET /clip/v2/resource/service_group)
+func (mock *mockServer) GetServiceGroups(ctx context.Context, request api.GetServiceGroupsRequestObject) (api.GetServiceGroupsResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get service group.
+// (GET /clip/v2/resource/service_group/{serviceGroupId})
+func (mock *mockServer) GetServiceGroup(ctx context.Context, request api.GetServiceGroupRequestObject) (api.GetServiceGroupResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update service group.
+// (PUT /clip/v2/resource/service_group/{serviceGroupId})
+func (mock *mockServer) UpdateServiceGroup(ctx context.Context, request api.UpdateServiceGroupRequestObject) (api.UpdateServiceGroupResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
 // List smart scenes
 // (GET /clip/v2/resource/smart_scene)
 func (mock *mockServer) GetSmartScenes(ctx context.Context, request api.GetSmartScenesRequestObject) (api.GetSmartScenesResponseObject, error) {
@@ -814,6 +1269,48 @@ func (mock *mockServer) UpdateSmartScene(ctx context.Context, request api.Update
 	return response, nil
 }
 
+// List speaker.
+// (GET /clip/v2/resource/speaker)
+func (mock *mockServer) GetSpeakers(ctx context.Context, request api.GetSpeakersRequestObject) (api.GetSpeakersResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get speaker.
+// (GET /clip/v2/resource/speaker/{speakerId})
+func (mock *mockServer) GetSpeaker(ctx context.Context, request api.GetSpeakerRequestObject) (api.GetSpeakerResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update speaker.
+// (PUT /clip/v2/resource/speaker/{speakerId})
+func (mock *mockServer) UpdateSpeaker(ctx context.Context, request api.UpdateSpeakerRequestObject) (api.UpdateSpeakerResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List tamper sensors.
+// (GET /clip/v2/resource/tamper)
+func (mock *mockServer) GetTampers(ctx context.Context, request api.GetTampersRequestObject) (api.GetTampersResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get tamper sensor.
+// (GET /clip/v2/resource/tamper/{tamperId})
+func (mock *mockServer) GetTamper(ctx context.Context, request api.GetTamperRequestObject) (api.GetTamperResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update tamper sensor.
+// (PUT /clip/v2/resource/tamper/{tamperId})
+func (mock *mockServer) UpdateTamper(ctx context.Context, request api.UpdateTamperRequestObject) (api.UpdateTamperResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
 // List temperatures
 // (GET /clip/v2/resource/temperature)
 func (mock *mockServer) GetTemperatures(ctx context.Context, request api.GetTemperaturesRequestObject) (api.GetTemperaturesResponseObject, error) {
@@ -836,6 +1333,90 @@ func (mock *mockServer) GetTemperature(ctx context.Context, request api.GetTempe
 func (mock *mockServer) UpdateTemperature(ctx context.Context, request api.UpdateTemperatureRequestObject) (api.UpdateTemperatureResponseObject, error) {
 	response := api.UpdateTemperature200JSONResponse{}
 	return response, nil
+}
+
+// List WiFi connectivity.
+// (GET /clip/v2/resource/wifi_connectivity)
+func (mock *mockServer) GetWifiConnectivities(ctx context.Context, request api.GetWifiConnectivitiesRequestObject) (api.GetWifiConnectivitiesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get WiFi connectivity.
+// (GET /clip/v2/resource/wifi_connectivity/{wifiConnectivityId})
+func (mock *mockServer) GetWifiConnectivity(ctx context.Context, request api.GetWifiConnectivityRequestObject) (api.GetWifiConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update WiFi connectivity.
+// (PUT /clip/v2/resource/wifi_connectivity/{wifiConnectivityId})
+func (mock *mockServer) UpdateWifiConnectivity(ctx context.Context, request api.UpdateWifiConnectivityRequestObject) (api.UpdateWifiConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List ZGP connectivity.
+// (GET /clip/v2/resource/zgp_connectivity)
+func (mock *mockServer) GetZgpConnectivities(ctx context.Context, request api.GetZgpConnectivitiesRequestObject) (api.GetZgpConnectivitiesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get ZGP connectivity.
+// (GET /clip/v2/resource/zgp_connectivity/{zgpConnectivityId})
+func (mock *mockServer) GetZgpConnectivity(ctx context.Context, request api.GetZgpConnectivityRequestObject) (api.GetZgpConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update ZGP connectivity.
+// (PUT /clip/v2/resource/zgp_connectivity/{zgpConnectivityId})
+func (mock *mockServer) UpdateZgpConnectivity(ctx context.Context, request api.UpdateZgpConnectivityRequestObject) (api.UpdateZgpConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List zigbee connectivity.
+// (GET /clip/v2/resource/zigbee_connectivity)
+func (mock *mockServer) GetZigbeeConnectivities(ctx context.Context, request api.GetZigbeeConnectivitiesRequestObject) (api.GetZigbeeConnectivitiesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get zigbee connectivity.
+// (GET /clip/v2/resource/zigbee_connectivity/{zigbeeConnectivityId})
+func (mock *mockServer) GetZigbeeConnectivity(ctx context.Context, request api.GetZigbeeConnectivityRequestObject) (api.GetZigbeeConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update zigbee connectivity.
+// (PUT /clip/v2/resource/zigbee_connectivity/{zigbeeConnectivityId})
+func (mock *mockServer) UpdateZigbeeConnectivity(ctx context.Context, request api.UpdateZigbeeConnectivityRequestObject) (api.UpdateZigbeeConnectivityResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// List zigbee device discovery.
+// (GET /clip/v2/resource/zigbee_device_discovery)
+func (mock *mockServer) GetZigbeeDeviceDiscoveries(ctx context.Context, request api.GetZigbeeDeviceDiscoveriesRequestObject) (api.GetZigbeeDeviceDiscoveriesResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Get zigbee device discovery.
+// (GET /clip/v2/resource/zigbee_device_discovery/{zigbeeDeviceDiscoveryId})
+func (mock *mockServer) GetZigbeeDeviceDiscovery(ctx context.Context, request api.GetZigbeeDeviceDiscoveryRequestObject) (api.GetZigbeeDeviceDiscoveryResponseObject, error) {
+	//TODO
+	return nil, nil
+}
+
+// Update zigbee device discovery.
+// (PUT /clip/v2/resource/zigbee_device_discovery/{zigbeeDeviceDiscoveryId})
+func (mock *mockServer) UpdateZigbeeDeviceDiscovery(ctx context.Context, request api.UpdateZigbeeDeviceDiscoveryRequestObject) (api.UpdateZigbeeDeviceDiscoveryResponseObject, error) {
+	//TODO
+	return nil, nil
 }
 
 // List zones
