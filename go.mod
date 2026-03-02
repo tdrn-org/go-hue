@@ -1,6 +1,6 @@
 module github.com/tdrn-org/go-hue
 
-go 1.25
+go 1.26
 
 require (
 	github.com/oapi-codegen/runtime v1.1.2
