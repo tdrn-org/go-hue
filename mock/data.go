@@ -31,56 +31,56 @@ type Data struct {
 		Errors *[]api.Error       `json:"errors,omitempty"`
 	} `json:"resources"`
 	GetBridges *struct {
-		Data   *[]api.BridgeGet `json:"data,omitempty"`
-		Errors *[]api.Error     `json:"errors,omitempty"`
+		Data   []api.BridgeGet `json:"data"`
+		Errors []api.Error     `json:"errors"`
 	} `json:"bridges"`
 	GetBridgeHomes *struct {
-		Data   *[]api.BridgeHomeGet `json:"data,omitempty"`
-		Errors *[]api.Error         `json:"errors,omitempty"`
+		Data   []api.BridgeHomeGet `json:"data"`
+		Errors []api.Error         `json:"errors"`
 	} `json:"bridge_homes"`
 	GetDevices *struct {
-		Data   *[]api.DeviceGet `json:"data,omitempty"`
-		Errors *[]api.Error     `json:"errors,omitempty"`
+		Data   []api.DeviceGet `json:"data"`
+		Errors []api.Error     `json:"errors"`
 	} `json:"devices"`
 	GetDevicePowers *struct {
-		Data   *[]api.DevicePowerGet `json:"data,omitempty"`
-		Errors *[]api.Error          `json:"errors,omitempty"`
+		Data   []api.DevicePowerGet `json:"data"`
+		Errors []api.Error          `json:"errors"`
 	} `json:"device_powers"`
 	GetGroupedLights *struct {
-		Data   *[]api.GroupedLightGet `json:"data,omitempty"`
-		Errors *[]api.Error           `json:"errors,omitempty"`
+		Data   []api.GroupedLightGet `json:"data"`
+		Errors []api.Error           `json:"errors"`
 	} `json:"grouped_lights"`
 	GetLights *struct {
-		Data   *[]api.LightGet `json:"data,omitempty"`
-		Errors *[]api.Error    `json:"errors,omitempty"`
+		Data   []api.LightGet `json:"data"`
+		Errors []api.Error    `json:"errors"`
 	} `json:"lights"`
 	GetLightLevels *struct {
-		Data   *[]api.LightLevelGet `json:"data,omitempty"`
-		Errors *[]api.Error         `json:"errors,omitempty"`
+		Data   []api.LightLevelGet `json:"data"`
+		Errors []api.Error         `json:"errors"`
 	} `json:"light_levels"`
 	GetMotionSensors *struct {
-		Data   *[]api.MotionGet `json:"data,omitempty"`
-		Errors *[]api.Error     `json:"errors,omitempty"`
+		Data   []api.MotionGet `json:"data"`
+		Errors []api.Error     `json:"errors"`
 	} `json:"motion_sensors"`
 	GetRooms *struct {
-		Data   *[]api.RoomGet `json:"data,omitempty"`
-		Errors *[]api.Error   `json:"errors,omitempty"`
+		Data   []api.RoomGet `json:"data"`
+		Errors []api.Error   `json:"errors"`
 	} `json:"rooms"`
 	GetScenes *struct {
-		Data   *[]api.SceneGet `json:"data,omitempty"`
-		Errors *[]api.Error    `json:"errors,omitempty"`
+		Data   []api.SceneGet `json:"data"`
+		Errors []api.Error    `json:"errors"`
 	} `json:"scenes"`
 	GetSmartScenes *struct {
-		Data   *[]api.SmartSceneGet `json:"data,omitempty"`
-		Errors *[]api.Error         `json:"errors,omitempty"`
+		Data   []api.SmartSceneGet `json:"data"`
+		Errors []api.Error         `json:"errors"`
 	} `json:"smart_scenes"`
 	GetTemperatures *struct {
-		Data   *[]api.TemperatureGet `json:"data,omitempty"`
-		Errors *[]api.Error          `json:"errors,omitempty"`
+		Data   []api.TemperatureGet `json:"data"`
+		Errors []api.Error          `json:"errors"`
 	} `json:"temperatures"`
 	GetZones *struct {
-		Data   *[]api.RoomGet `json:"data,omitempty"`
-		Errors *[]api.Error   `json:"errors,omitempty"`
+		Data   []api.RoomGet `json:"data"`
+		Errors []api.Error   `json:"errors"`
 	} `json:"zones"`
 }
 
