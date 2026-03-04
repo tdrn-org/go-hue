@@ -559,7 +559,7 @@ func (mock *mockServer) UpdateBehaviorScript(ctx context.Context, request api.Up
 
 // List bell buttons.
 // (GET /clip/v2/resource/bell_button)
-func (mock *mockServer) GetBellButtons(ctx context.Context, request api.GetBellButtonsRequestObject) (api.GetBellButtonsResponseObject, error) { //TODO
+func (mock *mockServer) GetBellButtons(ctx context.Context, request api.GetBellButtonsRequestObject) (api.GetBellButtonsResponseObject, error) {
 	response := api.GetBellButtons200JSONResponse{}
 	return response, nil
 }
