@@ -30,6 +30,7 @@ import (
 )
 
 func TestMDNSBridgeLocator(t *testing.T) {
+	skipInGithubAction(t, "Skipping: mDNS not working in Github Actions")
 	// Start mock server
 	bridgeMock := mock.Start()
 	require.NotNil(t, bridgeMock)
@@ -533,5 +534,11 @@ func httpClient(insecureSkipVerify bool) *http.Client {
 				InsecureSkipVerify: insecureSkipVerify,
 			},
 		},
+	}
+}
+
+func skipInGithubAction(t *testing.T, args ...any) {
+	if os.Getenv("GITHUB_ACTIONS") == "true" {
+		t.Skip(args...)
 	}
 }
