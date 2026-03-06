@@ -212,11 +212,13 @@ func (locator *RemoteBridgeLocator) NewClient(bridge *Bridge, authenticator Brid
 		return nil, fmt.Errorf("failed to create Hue API client (cause: %w)", err)
 	}
 	return &bridgeClient{
-		bridge:        bridge,
-		url:           bridge.Url,
-		httpClient:    httpClient,
-		apiClient:     apiClient,
-		authenticator: authenticator,
+		middlewareClient: middlewareClient{
+			bridge:        bridge,
+			url:           bridge.Url,
+			httpClient:    httpClient,
+			authenticator: authenticator,
+		},
+		apiClient: apiClient,
 	}, nil
 }
 

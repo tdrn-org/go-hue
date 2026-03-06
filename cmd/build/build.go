@@ -24,6 +24,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/tdrn-org/go-hue/api"
 )
 
 // Used via go:generate to perform build tasks.
@@ -31,6 +33,8 @@ func main() {
 	switch os.Args[1] {
 	case "fetch":
 		fetch()
+	case "generate":
+		generate()
 	}
 }
 
@@ -49,5 +53,13 @@ func fetch() {
 	_, err = io.Copy(file, rsp.Body)
 	if err != nil {
 		log.Fatal("write file failure: ", err)
+	}
+}
+
+// generate bridge client
+func generate() {
+	err := api.GenerateClient(os.Args[2], os.Args[3])
+	if err != nil {
+		log.Fatal("generate client failure: ", err)
 	}
 }
