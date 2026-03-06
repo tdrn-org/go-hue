@@ -61,7 +61,7 @@ func TestCloudLocator(t *testing.T) {
 	// Actual test
 	locator := hue.NewCloudBridgeLocator()
 	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("discovery")
-	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
+	locator.TlsConfig = insecureTlsConfig()
 	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
@@ -95,8 +95,15 @@ func TestRemoteLocator(t *testing.T) {
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
+	locator.TlsConfig = insecureTlsConfig()
 	bridges, err := locator.Query(hue.DefaultTimeout)
 	require.NoError(t, err)
 	require.Equal(t, len(bridges), 1)
+}
+
+func insecureTlsConfig() *tls.Config {
+	const insecure bool = true
+	return &tls.Config{
+		InsecureSkipVerify: insecure,
+	}
 }
