@@ -180,101 +180,101 @@ type BridgeClient interface {
 	// HttpClient gets the underlying http client used to access the bridge.
 	HttpClient() *http.Client
 	// Authenticate API call.
-	Authenticate(request api.AuthenticateJSONRequestBody) (*api.AuthenticateResponse, error)
+	Authenticate(ctx context.Context, request api.AuthenticateJSONRequestBody) (*api.AuthenticateResponse, error)
 	// GetResources API call.
-	GetResources() (*api.GetResourcesResponse, error)
+	GetResources(ctx context.Context) (*api.GetResourcesResponse, error)
 	// GetBridges API call.
-	GetBridges() (*api.GetBridgesResponse, error)
+	GetBridges(ctx context.Context) (*api.GetBridgesResponse, error)
 	// GetBridge API call.
-	GetBridge(bridgeId string) (*api.GetBridgeResponse, error)
+	GetBridge(ctx context.Context, bridgeId string) (*api.GetBridgeResponse, error)
 	// UpdateBridge API call.
-	UpdateBridge(bridgeId string, body api.UpdateBridgeJSONRequestBody) (*api.UpdateBridgeResponse, error)
+	UpdateBridge(ctx context.Context, bridgeId string, body api.UpdateBridgeJSONRequestBody) (*api.UpdateBridgeResponse, error)
 	// GetBridgeHomes API call.
-	GetBridgeHomes() (*api.GetBridgeHomesResponse, error)
+	GetBridgeHomes(ctx context.Context) (*api.GetBridgeHomesResponse, error)
 	// GetBridgeHome API call.
-	GetBridgeHome(bridgeHomeId string) (*api.GetBridgeHomeResponse, error)
+	GetBridgeHome(ctx context.Context, bridgeHomeId string) (*api.GetBridgeHomeResponse, error)
 	// GetDevices API call.
-	GetDevices() (*api.GetDevicesResponse, error)
+	GetDevices(ctx context.Context) (*api.GetDevicesResponse, error)
 	// DeleteDevice API call.
-	DeleteDevice(deviceId string) (*api.DeleteDeviceResponse, error)
+	DeleteDevice(ctx context.Context, deviceId string) (*api.DeleteDeviceResponse, error)
 	// GetDevice API call.
-	GetDevice(deviceId string) (*api.GetDeviceResponse, error)
+	GetDevice(ctx context.Context, deviceId string) (*api.GetDeviceResponse, error)
 	// UpdateDevice API call.
-	UpdateDevice(deviceId string, body api.UpdateDeviceJSONRequestBody) (*api.UpdateDeviceResponse, error)
+	UpdateDevice(ctx context.Context, deviceId string, body api.UpdateDeviceJSONRequestBody) (*api.UpdateDeviceResponse, error)
 	// GetDevicePowers API call.
-	GetDevicePowers() (*api.GetDevicePowersResponse, error)
+	GetDevicePowers(ctx context.Context) (*api.GetDevicePowersResponse, error)
 	// GetDevicePower API call.
-	GetDevicePower(deviceId string) (*api.GetDevicePowerResponse, error)
+	GetDevicePower(ctx context.Context, deviceId string) (*api.GetDevicePowerResponse, error)
 	// GetGroupedLights API call.
-	GetGroupedLights() (*api.GetGroupedLightsResponse, error)
+	GetGroupedLights(ctx context.Context) (*api.GetGroupedLightsResponse, error)
 	// GetGroupedLight API call.
-	GetGroupedLight(groupedLightId string) (*api.GetGroupedLightResponse, error)
+	GetGroupedLight(ctx context.Context, groupedLightId string) (*api.GetGroupedLightResponse, error)
 	// UpdateGroupedLight API call.
-	UpdateGroupedLight(groupedLightId string, body api.UpdateGroupedLightJSONRequestBody) (*api.UpdateGroupedLightResponse, error)
+	UpdateGroupedLight(ctx context.Context, groupedLightId string, body api.UpdateGroupedLightJSONRequestBody) (*api.UpdateGroupedLightResponse, error)
 	// GetLights API call.
-	GetLights() (*api.GetLightsResponse, error)
+	GetLights(ctx context.Context) (*api.GetLightsResponse, error)
 	// GetLight API call.
-	GetLight(lightId string) (*api.GetLightResponse, error)
+	GetLight(ctx context.Context, lightId string) (*api.GetLightResponse, error)
 	// UpdateLight API call.
-	UpdateLight(lightId string, body api.UpdateLightJSONRequestBody) (*api.UpdateLightResponse, error)
+	UpdateLight(ctx context.Context, lightId string, body api.UpdateLightJSONRequestBody) (*api.UpdateLightResponse, error)
 	// GetLightLevels API call.
-	GetLightLevels() (*api.GetLightLevelsResponse, error)
+	GetLightLevels(ctx context.Context) (*api.GetLightLevelsResponse, error)
 	// GetLightLevel API call.
-	GetLightLevel(lightId string) (*api.GetLightLevelResponse, error)
+	GetLightLevel(ctx context.Context, lightId string) (*api.GetLightLevelResponse, error)
 	// UpdateLightLevel API call.
-	UpdateLightLevel(lightId string, body api.UpdateLightLevelJSONRequestBody) (*api.UpdateLightLevelResponse, error)
+	UpdateLightLevel(ctx context.Context, lightId string, body api.UpdateLightLevelJSONRequestBody) (*api.UpdateLightLevelResponse, error)
 	// GetMotionSensors API call.
-	GetMotionSensors() (*api.GetMotionSensorsResponse, error)
+	GetMotionSensors(ctx context.Context) (*api.GetMotionSensorsResponse, error)
 	// GetMotionSensor API call.
-	GetMotionSensor(motionId string) (*api.GetMotionSensorResponse, error)
+	GetMotionSensor(ctx context.Context, motionId string) (*api.GetMotionSensorResponse, error)
 	// UpdateMotionSensor API call.
-	UpdateMotionSensor(motionId string, body api.UpdateMotionSensorJSONRequestBody) (*api.UpdateMotionSensorResponse, error)
+	UpdateMotionSensor(ctx context.Context, motionId string, body api.UpdateMotionSensorJSONRequestBody) (*api.UpdateMotionSensorResponse, error)
 	// GetRooms API call.
-	GetRooms() (*api.GetRoomsResponse, error)
+	GetRooms(ctx context.Context) (*api.GetRoomsResponse, error)
 	// CreateRoom API call.
-	CreateRoom(body api.CreateRoomJSONRequestBody) (*api.CreateRoomResponse, error)
+	CreateRoom(ctx context.Context, body api.CreateRoomJSONRequestBody) (*api.CreateRoomResponse, error)
 	// DeleteRoom API call.
-	DeleteRoom(roomId string) (*api.DeleteRoomResponse, error)
+	DeleteRoom(ctx context.Context, roomId string) (*api.DeleteRoomResponse, error)
 	// GetRoom API call.
-	GetRoom(roomId string) (*api.GetRoomResponse, error)
+	GetRoom(ctx context.Context, roomId string) (*api.GetRoomResponse, error)
 	// UpdateRoom API call.
-	UpdateRoom(roomId string, body api.UpdateRoomJSONRequestBody) (*api.UpdateRoomResponse, error)
+	UpdateRoom(ctx context.Context, roomId string, body api.UpdateRoomJSONRequestBody) (*api.UpdateRoomResponse, error)
 	// GetScenes API call.
-	GetScenes() (*api.GetScenesResponse, error)
+	GetScenes(ctx context.Context) (*api.GetScenesResponse, error)
 	// CreateScene API call.
-	CreateScene(body api.CreateSceneJSONRequestBody) (*api.CreateSceneResponse, error)
+	CreateScene(ctx context.Context, body api.CreateSceneJSONRequestBody) (*api.CreateSceneResponse, error)
 	// DeleteScene API call.
-	DeleteScene(sceneId string) (*api.DeleteSceneResponse, error)
+	DeleteScene(ctx context.Context, sceneId string) (*api.DeleteSceneResponse, error)
 	// GetScene API call.
-	GetScene(sceneId string) (*api.GetSceneResponse, error)
+	GetScene(ctx context.Context, sceneId string) (*api.GetSceneResponse, error)
 	// UpdateScene API call.
-	UpdateScene(sceneId string, body api.UpdateSceneJSONRequestBody) (*api.UpdateSceneResponse, error)
+	UpdateScene(ctx context.Context, sceneId string, body api.UpdateSceneJSONRequestBody) (*api.UpdateSceneResponse, error)
 	// GetSmartScenes API call.
-	GetSmartScenes() (*api.GetSmartScenesResponse, error)
+	GetSmartScenes(ctx context.Context) (*api.GetSmartScenesResponse, error)
 	// CreateSmartScene API call.
-	CreateSmartScene(body api.CreateSmartSceneJSONRequestBody) (*api.CreateSmartSceneResponse, error)
+	CreateSmartScene(ctx context.Context, body api.CreateSmartSceneJSONRequestBody) (*api.CreateSmartSceneResponse, error)
 	// DeleteSmartScene API call.
-	DeleteSmartScene(sceneId string) (*api.DeleteSmartSceneResponse, error)
+	DeleteSmartScene(ctx context.Context, sceneId string) (*api.DeleteSmartSceneResponse, error)
 	// GetSmartScene API call.
-	GetSmartScene(sceneId string) (*api.GetSmartSceneResponse, error)
+	GetSmartScene(ctx context.Context, sceneId string) (*api.GetSmartSceneResponse, error)
 	// UpdateSmartScene API call.
-	UpdateSmartScene(sceneId string, body api.UpdateSmartSceneJSONRequestBody) (*api.UpdateSmartSceneResponse, error)
+	UpdateSmartScene(ctx context.Context, sceneId string, body api.UpdateSmartSceneJSONRequestBody) (*api.UpdateSmartSceneResponse, error)
 	// GetTemperatures API call.
-	GetTemperatures() (*api.GetTemperaturesResponse, error)
+	GetTemperatures(ctx context.Context) (*api.GetTemperaturesResponse, error)
 	// GetTemperature API call.
-	GetTemperature(temperatureId string) (*api.GetTemperatureResponse, error)
+	GetTemperature(ctx context.Context, temperatureId string) (*api.GetTemperatureResponse, error)
 	// UpdateTemperature API call.
-	UpdateTemperature(temperatureId string, body api.UpdateTemperatureJSONRequestBody) (*api.UpdateTemperatureResponse, error)
+	UpdateTemperature(ctx context.Context, temperatureId string, body api.UpdateTemperatureJSONRequestBody) (*api.UpdateTemperatureResponse, error)
 	// GetZones API call.
-	GetZones() (*api.GetZonesResponse, error)
+	GetZones(ctx context.Context) (*api.GetZonesResponse, error)
 	// CreateZone API call.
-	CreateZone(body api.CreateZoneJSONRequestBody) (*api.CreateZoneResponse, error)
+	CreateZone(ctx context.Context, body api.CreateZoneJSONRequestBody) (*api.CreateZoneResponse, error)
 	// DeleteZone API call.
-	DeleteZone(zoneId string) (*api.DeleteZoneResponse, error)
+	DeleteZone(ctx context.Context, zoneId string) (*api.DeleteZoneResponse, error)
 	// GetZone API call.
-	GetZone(zoneId string) (*api.GetZoneResponse, error)
+	GetZone(ctx context.Context, zoneId string) (*api.GetZoneResponse, error)
 	// UpdateZone API call.
-	UpdateZone(zoneId string, body api.UpdateZoneJSONRequestBody) (*api.UpdateZoneResponse, error)
+	UpdateZone(ctx context.Context, zoneId string, body api.UpdateZoneJSONRequestBody) (*api.UpdateZoneResponse, error)
 }
 
 type bridgeClient struct {
@@ -318,8 +318,8 @@ func bridgeClientApiError(response *http.Response) error {
 	}
 }
 
-func (client *bridgeClient) Authenticate(request api.AuthenticateJSONRequestBody) (*api.AuthenticateResponse, error) {
-	response, err := client.apiClient.AuthenticateWithResponse(context.Background(), request)
+func (client *bridgeClient) Authenticate(ctx context.Context, request api.AuthenticateJSONRequestBody) (*api.AuthenticateResponse, error) {
+	response, err := client.apiClient.AuthenticateWithResponse(ctx, request)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
@@ -327,376 +327,376 @@ func (client *bridgeClient) Authenticate(request api.AuthenticateJSONRequestBody
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetResources() (*api.GetResourcesResponse, error) {
-	response, err := client.apiClient.GetResourcesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetResources(ctx context.Context) (*api.GetResourcesResponse, error) {
+	response, err := client.apiClient.GetResourcesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetBridges() (*api.GetBridgesResponse, error) {
-	response, err := client.apiClient.GetBridgesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetBridges(ctx context.Context) (*api.GetBridgesResponse, error) {
+	response, err := client.apiClient.GetBridgesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetBridge(bridgeId string) (*api.GetBridgeResponse, error) {
-	response, err := client.apiClient.GetBridgeWithResponse(context.Background(), bridgeId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetBridge(ctx context.Context, bridgeId string) (*api.GetBridgeResponse, error) {
+	response, err := client.apiClient.GetBridgeWithResponse(ctx, bridgeId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateBridge(bridgeId string, body api.UpdateBridgeJSONRequestBody) (*api.UpdateBridgeResponse, error) {
-	response, err := client.apiClient.UpdateBridgeWithResponse(context.Background(), bridgeId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateBridge(ctx context.Context, bridgeId string, body api.UpdateBridgeJSONRequestBody) (*api.UpdateBridgeResponse, error) {
+	response, err := client.apiClient.UpdateBridgeWithResponse(ctx, bridgeId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetBridgeHomes() (*api.GetBridgeHomesResponse, error) {
-	response, err := client.apiClient.GetBridgeHomesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetBridgeHomes(ctx context.Context) (*api.GetBridgeHomesResponse, error) {
+	response, err := client.apiClient.GetBridgeHomesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetBridgeHome(bridgeHomeId string) (*api.GetBridgeHomeResponse, error) {
-	response, err := client.apiClient.GetBridgeHomeWithResponse(context.Background(), bridgeHomeId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetBridgeHome(ctx context.Context, bridgeHomeId string) (*api.GetBridgeHomeResponse, error) {
+	response, err := client.apiClient.GetBridgeHomeWithResponse(ctx, bridgeHomeId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetDevices() (*api.GetDevicesResponse, error) {
-	response, err := client.apiClient.GetDevicesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetDevices(ctx context.Context) (*api.GetDevicesResponse, error) {
+	response, err := client.apiClient.GetDevicesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) DeleteDevice(deviceId string) (*api.DeleteDeviceResponse, error) {
-	response, err := client.apiClient.DeleteDeviceWithResponse(context.Background(), deviceId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) DeleteDevice(ctx context.Context, deviceId string) (*api.DeleteDeviceResponse, error) {
+	response, err := client.apiClient.DeleteDeviceWithResponse(ctx, deviceId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetDevice(deviceId string) (*api.GetDeviceResponse, error) {
-	response, err := client.apiClient.GetDeviceWithResponse(context.Background(), deviceId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetDevice(ctx context.Context, deviceId string) (*api.GetDeviceResponse, error) {
+	response, err := client.apiClient.GetDeviceWithResponse(ctx, deviceId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateDevice(deviceId string, body api.UpdateDeviceJSONRequestBody) (*api.UpdateDeviceResponse, error) {
-	response, err := client.apiClient.UpdateDeviceWithResponse(context.Background(), deviceId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateDevice(ctx context.Context, deviceId string, body api.UpdateDeviceJSONRequestBody) (*api.UpdateDeviceResponse, error) {
+	response, err := client.apiClient.UpdateDeviceWithResponse(ctx, deviceId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetDevicePowers() (*api.GetDevicePowersResponse, error) {
-	response, err := client.apiClient.GetDevicePowersWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetDevicePowers(ctx context.Context) (*api.GetDevicePowersResponse, error) {
+	response, err := client.apiClient.GetDevicePowersWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetDevicePower(deviceId string) (*api.GetDevicePowerResponse, error) {
-	response, err := client.apiClient.GetDevicePowerWithResponse(context.Background(), deviceId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetDevicePower(ctx context.Context, deviceId string) (*api.GetDevicePowerResponse, error) {
+	response, err := client.apiClient.GetDevicePowerWithResponse(ctx, deviceId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetGroupedLights() (*api.GetGroupedLightsResponse, error) {
-	response, err := client.apiClient.GetGroupedLightsWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetGroupedLights(ctx context.Context) (*api.GetGroupedLightsResponse, error) {
+	response, err := client.apiClient.GetGroupedLightsWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetGroupedLight(groupedLightId string) (*api.GetGroupedLightResponse, error) {
-	response, err := client.apiClient.GetGroupedLightWithResponse(context.Background(), groupedLightId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetGroupedLight(ctx context.Context, groupedLightId string) (*api.GetGroupedLightResponse, error) {
+	response, err := client.apiClient.GetGroupedLightWithResponse(ctx, groupedLightId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateGroupedLight(groupedLightId string, body api.UpdateGroupedLightJSONRequestBody) (*api.UpdateGroupedLightResponse, error) {
-	response, err := client.apiClient.UpdateGroupedLightWithResponse(context.Background(), groupedLightId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateGroupedLight(ctx context.Context, groupedLightId string, body api.UpdateGroupedLightJSONRequestBody) (*api.UpdateGroupedLightResponse, error) {
+	response, err := client.apiClient.UpdateGroupedLightWithResponse(ctx, groupedLightId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetLights() (*api.GetLightsResponse, error) {
-	response, err := client.apiClient.GetLightsWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetLights(ctx context.Context) (*api.GetLightsResponse, error) {
+	response, err := client.apiClient.GetLightsWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetLight(lightId string) (*api.GetLightResponse, error) {
-	response, err := client.apiClient.GetLightWithResponse(context.Background(), lightId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetLight(ctx context.Context, lightId string) (*api.GetLightResponse, error) {
+	response, err := client.apiClient.GetLightWithResponse(ctx, lightId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateLight(lightId string, body api.UpdateLightJSONRequestBody) (*api.UpdateLightResponse, error) {
-	response, err := client.apiClient.UpdateLightWithResponse(context.Background(), lightId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateLight(ctx context.Context, lightId string, body api.UpdateLightJSONRequestBody) (*api.UpdateLightResponse, error) {
+	response, err := client.apiClient.UpdateLightWithResponse(ctx, lightId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetLightLevels() (*api.GetLightLevelsResponse, error) {
-	response, err := client.apiClient.GetLightLevelsWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetLightLevels(ctx context.Context) (*api.GetLightLevelsResponse, error) {
+	response, err := client.apiClient.GetLightLevelsWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetLightLevel(lightId string) (*api.GetLightLevelResponse, error) {
-	response, err := client.apiClient.GetLightLevelWithResponse(context.Background(), lightId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetLightLevel(ctx context.Context, lightId string) (*api.GetLightLevelResponse, error) {
+	response, err := client.apiClient.GetLightLevelWithResponse(ctx, lightId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateLightLevel(lightId string, body api.UpdateLightLevelJSONRequestBody) (*api.UpdateLightLevelResponse, error) {
-	response, err := client.apiClient.UpdateLightLevelWithResponse(context.Background(), lightId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateLightLevel(ctx context.Context, lightId string, body api.UpdateLightLevelJSONRequestBody) (*api.UpdateLightLevelResponse, error) {
+	response, err := client.apiClient.UpdateLightLevelWithResponse(ctx, lightId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetMotionSensors() (*api.GetMotionSensorsResponse, error) {
-	response, err := client.apiClient.GetMotionSensorsWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetMotionSensors(ctx context.Context) (*api.GetMotionSensorsResponse, error) {
+	response, err := client.apiClient.GetMotionSensorsWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetMotionSensor(motionId string) (*api.GetMotionSensorResponse, error) {
-	response, err := client.apiClient.GetMotionSensorWithResponse(context.Background(), motionId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetMotionSensor(ctx context.Context, motionId string) (*api.GetMotionSensorResponse, error) {
+	response, err := client.apiClient.GetMotionSensorWithResponse(ctx, motionId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateMotionSensor(motionId string, body api.UpdateMotionSensorJSONRequestBody) (*api.UpdateMotionSensorResponse, error) {
-	response, err := client.apiClient.UpdateMotionSensorWithResponse(context.Background(), motionId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateMotionSensor(ctx context.Context, motionId string, body api.UpdateMotionSensorJSONRequestBody) (*api.UpdateMotionSensorResponse, error) {
+	response, err := client.apiClient.UpdateMotionSensorWithResponse(ctx, motionId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetRooms() (*api.GetRoomsResponse, error) {
-	response, err := client.apiClient.GetRoomsWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetRooms(ctx context.Context) (*api.GetRoomsResponse, error) {
+	response, err := client.apiClient.GetRoomsWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) CreateRoom(body api.CreateRoomJSONRequestBody) (*api.CreateRoomResponse, error) {
-	response, err := client.apiClient.CreateRoomWithResponse(context.Background(), body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) CreateRoom(ctx context.Context, body api.CreateRoomJSONRequestBody) (*api.CreateRoomResponse, error) {
+	response, err := client.apiClient.CreateRoomWithResponse(ctx, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) DeleteRoom(roomId string) (*api.DeleteRoomResponse, error) {
-	response, err := client.apiClient.DeleteRoomWithResponse(context.Background(), roomId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) DeleteRoom(ctx context.Context, roomId string) (*api.DeleteRoomResponse, error) {
+	response, err := client.apiClient.DeleteRoomWithResponse(ctx, roomId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetRoom(roomId string) (*api.GetRoomResponse, error) {
-	response, err := client.apiClient.GetRoomWithResponse(context.Background(), roomId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetRoom(ctx context.Context, roomId string) (*api.GetRoomResponse, error) {
+	response, err := client.apiClient.GetRoomWithResponse(ctx, roomId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateRoom(roomId string, body api.UpdateRoomJSONRequestBody) (*api.UpdateRoomResponse, error) {
-	response, err := client.apiClient.UpdateRoomWithResponse(context.Background(), roomId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateRoom(ctx context.Context, roomId string, body api.UpdateRoomJSONRequestBody) (*api.UpdateRoomResponse, error) {
+	response, err := client.apiClient.UpdateRoomWithResponse(ctx, roomId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetScenes() (*api.GetScenesResponse, error) {
-	response, err := client.apiClient.GetScenesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetScenes(ctx context.Context) (*api.GetScenesResponse, error) {
+	response, err := client.apiClient.GetScenesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) CreateScene(body api.CreateSceneJSONRequestBody) (*api.CreateSceneResponse, error) {
-	response, err := client.apiClient.CreateSceneWithResponse(context.Background(), body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) CreateScene(ctx context.Context, body api.CreateSceneJSONRequestBody) (*api.CreateSceneResponse, error) {
+	response, err := client.apiClient.CreateSceneWithResponse(ctx, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) DeleteScene(sceneId string) (*api.DeleteSceneResponse, error) {
-	response, err := client.apiClient.DeleteSceneWithResponse(context.Background(), sceneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) DeleteScene(ctx context.Context, sceneId string) (*api.DeleteSceneResponse, error) {
+	response, err := client.apiClient.DeleteSceneWithResponse(ctx, sceneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetScene(sceneId string) (*api.GetSceneResponse, error) {
-	response, err := client.apiClient.GetSceneWithResponse(context.Background(), sceneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetScene(ctx context.Context, sceneId string) (*api.GetSceneResponse, error) {
+	response, err := client.apiClient.GetSceneWithResponse(ctx, sceneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateScene(sceneId string, body api.UpdateSceneJSONRequestBody) (*api.UpdateSceneResponse, error) {
-	response, err := client.apiClient.UpdateSceneWithResponse(context.Background(), sceneId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateScene(ctx context.Context, sceneId string, body api.UpdateSceneJSONRequestBody) (*api.UpdateSceneResponse, error) {
+	response, err := client.apiClient.UpdateSceneWithResponse(ctx, sceneId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetSmartScenes() (*api.GetSmartScenesResponse, error) {
-	response, err := client.apiClient.GetSmartScenesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetSmartScenes(ctx context.Context) (*api.GetSmartScenesResponse, error) {
+	response, err := client.apiClient.GetSmartScenesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) CreateSmartScene(body api.CreateSmartSceneJSONRequestBody) (*api.CreateSmartSceneResponse, error) {
-	response, err := client.apiClient.CreateSmartSceneWithResponse(context.Background(), body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) CreateSmartScene(ctx context.Context, body api.CreateSmartSceneJSONRequestBody) (*api.CreateSmartSceneResponse, error) {
+	response, err := client.apiClient.CreateSmartSceneWithResponse(ctx, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) DeleteSmartScene(sceneId string) (*api.DeleteSmartSceneResponse, error) {
-	response, err := client.apiClient.DeleteSmartSceneWithResponse(context.Background(), sceneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) DeleteSmartScene(ctx context.Context, sceneId string) (*api.DeleteSmartSceneResponse, error) {
+	response, err := client.apiClient.DeleteSmartSceneWithResponse(ctx, sceneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetSmartScene(sceneId string) (*api.GetSmartSceneResponse, error) {
-	response, err := client.apiClient.GetSmartSceneWithResponse(context.Background(), sceneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetSmartScene(ctx context.Context, sceneId string) (*api.GetSmartSceneResponse, error) {
+	response, err := client.apiClient.GetSmartSceneWithResponse(ctx, sceneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateSmartScene(sceneId string, body api.UpdateSmartSceneJSONRequestBody) (*api.UpdateSmartSceneResponse, error) {
-	response, err := client.apiClient.UpdateSmartSceneWithResponse(context.Background(), sceneId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateSmartScene(ctx context.Context, sceneId string, body api.UpdateSmartSceneJSONRequestBody) (*api.UpdateSmartSceneResponse, error) {
+	response, err := client.apiClient.UpdateSmartSceneWithResponse(ctx, sceneId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetTemperatures() (*api.GetTemperaturesResponse, error) {
-	response, err := client.apiClient.GetTemperaturesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetTemperatures(ctx context.Context) (*api.GetTemperaturesResponse, error) {
+	response, err := client.apiClient.GetTemperaturesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetTemperature(temperatureId string) (*api.GetTemperatureResponse, error) {
-	response, err := client.apiClient.GetTemperatureWithResponse(context.Background(), temperatureId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetTemperature(ctx context.Context, temperatureId string) (*api.GetTemperatureResponse, error) {
+	response, err := client.apiClient.GetTemperatureWithResponse(ctx, temperatureId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateTemperature(temperatureId string, body api.UpdateTemperatureJSONRequestBody) (*api.UpdateTemperatureResponse, error) {
-	response, err := client.apiClient.UpdateTemperatureWithResponse(context.Background(), temperatureId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateTemperature(ctx context.Context, temperatureId string, body api.UpdateTemperatureJSONRequestBody) (*api.UpdateTemperatureResponse, error) {
+	response, err := client.apiClient.UpdateTemperatureWithResponse(ctx, temperatureId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetZones() (*api.GetZonesResponse, error) {
-	response, err := client.apiClient.GetZonesWithResponse(context.Background(), client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetZones(ctx context.Context) (*api.GetZonesResponse, error) {
+	response, err := client.apiClient.GetZonesWithResponse(ctx, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) CreateZone(body api.CreateZoneJSONRequestBody) (*api.CreateZoneResponse, error) {
-	response, err := client.apiClient.CreateZoneWithResponse(context.Background(), body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) CreateZone(ctx context.Context, body api.CreateZoneJSONRequestBody) (*api.CreateZoneResponse, error) {
+	response, err := client.apiClient.CreateZoneWithResponse(ctx, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) DeleteZone(zoneId string) (*api.DeleteZoneResponse, error) {
-	response, err := client.apiClient.DeleteZoneWithResponse(context.Background(), zoneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) DeleteZone(ctx context.Context, zoneId string) (*api.DeleteZoneResponse, error) {
+	response, err := client.apiClient.DeleteZoneWithResponse(ctx, zoneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) GetZone(zoneId string) (*api.GetZoneResponse, error) {
-	response, err := client.apiClient.GetZoneWithResponse(context.Background(), zoneId, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) GetZone(ctx context.Context, zoneId string) (*api.GetZoneResponse, error) {
+	response, err := client.apiClient.GetZoneWithResponse(ctx, zoneId, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}
 	return response, bridgeClientApiError(response.HTTPResponse)
 }
 
-func (client *bridgeClient) UpdateZone(zoneId string, body api.UpdateZoneJSONRequestBody) (*api.UpdateZoneResponse, error) {
-	response, err := client.apiClient.UpdateZoneWithResponse(context.Background(), zoneId, body, client.authenticator.AuthenticateRequest)
+func (client *bridgeClient) UpdateZone(ctx context.Context, zoneId string, body api.UpdateZoneJSONRequestBody) (*api.UpdateZoneResponse, error) {
+	response, err := client.apiClient.UpdateZoneWithResponse(ctx, zoneId, body, client.authenticator.AuthenticateRequest)
 	if err != nil {
 		return nil, bridgeClientWrapSystemError(err)
 	}

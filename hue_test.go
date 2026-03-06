@@ -51,7 +51,7 @@ func TestCloudBridgeLocator(t *testing.T) {
 	locator := hue.NewCloudBridgeLocator()
 	require.Equal(t, "cloud", locator.Name())
 	locator.DiscoveryEndpointUrl = bridgeMock.Server().JoinPath("/discovery")
-	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
+	locator.TlsConfig = insecureTlsConfig()
 	testBridgeLocator(t, locator)
 }
 
@@ -76,7 +76,7 @@ func TestRemoteBridgeLocator(t *testing.T) {
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, "")
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
+	locator.TlsConfig = insecureTlsConfig()
 	require.Equal(t, "remote", locator.Name())
 	httpClient := httpClient(true)
 	rsp, err := httpClient.Get(locator.AuthCodeURL())
@@ -133,7 +133,7 @@ func testRemoteClientHelper(t *testing.T, bridgeMock mock.BridgeServer, tokenFil
 	locator, err := hue.NewRemoteBridgeLocator(mock.MockClientId, mock.MockClientSecret, nil, tokenFile)
 	require.NoError(t, err)
 	locator.EndpointUrl = bridgeMock.Server()
-	locator.TlsConfig = &tls.Config{InsecureSkipVerify: true}
+	locator.TlsConfig = insecureTlsConfig()
 	bridge, err := locator.Lookup(mock.MockBridgeId, hue.DefaultTimeout)
 	require.NoError(t, err)
 	var authenticator *hue.RemoteBridgeAuthenticator
@@ -218,7 +218,7 @@ func testClientApi(t *testing.T, client hue.BridgeClient) {
 }
 
 func testGetResourcesForbidden(t *testing.T, client hue.BridgeClient) {
-	_, err := client.GetResources()
+	_, err := client.GetResources(t.Context())
 	require.ErrorIs(t, err, hue.ErrNotAuthenticated)
 }
 
@@ -229,7 +229,7 @@ func testAuthenticate(t *testing.T, client hue.BridgeClient) {
 		Devicetype:        &deviceType,
 		Generateclientkey: &generateClientKey,
 	}
-	response, err := client.Authenticate(request)
+	response, err := client.Authenticate(t.Context(), request)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 	require.Equal(t, mock.MockBridgeClientkey, *(*response.JSON200)[0].Success.Clientkey)
@@ -237,292 +237,292 @@ func testAuthenticate(t *testing.T, client hue.BridgeClient) {
 }
 
 func testGetResources(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetResources()
+	response, err := client.GetResources(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetBridges(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetBridges()
+	response, err := client.GetBridges(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetBridge(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetBridge(mock.MockBridgeId)
+	response, err := client.GetBridge(t.Context(), mock.MockBridgeId)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateBridge(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateBridgeJSONRequestBody{}
-	response, err := client.UpdateBridge(mock.MockBridgeId, body)
+	response, err := client.UpdateBridge(t.Context(), mock.MockBridgeId, body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetBridgeHomes(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetBridgeHomes()
+	response, err := client.GetBridgeHomes(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetDevices(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetDevices()
+	response, err := client.GetDevices(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testDeleteDevice(t *testing.T, client hue.BridgeClient) {
-	response, err := client.DeleteDevice("1")
+	response, err := client.DeleteDevice(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetDevice(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetDevice("1")
+	response, err := client.GetDevice(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateDevice(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateDeviceJSONRequestBody{}
-	response, err := client.UpdateDevice("1", body)
+	response, err := client.UpdateDevice(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetDevicePowers(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetDevicePowers()
+	response, err := client.GetDevicePowers(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetDevicePower(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetDevicePower("1")
+	response, err := client.GetDevicePower(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetGroupedLights(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetGroupedLights()
+	response, err := client.GetGroupedLights(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetGroupedLight(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetGroupedLight("1")
+	response, err := client.GetGroupedLight(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateGroupedLight(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateGroupedLightJSONRequestBody{}
-	response, err := client.UpdateGroupedLight("1", body)
+	response, err := client.UpdateGroupedLight(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetLights(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetLights()
+	response, err := client.GetLights(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetLight(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetLight("1")
+	response, err := client.GetLight(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateLight(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateLightJSONRequestBody{}
-	response, err := client.UpdateLight("1", body)
+	response, err := client.UpdateLight(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetLightLevels(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetLightLevels()
+	response, err := client.GetLightLevels(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetLightLevel(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetLightLevel("1")
+	response, err := client.GetLightLevel(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateLightLevel(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateLightLevelJSONRequestBody{}
-	response, err := client.UpdateLightLevel("1", body)
+	response, err := client.UpdateLightLevel(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetMotionSensors(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetMotionSensors()
+	response, err := client.GetMotionSensors(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetMotionSensor(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetMotionSensor("1")
+	response, err := client.GetMotionSensor(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateMotionSensor(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateMotionSensorJSONRequestBody{}
-	response, err := client.UpdateMotionSensor("1", body)
+	response, err := client.UpdateMotionSensor(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetRooms(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetRooms()
+	response, err := client.GetRooms(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testCreateRoom(t *testing.T, client hue.BridgeClient) {
 	body := api.CreateRoomJSONRequestBody{}
-	response, err := client.CreateRoom(body)
+	response, err := client.CreateRoom(t.Context(), body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testDeleteRoom(t *testing.T, client hue.BridgeClient) {
-	response, err := client.DeleteRoom("1")
+	response, err := client.DeleteRoom(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetRoom(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetRoom("1")
+	response, err := client.GetRoom(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateRoom(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateRoomJSONRequestBody{}
-	response, err := client.UpdateRoom("1", body)
+	response, err := client.UpdateRoom(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetScenes(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetScenes()
+	response, err := client.GetScenes(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testCreateScene(t *testing.T, client hue.BridgeClient) {
 	body := api.CreateSceneJSONRequestBody{}
-	response, err := client.CreateScene(body)
+	response, err := client.CreateScene(t.Context(), body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testDeleteScene(t *testing.T, client hue.BridgeClient) {
-	response, err := client.DeleteScene("1")
+	response, err := client.DeleteScene(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetScene(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetScene("1")
+	response, err := client.GetScene(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateScene(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateSceneJSONRequestBody{}
-	response, err := client.UpdateScene("1", body)
+	response, err := client.UpdateScene(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetSmartScenes(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetSmartScenes()
+	response, err := client.GetSmartScenes(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testCreateSmartScene(t *testing.T, client hue.BridgeClient) {
 	body := api.CreateSmartSceneJSONRequestBody{}
-	response, err := client.CreateSmartScene(body)
+	response, err := client.CreateSmartScene(t.Context(), body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testDeleteSmartScene(t *testing.T, client hue.BridgeClient) {
-	response, err := client.DeleteSmartScene("1")
+	response, err := client.DeleteSmartScene(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetSmartScene(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetSmartScene("1")
+	response, err := client.GetSmartScene(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateSmartScene(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateSmartSceneJSONRequestBody{}
-	response, err := client.UpdateSmartScene("1", body)
+	response, err := client.UpdateSmartScene(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetTemperatures(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetTemperatures()
+	response, err := client.GetTemperatures(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetTemperature(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetTemperature("1")
+	response, err := client.GetTemperature(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateTemperature(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateTemperatureJSONRequestBody{}
-	response, err := client.UpdateTemperature("1", body)
+	response, err := client.UpdateTemperature(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetZones(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetZones()
+	response, err := client.GetZones(t.Context())
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testCreateZone(t *testing.T, client hue.BridgeClient) {
 	body := api.CreateZoneJSONRequestBody{}
-	response, err := client.CreateZone(body)
+	response, err := client.CreateZone(t.Context(), body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testDeleteZone(t *testing.T, client hue.BridgeClient) {
-	response, err := client.DeleteZone("1")
+	response, err := client.DeleteZone(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testGetZone(t *testing.T, client hue.BridgeClient) {
-	response, err := client.GetZone("1")
+	response, err := client.GetZone(t.Context(), "1")
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
 
 func testUpdateZone(t *testing.T, client hue.BridgeClient) {
 	body := api.UpdateZoneJSONRequestBody{}
-	response, err := client.UpdateZone("1", body)
+	response, err := client.UpdateZone(t.Context(), "1", body)
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, response.HTTPResponse.StatusCode)
 }
@@ -534,6 +534,13 @@ func httpClient(insecureSkipVerify bool) *http.Client {
 				InsecureSkipVerify: insecureSkipVerify,
 			},
 		},
+	}
+}
+
+func insecureTlsConfig() *tls.Config {
+	const insecure bool = true
+	return &tls.Config{
+		InsecureSkipVerify: insecure,
 	}
 }
 
