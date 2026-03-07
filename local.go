@@ -139,9 +139,10 @@ func localBridgeHttpClient(bridgeId string, timeout time.Duration) *localBridgeC
 		Client:              http.Client{Timeout: timeout},
 		CertificateBridgeId: strings.ToLower(bridgeId),
 	}
+	const insecure bool = true
 	tlsClientconfig := &tls.Config{
 		VerifyPeerCertificate: client.verifyBridgeCertificate,
-		InsecureSkipVerify:    true,
+		InsecureSkipVerify:    insecure,
 	}
 	client.Transport = &http.Transport{
 		ResponseHeaderTimeout: timeout,

@@ -216,8 +216,9 @@ func (mock *mockServer) addressParts() (net.IP, int, error) {
 }
 
 func (mock *mockServer) newHttpClient() *http.Client {
+	const insecure bool = true
 	tlsConfig := &tls.Config{
-		InsecureSkipVerify: true,
+		InsecureSkipVerify: insecure,
 	}
 	transport := &http.Transport{
 		TLSClientConfig: tlsConfig,
