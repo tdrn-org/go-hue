@@ -8,5 +8,8 @@
 The [Hue Smart Home system](https://www.philips-hue.com/) provides a REST [API](https://developers.meethue.com/develop/hue-api-v2/) to access Hue Smart Home bridges to evaluate and control the connected devices. This library provides the Go wrapper for this API. 
 It is based on the Hue API's [OpenAPI specification](https://github.com/openhue/openhue-api/) provided by the [OpenHue project](https://www.openhue.io/).
 
+### Versioning
+The package main version (major.minor) matches the version of the OpenAPI specification the package version is based on.
+
 ### License
 This project is subject to the the Apache License, Version 2.0. See LICENSE information for details.
