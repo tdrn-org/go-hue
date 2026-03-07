@@ -1,697 +1,380 @@
 {
-  "resources": {
+  "behavior_instances": {
     "data": [
       {
+        "configuration": {
+          "settings": {
+            "daylight_sensitivity": {
+              "dark_threshold": 16000,
+              "offset": 7000
+            }
+          },
+          "source": {
+            "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+            "rtype": "device"
+          },
+          "when": {
+            "timeslots": [
+              {
+                "on_motion": {
+                  "recall_single": [
+                    {
+                      "action": {
+                        "recall": {
+                          "rid": "e2c5c979-06df-4505-8d72-2191f9ab6459",
+                          "rtype": "scene"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "on_no_motion": {
+                  "after": {
+                    "minutes": 10
+                  },
+                  "recall_single": [
+                    {
+                      "action": "all_off"
+                    }
+                  ]
+                },
+                "start_time": {
+                  "time": {
+                    "hour": 8,
+                    "minute": 0
+                  },
+                  "type": "time"
+                }
+              },
+              {
+                "on_motion": {
+                  "recall_single": [
+                    {
+                      "action": {
+                        "recall": {
+                          "rid": "ded2cd62-da7d-4c7e-a4c1-b11d93a0ea41",
+                          "rtype": "scene"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "on_no_motion": {
+                  "after": {
+                    "minutes": 5
+                  },
+                  "recall_single": [
+                    {
+                      "action": "all_off"
+                    }
+                  ]
+                },
+                "start_time": {
+                  "time": {
+                    "hour": 23,
+                    "minute": 0
+                  },
+                  "type": "time"
+                }
+              }
+            ]
+          },
+          "where": [
+            {
+              "group": {
+                "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+                "rtype": "room"
+              }
+            }
+          ]
+        },
+        "dependees": [
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          },
+          {
+            "rid": "",
+            "rtype": ""
+          }
+        ],
+        "enabled": true,
         "id": "eb3b7392-2e15-4083-a056-81cae52bd266",
+        "last_error": "",
+        "metadata": {
+          "name": "Name#1"
+        },
+        "script_id": "bba79770-19f1-11ec-9621-0242ac130002",
+        "state": {
+          "model_id": "SML001",
+          "source_type": "device"
+        },
+        "status": "running",
         "type": "behavior_instance"
-      },
-      {
-        "id": "0194752a-2d53-4f92-8209-dfdc52745af3",
-        "type": "behavior_script"
-      },
-      {
-        "id": "049008e6-62d7-42ba-b473-d8488cfde600",
-        "type": "behavior_script"
-      },
-      {
-        "id": "67d9395b-4403-42cc-b5f0-740b699d67c6",
-        "type": "behavior_script"
-      },
-      {
-        "id": "7238c707-8693-4f19-9095-ccdc1444d228",
-        "type": "behavior_script"
-      },
-      {
-        "id": "7719b841-6b3d-448d-a0e7-601ae9edb6a2",
-        "type": "behavior_script"
-      },
-      {
-        "id": "7e571ac6-f363-42e1-809a-4cbf6523ed72",
-        "type": "behavior_script"
-      },
-      {
-        "id": "bba79770-19f1-11ec-9621-0242ac130002",
-        "type": "behavior_script"
-      },
-      {
-        "id": "db06cabc-c752-4904-9e8f-4ebe98feaa1a",
-        "type": "behavior_script"
-      },
-      {
-        "id": "e73bc72d-96b1-46f8-aa57-729861f80c78",
-        "type": "behavior_script"
-      },
-      {
-        "id": "f306f634-acdb-4dd6-bdf5-48dd626d667e",
-        "type": "behavior_script"
-      },
-      {
-        "id": "fd60fcd1-4809-4813-b510-4a18856a595c",
-        "type": "behavior_script"
-      },
-      {
-        "id": "ff8957e3-2eb9-4699-a0c8-ad2cb3ede704",
-        "type": "behavior_script"
-      },
-      {
-        "id": "5ada0f32-4ccb-45d7-a2ff-d2842eb0a527",
-        "owner": {
-          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-          "rtype": "device"
-        },
-        "type": "bridge"
-      },
-      {
-        "id": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
-        "id_v1": "/groups/0",
-        "type": "bridge_home"
-      },
-      {
-        "id": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
-        "id_v1": "/lights/5",
-        "type": "device"
-      },
-      {
-        "id": "4e16129d-464c-48fc-9193-6264e463e3df",
-        "id_v1": "/lights/7",
-        "type": "device"
-      },
-      {
-        "id": "549995d5-a934-4469-ba27-6d1391633ff8",
-        "id_v1": "/lights/9",
-        "type": "device"
-      },
-      {
-        "id": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
-        "id_v1": "/lights/11",
-        "type": "device"
-      },
-      {
-        "id": "5c8131ae-c187-4408-98d3-c362c5f777a3",
-        "id_v1": "/lights/8",
-        "type": "device"
-      },
-      {
-        "id": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
-        "id_v1": "/lights/4",
-        "type": "device"
-      },
-      {
-        "id": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-        "id_v1": "/sensors/4",
-        "type": "device"
-      },
-      {
-        "id": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
-        "id_v1": "/lights/12",
-        "type": "device"
-      },
-      {
-        "id": "a58ff365-eba2-4411-8678-d5ac2c68512b",
-        "id_v1": "/lights/6",
-        "type": "device"
-      },
-      {
-        "id": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-        "type": "device"
-      },
-      {
-        "id": "b9e3eca4-c718-4445-9833-aa5f349c8219",
-        "id_v1": "/lights/2",
-        "type": "device"
-      },
-      {
-        "id": "da699f9a-1098-484f-99af-8de24cb9b44f",
-        "id_v1": "/lights/3",
-        "type": "device"
-      },
-      {
-        "id": "52d23eb6-c9b5-4641-b873-3d441888c34b",
-        "id_v1": "/sensors/4",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "device_power"
-      },
-      {
-        "id": "042fd3fb-4d25-44ad-9928-90fce043f8fd",
-        "owner": {
-          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "1d506942-aba3-4758-aff8-0661af3dab0e",
-        "owner": {
-          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "227c1005-f06a-490c-b838-3c5bab064561",
-        "owner": {
-          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "3a09176c-bbc3-45ab-ace8-41c27ae57e0f",
-        "owner": {
-          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "49ceadda-03fe-4385-adb2-8eb0da74439d",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "70bfccef-1262-42c5-8bb4-f194e71c3394",
-        "owner": {
-          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "8209ecaa-e8bd-4782-a776-e1d035b4b13e",
-        "owner": {
-          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "b2f6bb0c-da47-40aa-ac16-528f8e00e38e",
-        "owner": {
-          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "bc946aa1-ae3d-4124-8b0e-1300bb2ea826",
-        "owner": {
-          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "ded732ad-a737-4a91-aedf-fc80e0492f00",
-        "owner": {
-          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "f9373c97-4e56-47dd-bba0-bc25ab9c141c",
-        "owner": {
-          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
-          "rtype": "device"
-        },
-        "type": "device_software_update"
-      },
-      {
-        "id": "33da95c2-3949-4d6a-8577-35a39bd78cca",
-        "owner": {
-          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-          "rtype": "device"
-        },
-        "type": "entertainment"
-      },
-      {
-        "id": "8c1a5c84-7209-43d2-bba6-94aa18fd1eba",
-        "id_v1": "/lights/3",
-        "owner": {
-          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
-          "rtype": "device"
-        },
-        "type": "entertainment"
-      },
-      {
-        "id": "f78d8be1-8f72-4dab-ae75-b762bd3e7f1a",
-        "type": "geolocation"
-      },
-      {
-        "id": "0b4c7cc4-624e-4b86-8964-c1cd99dec591",
-        "id_v1": "/groups/1",
-        "owner": {
-          "rid": "e998cc46-e091-41c2-bdb9-df7ac849982e",
-          "rtype": "room"
-        },
-        "type": "grouped_light"
-      },
-      {
-        "id": "662c712d-d681-4309-b249-64a5bb638c3b",
-        "id_v1": "/groups/0",
-        "owner": {
-          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
-          "rtype": "bridge_home"
-        },
-        "type": "grouped_light"
-      },
-      {
-        "id": "c21f1657-a424-46ea-89be-b882057c4ef7",
-        "id_v1": "/groups/2",
-        "owner": {
-          "rid": "e1b696b9-21a4-4a2e-8f66-6e5463581069",
-          "rtype": "room"
-        },
-        "type": "grouped_light"
-      },
-      {
-        "id": "ca29da78-17af-41cc-a95f-b4774714fbe3",
-        "id_v1": "/groups/4",
-        "owner": {
-          "rid": "77db55a9-276f-45cc-91d8-0ab4966b288a",
-          "rtype": "room"
-        },
-        "type": "grouped_light"
-      },
-      {
-        "id": "e01af1c3-62a5-46cc-86bb-9b0b19bf25ee",
-        "id_v1": "/groups/3",
-        "owner": {
-          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
-          "rtype": "room"
-        },
-        "type": "grouped_light"
-      },
-      {
-        "id": "6b6d366d-40d4-46f6-a823-d70985a2e89b",
-        "owner": {
-          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
-          "rtype": "bridge_home"
-        },
-        "type": "grouped_light_level"
-      },
-      {
-        "id": "c3b6de8a-e601-4f05-9864-011d5907d308",
-        "owner": {
-          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
-          "rtype": "bridge_home"
-        },
-        "type": "grouped_motion"
-      },
-      {
-        "id": "680847bf-b790-4659-821b-f86ea06ce9e4",
-        "type": "homekit"
-      },
-      {
-        "id": "22e46126-e936-4784-a628-7e8f084e9019",
-        "id_v1": "/lights/9",
-        "owner": {
-          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "284465d2-19cd-4ab4-9fdb-78e87983b68d",
-        "id_v1": "/lights/12",
-        "owner": {
-          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "38e332e0-8d45-4174-bf86-6dec2f2314a2",
-        "id_v1": "/lights/3",
-        "owner": {
-          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "519df633-bcad-489e-a490-353b6bfaf2bf",
-        "id_v1": "/lights/4",
-        "owner": {
-          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "70b7a3e7-d800-4251-a2a2-741eef41b041",
-        "id_v1": "/lights/5",
-        "owner": {
-          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "a3c5f066-f598-41eb-bae2-33d3aa34000c",
-        "id_v1": "/lights/7",
-        "owner": {
-          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "ad90a702-a167-4a7c-8bf0-c87cc5938855",
-        "id_v1": "/lights/8",
-        "owner": {
-          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "b3014594-9802-4b54-8c24-bfb1e7c6c81c",
-        "id_v1": "/lights/6",
-        "owner": {
-          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "be27e7a9-acd4-42da-a1e1-ceac9e279681",
-        "id_v1": "/lights/2",
-        "owner": {
-          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "ecd97735-9a39-466b-bf24-fb3ba8c9e4ba",
-        "id_v1": "/lights/11",
-        "owner": {
-          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
-          "rtype": "device"
-        },
-        "type": "light"
-      },
-      {
-        "id": "b612b85c-1231-4aed-ac03-98250efdbb6c",
-        "id_v1": "/sensors/5",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "light_level"
-      },
-      {
-        "id": "ddbedd26-0951-4d33-abfa-35e57b981522",
-        "type": "matter"
-      },
-      {
-        "id": "4a50cccd-b1d7-447e-bd94-3e73b2e6097a",
-        "id_v1": "/sensors/4",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "motion"
-      },
-      {
-        "id": "77db55a9-276f-45cc-91d8-0ab4966b288a",
-        "id_v1": "/groups/4",
-        "type": "room"
-      },
-      {
-        "id": "e1b696b9-21a4-4a2e-8f66-6e5463581069",
-        "id_v1": "/groups/2",
-        "type": "room"
-      },
-      {
-        "id": "e8006e01-92a3-4bc7-9102-a768259187b0",
-        "id_v1": "/groups/3",
-        "type": "room"
-      },
-      {
-        "id": "e998cc46-e091-41c2-bdb9-df7ac849982e",
-        "id_v1": "/groups/1",
-        "type": "room"
-      },
-      {
-        "id": "051256aa-1b68-4820-8fef-f55ae6f084ea",
-        "id_v1": "/scenes/P-rspHcq2iEI39Z",
-        "type": "scene"
-      },
-      {
-        "id": "06dc8d7f-bcd5-4372-ae8d-c107fa9289cb",
-        "id_v1": "/scenes/XP2xMN3SLDwC1EK",
-        "type": "scene"
-      },
-      {
-        "id": "0cfaf26a-b499-42b1-81e8-d83de3213841",
-        "id_v1": "/scenes/s3VBoDz9bwUK9o5",
-        "type": "scene"
-      },
-      {
-        "id": "16807983-46dc-46aa-ab60-40a8a89c89e1",
-        "id_v1": "/scenes/Jrx0evefcm6tmls",
-        "type": "scene"
-      },
-      {
-        "id": "22e398eb-c949-4050-bc37-9b16d759709f",
-        "id_v1": "/scenes/1jX3-VbqnKYwOmD",
-        "type": "scene"
-      },
-      {
-        "id": "343ca3ee-6102-4fac-a7f6-da9ff12fdb2b",
-        "id_v1": "/scenes/Ac3Pr6qk0N14DGP",
-        "type": "scene"
-      },
-      {
-        "id": "54110d9d-90b2-4b1d-8c74-03218306b1c8",
-        "id_v1": "/scenes/0J89q9x-ekTMMFO",
-        "type": "scene"
-      },
-      {
-        "id": "5836774c-bc8c-4dee-aeba-7d6a2226ca9c",
-        "id_v1": "/scenes/o86BNeOxKbHVvvl",
-        "type": "scene"
-      },
-      {
-        "id": "5c43cb57-f14a-4a7c-9770-fdc94bb2fb70",
-        "id_v1": "/scenes/TY7BdKhM1pOlK8V",
-        "type": "scene"
-      },
-      {
-        "id": "6dd0bfb9-0a47-49a1-97ef-7978766217df",
-        "id_v1": "/scenes/EdIwm3d-F4Q4JND",
-        "type": "scene"
-      },
-      {
-        "id": "718cdba6-fb1c-4951-afc9-8230c6f25d0d",
-        "id_v1": "/scenes/OgwBZLN4Vhm5dcP",
-        "type": "scene"
-      },
-      {
-        "id": "8854c65a-5a73-40d0-b7ce-b14d4a61de20",
-        "id_v1": "/scenes/4fuXHVb3vCelois",
-        "type": "scene"
-      },
-      {
-        "id": "915959e0-0098-49f6-96d3-47a82d963ac8",
-        "id_v1": "/scenes/oQ-UGkr8gxSKrpZ",
-        "type": "scene"
-      },
-      {
-        "id": "931a97bf-2c0b-4e45-9e1f-d7a85d04b7cc",
-        "id_v1": "/scenes/rbpLll1jNiTft5Q",
-        "type": "scene"
-      },
-      {
-        "id": "a26ffa99-064a-4881-b833-3018dc277e67",
-        "id_v1": "/scenes/zDFx3lU-Hb2oSBA",
-        "type": "scene"
-      },
-      {
-        "id": "ded2cd62-da7d-4c7e-a4c1-b11d93a0ea41",
-        "id_v1": "/scenes/bIiR35pVrvNCgLH",
-        "type": "scene"
-      },
-      {
-        "id": "e2c5c979-06df-4505-8d72-2191f9ab6459",
-        "id_v1": "/scenes/1tSancEcLQ9O8Xy",
-        "type": "scene"
-      },
-      {
-        "id": "eaae33f1-0dfa-4bed-89aa-af13c6313f63",
-        "id_v1": "/scenes/4j-zh72Smjdpp-X",
-        "type": "scene"
-      },
-      {
-        "id": "f99c613a-d227-474f-b456-934158cd544c",
-        "id_v1": "/scenes/2Aj44yxsapnJhG9",
-        "type": "scene"
-      },
-      {
-        "id": "fbd99c4d-e6d6-4fd7-8c56-78ded652001b",
-        "id_v1": "/scenes/Zli0vW4rTzEURoJ",
-        "type": "scene"
-      },
-      {
-        "id": "5606a921-4315-4d66-867a-552718df8cae",
-        "id_v1": "/sensors/3",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "temperature"
-      },
-      {
-        "id": "0f01e4a0-9694-489e-a081-eb16262fee5f",
-        "id_v1": "/lights/2",
-        "owner": {
-          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "223e1cfe-8876-4998-9dce-53290bcbb15f",
-        "id_v1": "/lights/3",
-        "owner": {
-          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "2255d394-2d68-41f4-a51b-84f93d160303",
-        "id_v1": "/lights/9",
-        "owner": {
-          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "35aa51eb-42d3-4040-92f3-6ce5a033dd87",
-        "id_v1": "/lights/7",
-        "owner": {
-          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "733aeb83-0087-4b90-b33c-a4f130e745c9",
-        "id_v1": "/sensors/4",
-        "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "8aa96ebb-6f88-4a7a-bece-2ab0f0b1adeb",
-        "owner": {
-          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "99210e09-5887-4740-8c4c-27a13fa8524c",
-        "id_v1": "/lights/8",
-        "owner": {
-          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "b209ee8c-d232-4b73-90fb-42da5f3b2edf",
-        "id_v1": "/lights/12",
-        "owner": {
-          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "bb9e27ad-bd17-4775-86d2-2be300e79d5f",
-        "id_v1": "/lights/5",
-        "owner": {
-          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "df341305-fc87-43f4-908b-bc61a8cd1037",
-        "id_v1": "/lights/11",
-        "owner": {
-          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "efb41a90-8057-4cdd-8481-27f0e76e3ce6",
-        "id_v1": "/lights/4",
-        "owner": {
-          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "f20a90d0-3a8e-434b-8874-f1f51f5b5742",
-        "id_v1": "/lights/6",
-        "owner": {
-          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
-          "rtype": "device"
-        },
-        "type": "zigbee_connectivity"
-      },
-      {
-        "id": "00b5dd45-6744-48a2-b393-404939bbbf8d",
-        "owner": {
-          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-          "rtype": "device"
-        },
-        "type": "zigbee_device_discovery"
       }
     ],
     "errors": []
   },
-  "bridges": {
+  "behavior_scripts": {
     "data": [
       {
-        "bridge_id": "001788fffe22d8c1",
-        "id": "5ada0f32-4ccb-45d7-a2ff-d2842eb0a527",
-        "owner": {
-          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
-          "rtype": "device"
+        "configuration_schema": {
+          "$ref": "leaving_home_config.json#"
         },
-        "time_zone": {
-          "time_zone": "Europe/Berlin"
+        "description": "Automatically turn off your lights when you leave",
+        "id": "0194752a-2d53-4f92-8209-dfdc52745af3",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#2"
         },
-        "type": "bridge"
+        "state_schema": {},
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "config.json#"
+        },
+        "description": "Contact Sensor script",
+        "id": "049008e6-62d7-42ba-b473-d8488cfde600",
+        "metadata": {
+          "category": "accessory",
+          "name": "Name#3"
+        },
+        "state_schema": {
+          "$ref": "state.json#"
+        },
+        "trigger_schema": {},
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "smoke_alarm_config.json#"
+        },
+        "description": "Smoke alarm automation",
+        "id": "58f97610-b471-4c94-a27d-4d55bcd8c197",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#4"
+        },
+        "state_schema": {
+          "$ref": "smoke_alarm_state.json#"
+        },
+        "trigger_schema": {
+          "$ref": "smoke_alarm_trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "config.json#"
+        },
+        "description": "Generic switches script",
+        "id": "67d9395b-4403-42cc-b5f0-740b699d67c6",
+        "metadata": {
+          "category": "accessory",
+          "name": "Name#5"
+        },
+        "state_schema": {
+          "$ref": "state.json#"
+        },
+        "trigger_schema": {},
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "schedule_config.json#"
+        },
+        "description": "Schedule turning on and off lights",
+        "id": "7238c707-8693-4f19-9095-ccdc1444d228",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#6"
+        },
+        "state_schema": {},
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "lights_state_after_streaming_config.json#"
+        },
+        "description": "State of lights in the entertainment group after streaming ends",
+        "id": "7719b841-6b3d-448d-a0e7-601ae9edb6a2",
+        "metadata": {
+          "category": "entertainment",
+          "name": "Name#7"
+        },
+        "state_schema": {},
+        "trigger_schema": {},
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "goto_sleep_config.json#"
+        },
+        "description": "Get ready for nice sleep.",
+        "id": "7e571ac6-f363-42e1-809a-4cbf6523ed72",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#8"
+        },
+        "state_schema": {
+          "$ref": "goto_sleep_state.json#"
+        },
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "motion_sensor_config.json#"
+        },
+        "description": "Motion sensor script",
+        "id": "bba79770-19f1-11ec-9621-0242ac130002",
+        "metadata": {
+          "category": "accessory",
+          "name": "Name#9"
+        },
+        "state_schema": {
+          "$ref": "motion_sensor_state.json#"
+        },
+        "trigger_schema": {},
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "pm_config.json#"
+        },
+        "description": "PM Automation",
+        "id": "db06cabc-c752-4904-9e8f-4ebe98feaa1a",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#10"
+        },
+        "state_schema": {
+          "$ref": "pm_state.json#"
+        },
+        "trigger_schema": {
+          "$ref": "pm_trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "timer_config.json#"
+        },
+        "description": "Countdown Timer",
+        "id": "e73bc72d-96b1-46f8-aa57-729861f80c78",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#11"
+        },
+        "state_schema": {
+          "$ref": "timer_state.json#"
+        },
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "config.json#"
+        },
+        "description": "Tap Switch script",
+        "id": "f306f634-acdb-4dd6-bdf5-48dd626d667e",
+        "metadata": {
+          "category": "accessory",
+          "name": "Name#12"
+        },
+        "state_schema": {
+          "$ref": "state.json#"
+        },
+        "trigger_schema": {},
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "coming_home_config.json#"
+        },
+        "description": "Automatically turn your lights to choosen light states, when you arrive at home.",
+        "id": "fd60fcd1-4809-4813-b510-4a18856a595c",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#13"
+        },
+        "state_schema": {},
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
+      },
+      {
+        "configuration_schema": {
+          "$ref": "basic_wake_up_config.json#"
+        },
+        "description": "Get your body in the mood to wake up by fading on the lights in the morning.",
+        "id": "ff8957e3-2eb9-4699-a0c8-ad2cb3ede704",
+        "metadata": {
+          "category": "automation",
+          "name": "Name#14"
+        },
+        "state_schema": {},
+        "trigger_schema": {
+          "$ref": "trigger.json#"
+        },
+        "type": "behavior_script",
+        "version": "0.0.1"
       }
     ],
+    "errors": []
+  },
+  "bell_buttons": {
+    "data": [],
     "errors": []
   },
   "bridge_homes": {
     "data": [
       {
         "children": [
-          {
-            "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
-            "rtype": "device"
-          },
           {
             "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
             "rtype": "device"
@@ -734,14 +417,181 @@
     ],
     "errors": []
   },
+  "bridges": {
+    "data": [
+      {
+        "bridge_id": "001788fffe22d8c1",
+        "id": "5ada0f32-4ccb-45d7-a2ff-d2842eb0a527",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "time_zone": {
+          "time_zone": "Europe/Berlin"
+        },
+        "type": "bridge"
+      }
+    ],
+    "errors": []
+  },
+  "buttons": {
+    "data": [],
+    "errors": []
+  },
+  "camera_motions": {
+    "data": [],
+    "errors": []
+  },
+  "contacts": {
+    "data": [],
+    "errors": []
+  },
+  "device_powers": {
+    "data": [
+      {
+        "id": "52d23eb6-c9b5-4641-b873-3d441888c34b",
+        "id_v1": "/sensors/4",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "power_state": {
+          "battery_level": 77,
+          "battery_state": "normal"
+        },
+        "type": "device_power"
+      }
+    ],
+    "errors": []
+  },
+  "device_software_updates": {
+    "data": [
+      {
+        "id": "042fd3fb-4d25-44ad-9928-90fce043f8fd",
+        "owner": {
+          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "1d506942-aba3-4758-aff8-0661af3dab0e",
+        "owner": {
+          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "227c1005-f06a-490c-b838-3c5bab064561",
+        "owner": {
+          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "3a09176c-bbc3-45ab-ace8-41c27ae57e0f",
+        "owner": {
+          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "49ceadda-03fe-4385-adb2-8eb0da74439d",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "70bfccef-1262-42c5-8bb4-f194e71c3394",
+        "owner": {
+          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "8209ecaa-e8bd-4782-a776-e1d035b4b13e",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "b2f6bb0c-da47-40aa-ac16-528f8e00e38e",
+        "owner": {
+          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "bc946aa1-ae3d-4124-8b0e-1300bb2ea826",
+        "owner": {
+          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "ded732ad-a737-4a91-aedf-fc80e0492f00",
+        "owner": {
+          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      },
+      {
+        "id": "f9373c97-4e56-47dd-bba0-bc25ab9c141c",
+        "owner": {
+          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+          "rtype": "device"
+        },
+        "problems": [],
+        "state": "no_update",
+        "type": "device_software_update"
+      }
+    ],
+    "errors": []
+  },
   "devices": {
     "data": [
       {
         "id": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
         "id_v1": "/lights/5",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#1"
+          "name": "Name#15"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -750,7 +600,7 @@
           "model_id": "LTW012",
           "product_archetype": "candle_bulb",
           "product_name": "Hue ambiance candle",
-          "software_version": "1.116.3"
+          "software_version": "1.116.8"
         },
         "services": [
           {
@@ -762,6 +612,10 @@
             "rtype": "light"
           },
           {
+            "rid": "4fcf666e-08d7-48bb-86ec-0702f62dd753",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "70bfccef-1262-42c5-8bb4-f194e71c3394",
             "rtype": "device_software_update"
           }
@@ -771,9 +625,14 @@
       {
         "id": "4e16129d-464c-48fc-9193-6264e463e3df",
         "id_v1": "/lights/7",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#2"
+          "name": "Name#16"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -782,7 +641,7 @@
           "model_id": "LTW012",
           "product_archetype": "candle_bulb",
           "product_name": "Hue ambiance candle",
-          "software_version": "1.116.3"
+          "software_version": "1.116.8"
         },
         "services": [
           {
@@ -794,6 +653,10 @@
             "rtype": "light"
           },
           {
+            "rid": "30442e17-f622-4829-bf5c-bfdcc58583ed",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "bc946aa1-ae3d-4124-8b0e-1300bb2ea826",
             "rtype": "device_software_update"
           }
@@ -803,9 +666,14 @@
       {
         "id": "549995d5-a934-4469-ba27-6d1391633ff8",
         "id_v1": "/lights/9",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
-          "name": "Name#3"
+          "name": "Name#17"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -814,7 +682,7 @@
           "model_id": "LWA001",
           "product_archetype": "sultan_bulb",
           "product_name": "Hue white lamp",
-          "software_version": "1.122.2"
+          "software_version": "1.122.8"
         },
         "services": [
           {
@@ -827,7 +695,7 @@
           },
           {
             "rid": "a1174e11-b97f-4e63-b261-9cbbf56b47f2",
-            "rtype": "taurus_7455"
+            "rtype": "motion_area_candidate"
           },
           {
             "rid": "ded732ad-a737-4a91-aedf-fc80e0492f00",
@@ -839,9 +707,14 @@
       {
         "id": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
         "id_v1": "/lights/11",
+        "identify": {},
         "metadata": {
           "archetype": "floor_shade",
-          "name": "Name#4"
+          "name": "Name#18"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -850,7 +723,7 @@
           "model_id": "LWA011",
           "product_archetype": "sultan_bulb",
           "product_name": "Hue white lamp",
-          "software_version": "1.122.2"
+          "software_version": "1.145.1"
         },
         "services": [
           {
@@ -863,7 +736,7 @@
           },
           {
             "rid": "4d0bd493-4819-4b82-b054-2262b9f13fdd",
-            "rtype": "taurus_7455"
+            "rtype": "motion_area_candidate"
           },
           {
             "rid": "b2f6bb0c-da47-40aa-ac16-528f8e00e38e",
@@ -875,9 +748,14 @@
       {
         "id": "5c8131ae-c187-4408-98d3-c362c5f777a3",
         "id_v1": "/lights/8",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
-          "name": "Name#5"
+          "name": "Name#19"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -886,7 +764,7 @@
           "model_id": "LWA001",
           "product_archetype": "sultan_bulb",
           "product_name": "Hue white lamp",
-          "software_version": "1.122.2"
+          "software_version": "1.122.8"
         },
         "services": [
           {
@@ -899,7 +777,7 @@
           },
           {
             "rid": "4c844380-c20c-4740-a334-bedda51377b0",
-            "rtype": "taurus_7455"
+            "rtype": "motion_area_candidate"
           },
           {
             "rid": "3a09176c-bbc3-45ab-ace8-41c27ae57e0f",
@@ -911,9 +789,14 @@
       {
         "id": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
         "id_v1": "/lights/4",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#6"
+          "name": "Name#20"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -922,7 +805,7 @@
           "model_id": "LTW012",
           "product_archetype": "candle_bulb",
           "product_name": "Hue ambiance candle",
-          "software_version": "1.116.3"
+          "software_version": "1.116.8"
         },
         "services": [
           {
@@ -934,6 +817,10 @@
             "rtype": "light"
           },
           {
+            "rid": "b5e9797b-a8a3-46ad-8112-397e814995a5",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "042fd3fb-4d25-44ad-9928-90fce043f8fd",
             "rtype": "device_software_update"
           }
@@ -943,9 +830,14 @@
       {
         "id": "92cd53c4-abff-437c-bb21-1733e74c5df5",
         "id_v1": "/sensors/4",
+        "identify": {},
         "metadata": {
           "archetype": "unknown_archetype",
-          "name": "Name#7"
+          "name": "Name#1"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -954,7 +846,7 @@
           "model_id": "SML001",
           "product_archetype": "unknown_archetype",
           "product_name": "Hue motion sensor",
-          "software_version": "1.1.27575"
+          "software_version": "67.116.1"
         },
         "services": [
           {
@@ -991,9 +883,14 @@
       {
         "id": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
         "id_v1": "/lights/12",
+        "identify": {},
         "metadata": {
           "archetype": "ceiling_round",
-          "name": "Name#8"
+          "name": "Name#21"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -1002,7 +899,7 @@
           "model_id": "LWA011",
           "product_archetype": "sultan_bulb",
           "product_name": "Hue white lamp",
-          "software_version": "1.122.2"
+          "software_version": "1.145.1"
         },
         "services": [
           {
@@ -1015,7 +912,7 @@
           },
           {
             "rid": "76237bf0-e13d-4643-83c6-ddcd43cf194f",
-            "rtype": "taurus_7455"
+            "rtype": "motion_area_candidate"
           },
           {
             "rid": "227c1005-f06a-490c-b838-3c5bab064561",
@@ -1027,9 +924,14 @@
       {
         "id": "a58ff365-eba2-4411-8678-d5ac2c68512b",
         "id_v1": "/lights/6",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#9"
+          "name": "Name#22"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -1038,7 +940,7 @@
           "model_id": "LTW012",
           "product_archetype": "candle_bulb",
           "product_name": "Hue ambiance candle",
-          "software_version": "1.116.3"
+          "software_version": "1.116.8"
         },
         "services": [
           {
@@ -1050,6 +952,10 @@
             "rtype": "light"
           },
           {
+            "rid": "a9ee33bd-fbac-4237-9c7d-c822c68724b3",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "1d506942-aba3-4758-aff8-0661af3dab0e",
             "rtype": "device_software_update"
           }
@@ -1058,9 +964,14 @@
       },
       {
         "id": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+        "identify": {},
         "metadata": {
           "archetype": "bridge_v2",
-          "name": "Name#10"
+          "name": "Name#23"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -1068,7 +979,7 @@
           "model_id": "BSB002",
           "product_archetype": "bridge_v2",
           "product_name": "Hue Bridge",
-          "software_version": "1.68.1968096020"
+          "software_version": "1.75.1975170000"
         },
         "services": [
           {
@@ -1093,9 +1004,14 @@
       {
         "id": "b9e3eca4-c718-4445-9833-aa5f349c8219",
         "id_v1": "/lights/2",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
-          "name": "Name#11"
+          "name": "Name#24"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -1104,7 +1020,7 @@
           "model_id": "LWB006",
           "product_archetype": "classic_bulb",
           "product_name": "Hue white lamp",
-          "software_version": "67.116.3"
+          "software_version": "67.116.8"
         },
         "services": [
           {
@@ -1116,6 +1032,10 @@
             "rtype": "light"
           },
           {
+            "rid": "7ede1e81-1103-4e5b-9b9d-db92e404ac5f",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "f9373c97-4e56-47dd-bba0-bc25ab9c141c",
             "rtype": "device_software_update"
           }
@@ -1125,9 +1045,14 @@
       {
         "id": "da699f9a-1098-484f-99af-8de24cb9b44f",
         "id_v1": "/lights/3",
+        "identify": {},
         "metadata": {
           "archetype": "floor_shade",
-          "name": "Name#12"
+          "name": "Name#25"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "product_data": {
           "certified": true,
@@ -1136,7 +1061,7 @@
           "model_id": "LCT010",
           "product_archetype": "sultan_bulb",
           "product_name": "Hue color lamp",
-          "software_version": "1.116.3"
+          "software_version": "1.116.8"
         },
         "services": [
           {
@@ -1152,6 +1077,10 @@
             "rtype": "entertainment"
           },
           {
+            "rid": "e426a3c2-c327-4391-9224-21dbc811f547",
+            "rtype": "motion_area_candidate"
+          },
+          {
             "rid": "8209ecaa-e8bd-4782-a776-e1d035b4b13e",
             "rtype": "device_software_update"
           }
@@ -1161,20 +1090,80 @@
     ],
     "errors": []
   },
-  "device_powers": {
+  "entertainment_configurations": {
+    "data": [],
+    "errors": []
+  },
+  "entertainments": {
     "data": [
       {
-        "id": "52d23eb6-c9b5-4641-b873-3d441888c34b",
-        "id_v1": "/sensors/4",
+        "id": "33da95c2-3949-4d6a-8577-35a39bd78cca",
+        "max_streams": 1,
         "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
           "rtype": "device"
         },
-        "power_state": {
-          "battery_level": 100,
-          "battery_state": "normal"
+        "proxy": true,
+        "renderer": false,
+        "type": "entertainment"
+      },
+      {
+        "id": "8c1a5c84-7209-43d2-bba6-94aa18fd1eba",
+        "id_v1": "/lights/3",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
         },
-        "type": "device_power"
+        "proxy": true,
+        "renderer": true,
+        "segments": {
+          "configurable": false,
+          "max_segments": 1,
+          "segments": [
+            {
+              "length": 1,
+              "start": 0
+            }
+          ]
+        },
+        "type": "entertainment"
+      }
+    ],
+    "errors": []
+  },
+  "geofence_clients": {
+    "data": [],
+    "errors": []
+  },
+  "geolocations": {
+    "data": [
+      {
+        "id": "f78d8be1-8f72-4dab-ae75-b762bd3e7f1a",
+        "is_configured": true,
+        "type": "geolocation"
+      }
+    ],
+    "errors": []
+  },
+  "grouped_light_levels": {
+    "data": [
+      {
+        "id": "13fe64a6-8fa4-4d89-bc9e-9e93767e3b77",
+        "light": {},
+        "owner": {
+          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+          "rtype": "room"
+        },
+        "type": "grouped_light_level"
+      },
+      {
+        "id": "6b6d366d-40d4-46f6-a823-d70985a2e89b",
+        "light": {},
+        "owner": {
+          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+          "rtype": "bridge_home"
+        },
+        "type": "grouped_light_level"
       }
     ],
     "errors": []
@@ -1318,6 +1307,66 @@
     ],
     "errors": []
   },
+  "grouped_motions": {
+    "data": [
+      {
+        "id": "537378f6-1a55-4274-8085-0eb504bb15a4",
+        "motion": {},
+        "owner": {
+          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+          "rtype": "room"
+        },
+        "type": "grouped_motion"
+      },
+      {
+        "id": "c3b6de8a-e601-4f05-9864-011d5907d308",
+        "motion": {},
+        "owner": {
+          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+          "rtype": "bridge_home"
+        },
+        "type": "grouped_motion"
+      }
+    ],
+    "errors": []
+  },
+  "homekits": {
+    "data": [
+      {
+        "id": "680847bf-b790-4659-821b-f86ea06ce9e4",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "status": "paired",
+        "type": "homekit"
+      }
+    ],
+    "errors": []
+  },
+  "light_levels": {
+    "data": [
+      {
+        "enabled": true,
+        "id": "b612b85c-1231-4aed-ac03-98250efdbb6c",
+        "id_v1": "/sensors/5",
+        "light": {
+          "light_level": 4895,
+          "light_level_report": {
+            "changed": "2026-03-07T07:15:01.112Z",
+            "light_level": 4895
+          },
+          "light_level_valid": true
+        },
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "light_level"
+      }
+    ],
+    "errors": []
+  },
   "lights": {
     "data": [
       {
@@ -1327,7 +1376,7 @@
           ]
         },
         "dimming": {
-          "brightness": 49.8,
+          "brightness": 30.04,
           "min_dim_level": 5
         },
         "dynamics": {
@@ -1351,10 +1400,12 @@
         },
         "id": "22e46126-e936-4784-a628-7e8f084e9019",
         "id_v1": "/lights/9",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
           "fixed_mired": 366,
-          "name": "Name#3"
+          "function": "mixed",
+          "name": "Name#17"
         },
         "mode": "normal",
         "on": {
@@ -1374,6 +1425,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1413,10 +1465,12 @@
         },
         "id": "284465d2-19cd-4ab4-9fdb-78e87983b68d",
         "id_v1": "/lights/12",
+        "identify": {},
         "metadata": {
           "archetype": "ceiling_round",
           "fixed_mired": 366,
-          "name": "Name#8"
+          "function": "mixed",
+          "name": "Name#21"
         },
         "mode": "normal",
         "on": {
@@ -1436,6 +1490,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1467,12 +1522,12 @@
           },
           "gamut_type": "C",
           "xy": {
-            "x": 0.4572,
-            "y": 0.4099
+            "x": 0.4578,
+            "y": 0.41
           }
         },
         "color_temperature": {
-          "mirek": 366,
+          "mirek": 367,
           "mirek_schema": {
             "mirek_maximum": 500,
             "mirek_minimum": 153
@@ -1515,9 +1570,11 @@
         },
         "id": "38e332e0-8d45-4174-bf86-6dec2f2314a2",
         "id_v1": "/lights/3",
+        "identify": {},
         "metadata": {
           "archetype": "floor_shade",
-          "name": "Name#12"
+          "function": "mixed",
+          "name": "Name#25"
         },
         "mode": "normal",
         "on": {
@@ -1537,6 +1594,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1554,7 +1612,7 @@
           ]
         },
         "color_temperature": {
-          "mirek": 443,
+          "mirek": 366,
           "mirek_schema": {
             "mirek_maximum": 454,
             "mirek_minimum": 153
@@ -1562,7 +1620,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 56.52,
+          "brightness": 30.04,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1590,9 +1648,11 @@
         },
         "id": "519df633-bcad-489e-a490-353b6bfaf2bf",
         "id_v1": "/lights/4",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#6"
+          "function": "mixed",
+          "name": "Name#20"
         },
         "mode": "normal",
         "on": {
@@ -1612,6 +1672,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1627,7 +1688,7 @@
           ]
         },
         "color_temperature": {
-          "mirek": 443,
+          "mirek": 366,
           "mirek_schema": {
             "mirek_maximum": 454,
             "mirek_minimum": 153
@@ -1635,7 +1696,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 56.52,
+          "brightness": 30.04,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1663,9 +1724,11 @@
         },
         "id": "70b7a3e7-d800-4251-a2a2-741eef41b041",
         "id_v1": "/lights/5",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#1"
+          "function": "mixed",
+          "name": "Name#15"
         },
         "mode": "normal",
         "on": {
@@ -1685,6 +1748,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1700,7 +1764,7 @@
           ]
         },
         "color_temperature": {
-          "mirek": 443,
+          "mirek": 366,
           "mirek_schema": {
             "mirek_maximum": 454,
             "mirek_minimum": 153
@@ -1708,7 +1772,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 56.52,
+          "brightness": 30.04,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1736,9 +1800,11 @@
         },
         "id": "a3c5f066-f598-41eb-bae2-33d3aa34000c",
         "id_v1": "/lights/7",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#2"
+          "function": "mixed",
+          "name": "Name#16"
         },
         "mode": "normal",
         "on": {
@@ -1758,6 +1824,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1773,7 +1840,7 @@
           ]
         },
         "dimming": {
-          "brightness": 49.8,
+          "brightness": 30.04,
           "min_dim_level": 5
         },
         "dynamics": {
@@ -1797,10 +1864,12 @@
         },
         "id": "ad90a702-a167-4a7c-8bf0-c87cc5938855",
         "id_v1": "/lights/8",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
           "fixed_mired": 366,
-          "name": "Name#5"
+          "function": "mixed",
+          "name": "Name#19"
         },
         "mode": "normal",
         "on": {
@@ -1820,6 +1889,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1835,7 +1905,7 @@
           ]
         },
         "color_temperature": {
-          "mirek": 443,
+          "mirek": 366,
           "mirek_schema": {
             "mirek_maximum": 454,
             "mirek_minimum": 153
@@ -1843,7 +1913,7 @@
           "mirek_valid": true
         },
         "dimming": {
-          "brightness": 56.52,
+          "brightness": 30.04,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1871,9 +1941,11 @@
         },
         "id": "b3014594-9802-4b54-8c24-bfb1e7c6c81c",
         "id_v1": "/lights/6",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_long",
-          "name": "Name#9"
+          "function": "mixed",
+          "name": "Name#22"
         },
         "mode": "normal",
         "on": {
@@ -1893,6 +1965,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1908,7 +1981,7 @@
           ]
         },
         "dimming": {
-          "brightness": 49.8,
+          "brightness": 30.04,
           "min_dim_level": 2
         },
         "dynamics": {
@@ -1921,10 +1994,12 @@
         },
         "id": "be27e7a9-acd4-42da-a1e1-ceac9e279681",
         "id_v1": "/lights/2",
+        "identify": {},
         "metadata": {
           "archetype": "pendant_round",
-          "fixed_mired": 366,
-          "name": "Name#11"
+          "fixed_mired": 367,
+          "function": "mixed",
+          "name": "Name#24"
         },
         "mode": "normal",
         "on": {
@@ -1944,6 +2019,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -1983,10 +2059,12 @@
         },
         "id": "ecd97735-9a39-466b-bf24-fb3ba8c9e4ba",
         "id_v1": "/lights/11",
+        "identify": {},
         "metadata": {
           "archetype": "floor_shade",
           "fixed_mired": 366,
-          "name": "Name#4"
+          "function": "mixed",
+          "name": "Name#18"
         },
         "mode": "normal",
         "on": {
@@ -2006,6 +2084,7 @@
           },
           "preset": "powerfail"
         },
+        "service_id": 0,
         "signaling": {
           "signal_values": [
             "no_signal",
@@ -2017,25 +2096,106 @@
     ],
     "errors": []
   },
-  "light_levels": {
+  "matter_fabrics": {
+    "data": [],
+    "errors": []
+  },
+  "matter": {
     "data": [
       {
-        "enabled": true,
-        "id": "b612b85c-1231-4aed-ac03-98250efdbb6c",
-        "id_v1": "/sensors/5",
-        "light": {
-          "light_level": 18948,
-          "light_level_report": {
-            "changed": "2024-12-21T11:25:05.225Z",
-            "light_level": 18948
-          },
-          "light_level_valid": true
-        },
+        "has_qr_code": false,
+        "id": "ddbedd26-0951-4d33-abfa-35e57b981522",
+        "max_fabrics": 16,
         "owner": {
-          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "matter"
+      }
+    ],
+    "errors": []
+  },
+  "motion_area_candidates": {
+    "data": [
+      {
+        "id": "30442e17-f622-4829-bf5c-bfdcc58583ed",
+        "owner": {
+          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
           "rtype": "device"
         },
-        "type": "light_level"
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "4c844380-c20c-4740-a334-bedda51377b0",
+        "owner": {
+          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "4d0bd493-4819-4b82-b054-2262b9f13fdd",
+        "owner": {
+          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "4fcf666e-08d7-48bb-86ec-0702f62dd753",
+        "owner": {
+          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "76237bf0-e13d-4643-83c6-ddcd43cf194f",
+        "owner": {
+          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "7ede1e81-1103-4e5b-9b9d-db92e404ac5f",
+        "owner": {
+          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "a1174e11-b97f-4e63-b261-9cbbf56b47f2",
+        "owner": {
+          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "a9ee33bd-fbac-4237-9c7d-c822c68724b3",
+        "owner": {
+          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "b5e9797b-a8a3-46ad-8112-397e814995a5",
+        "owner": {
+          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
+      },
+      {
+        "id": "e426a3c2-c327-4391-9224-21dbc811f547",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "type": "motion_area_candidate"
       }
     ],
     "errors": []
@@ -2049,7 +2209,7 @@
         "motion": {
           "motion": false,
           "motion_report": {
-            "changed": "2024-12-21T10:51:10.902Z",
+            "changed": "2026-03-07T05:30:11.001Z",
             "motion": false
           },
           "motion_valid": true
@@ -2064,6 +2224,922 @@
           "status": "set"
         },
         "type": "motion"
+      }
+    ],
+    "errors": []
+  },
+  "relative_rotaries": {
+    "data": [],
+    "errors": []
+  },
+  "resources": {
+    "data": [
+      {
+        "id": "eb3b7392-2e15-4083-a056-81cae52bd266",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_instance"
+      },
+      {
+        "id": "0194752a-2d53-4f92-8209-dfdc52745af3",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "049008e6-62d7-42ba-b473-d8488cfde600",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "58f97610-b471-4c94-a27d-4d55bcd8c197",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "67d9395b-4403-42cc-b5f0-740b699d67c6",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "7238c707-8693-4f19-9095-ccdc1444d228",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "7719b841-6b3d-448d-a0e7-601ae9edb6a2",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "7e571ac6-f363-42e1-809a-4cbf6523ed72",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "bba79770-19f1-11ec-9621-0242ac130002",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "db06cabc-c752-4904-9e8f-4ebe98feaa1a",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "e73bc72d-96b1-46f8-aa57-729861f80c78",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "f306f634-acdb-4dd6-bdf5-48dd626d667e",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "fd60fcd1-4809-4813-b510-4a18856a595c",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "ff8957e3-2eb9-4699-a0c8-ad2cb3ede704",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "behavior_script"
+      },
+      {
+        "id": "5ada0f32-4ccb-45d7-a2ff-d2842eb0a527",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "type": "bridge"
+      },
+      {
+        "id": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+        "id_v1": "/groups/0",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "bridge_home"
+      },
+      {
+        "id": "a3752057-d413-4ac5-807a-8d22439678e3",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "clip"
+      },
+      {
+        "id": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+        "id_v1": "/lights/5",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "4e16129d-464c-48fc-9193-6264e463e3df",
+        "id_v1": "/lights/7",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "549995d5-a934-4469-ba27-6d1391633ff8",
+        "id_v1": "/lights/9",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+        "id_v1": "/lights/11",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+        "id_v1": "/lights/8",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+        "id_v1": "/lights/4",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+        "id_v1": "/sensors/4",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+        "id_v1": "/lights/12",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+        "id_v1": "/lights/6",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+        "id_v1": "/lights/2",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "da699f9a-1098-484f-99af-8de24cb9b44f",
+        "id_v1": "/lights/3",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "device"
+      },
+      {
+        "id": "52d23eb6-c9b5-4641-b873-3d441888c34b",
+        "id_v1": "/sensors/4",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "device_power"
+      },
+      {
+        "id": "042fd3fb-4d25-44ad-9928-90fce043f8fd",
+        "owner": {
+          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "1d506942-aba3-4758-aff8-0661af3dab0e",
+        "owner": {
+          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "227c1005-f06a-490c-b838-3c5bab064561",
+        "owner": {
+          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "3a09176c-bbc3-45ab-ace8-41c27ae57e0f",
+        "owner": {
+          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "49ceadda-03fe-4385-adb2-8eb0da74439d",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "70bfccef-1262-42c5-8bb4-f194e71c3394",
+        "owner": {
+          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "8209ecaa-e8bd-4782-a776-e1d035b4b13e",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "b2f6bb0c-da47-40aa-ac16-528f8e00e38e",
+        "owner": {
+          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "bc946aa1-ae3d-4124-8b0e-1300bb2ea826",
+        "owner": {
+          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "ded732ad-a737-4a91-aedf-fc80e0492f00",
+        "owner": {
+          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "f9373c97-4e56-47dd-bba0-bc25ab9c141c",
+        "owner": {
+          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+          "rtype": "device"
+        },
+        "type": "device_software_update"
+      },
+      {
+        "id": "33da95c2-3949-4d6a-8577-35a39bd78cca",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "type": "entertainment"
+      },
+      {
+        "id": "8c1a5c84-7209-43d2-bba6-94aa18fd1eba",
+        "id_v1": "/lights/3",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "type": "entertainment"
+      },
+      {
+        "id": "f78d8be1-8f72-4dab-ae75-b762bd3e7f1a",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "geolocation"
+      },
+      {
+        "id": "0b4c7cc4-624e-4b86-8964-c1cd99dec591",
+        "id_v1": "/groups/1",
+        "owner": {
+          "rid": "e998cc46-e091-41c2-bdb9-df7ac849982e",
+          "rtype": "room"
+        },
+        "type": "grouped_light"
+      },
+      {
+        "id": "662c712d-d681-4309-b249-64a5bb638c3b",
+        "id_v1": "/groups/0",
+        "owner": {
+          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+          "rtype": "bridge_home"
+        },
+        "type": "grouped_light"
+      },
+      {
+        "id": "c21f1657-a424-46ea-89be-b882057c4ef7",
+        "id_v1": "/groups/2",
+        "owner": {
+          "rid": "e1b696b9-21a4-4a2e-8f66-6e5463581069",
+          "rtype": "room"
+        },
+        "type": "grouped_light"
+      },
+      {
+        "id": "ca29da78-17af-41cc-a95f-b4774714fbe3",
+        "id_v1": "/groups/4",
+        "owner": {
+          "rid": "77db55a9-276f-45cc-91d8-0ab4966b288a",
+          "rtype": "room"
+        },
+        "type": "grouped_light"
+      },
+      {
+        "id": "e01af1c3-62a5-46cc-86bb-9b0b19bf25ee",
+        "id_v1": "/groups/3",
+        "owner": {
+          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+          "rtype": "room"
+        },
+        "type": "grouped_light"
+      },
+      {
+        "id": "13fe64a6-8fa4-4d89-bc9e-9e93767e3b77",
+        "owner": {
+          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+          "rtype": "room"
+        },
+        "type": "grouped_light_level"
+      },
+      {
+        "id": "6b6d366d-40d4-46f6-a823-d70985a2e89b",
+        "owner": {
+          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+          "rtype": "bridge_home"
+        },
+        "type": "grouped_light_level"
+      },
+      {
+        "id": "537378f6-1a55-4274-8085-0eb504bb15a4",
+        "owner": {
+          "rid": "e8006e01-92a3-4bc7-9102-a768259187b0",
+          "rtype": "room"
+        },
+        "type": "grouped_motion"
+      },
+      {
+        "id": "c3b6de8a-e601-4f05-9864-011d5907d308",
+        "owner": {
+          "rid": "3dfff7e9-b441-4db6-b516-621eda73c7b0",
+          "rtype": "bridge_home"
+        },
+        "type": "grouped_motion"
+      },
+      {
+        "id": "680847bf-b790-4659-821b-f86ea06ce9e4",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "homekit"
+      },
+      {
+        "id": "22e46126-e936-4784-a628-7e8f084e9019",
+        "id_v1": "/lights/9",
+        "owner": {
+          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "284465d2-19cd-4ab4-9fdb-78e87983b68d",
+        "id_v1": "/lights/12",
+        "owner": {
+          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "38e332e0-8d45-4174-bf86-6dec2f2314a2",
+        "id_v1": "/lights/3",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "519df633-bcad-489e-a490-353b6bfaf2bf",
+        "id_v1": "/lights/4",
+        "owner": {
+          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "70b7a3e7-d800-4251-a2a2-741eef41b041",
+        "id_v1": "/lights/5",
+        "owner": {
+          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "a3c5f066-f598-41eb-bae2-33d3aa34000c",
+        "id_v1": "/lights/7",
+        "owner": {
+          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "ad90a702-a167-4a7c-8bf0-c87cc5938855",
+        "id_v1": "/lights/8",
+        "owner": {
+          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "b3014594-9802-4b54-8c24-bfb1e7c6c81c",
+        "id_v1": "/lights/6",
+        "owner": {
+          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "be27e7a9-acd4-42da-a1e1-ceac9e279681",
+        "id_v1": "/lights/2",
+        "owner": {
+          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "ecd97735-9a39-466b-bf24-fb3ba8c9e4ba",
+        "id_v1": "/lights/11",
+        "owner": {
+          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+          "rtype": "device"
+        },
+        "type": "light"
+      },
+      {
+        "id": "b612b85c-1231-4aed-ac03-98250efdbb6c",
+        "id_v1": "/sensors/5",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "light_level"
+      },
+      {
+        "id": "ddbedd26-0951-4d33-abfa-35e57b981522",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "matter"
+      },
+      {
+        "id": "4a50cccd-b1d7-447e-bd94-3e73b2e6097a",
+        "id_v1": "/sensors/4",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "motion"
+      },
+      {
+        "id": "77db55a9-276f-45cc-91d8-0ab4966b288a",
+        "id_v1": "/groups/4",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "room"
+      },
+      {
+        "id": "e1b696b9-21a4-4a2e-8f66-6e5463581069",
+        "id_v1": "/groups/2",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "room"
+      },
+      {
+        "id": "e8006e01-92a3-4bc7-9102-a768259187b0",
+        "id_v1": "/groups/3",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "room"
+      },
+      {
+        "id": "e998cc46-e091-41c2-bdb9-df7ac849982e",
+        "id_v1": "/groups/1",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "room"
+      },
+      {
+        "id": "051256aa-1b68-4820-8fef-f55ae6f084ea",
+        "id_v1": "/scenes/P-rspHcq2iEI39Z",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "06dc8d7f-bcd5-4372-ae8d-c107fa9289cb",
+        "id_v1": "/scenes/XP2xMN3SLDwC1EK",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "0cfaf26a-b499-42b1-81e8-d83de3213841",
+        "id_v1": "/scenes/s3VBoDz9bwUK9o5",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "16807983-46dc-46aa-ab60-40a8a89c89e1",
+        "id_v1": "/scenes/Jrx0evefcm6tmls",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "22e398eb-c949-4050-bc37-9b16d759709f",
+        "id_v1": "/scenes/1jX3-VbqnKYwOmD",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "343ca3ee-6102-4fac-a7f6-da9ff12fdb2b",
+        "id_v1": "/scenes/Ac3Pr6qk0N14DGP",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "54110d9d-90b2-4b1d-8c74-03218306b1c8",
+        "id_v1": "/scenes/0J89q9x-ekTMMFO",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "5836774c-bc8c-4dee-aeba-7d6a2226ca9c",
+        "id_v1": "/scenes/o86BNeOxKbHVvvl",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "5c43cb57-f14a-4a7c-9770-fdc94bb2fb70",
+        "id_v1": "/scenes/TY7BdKhM1pOlK8V",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "6dd0bfb9-0a47-49a1-97ef-7978766217df",
+        "id_v1": "/scenes/EdIwm3d-F4Q4JND",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "718cdba6-fb1c-4951-afc9-8230c6f25d0d",
+        "id_v1": "/scenes/OgwBZLN4Vhm5dcP",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "8854c65a-5a73-40d0-b7ce-b14d4a61de20",
+        "id_v1": "/scenes/4fuXHVb3vCelois",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "915959e0-0098-49f6-96d3-47a82d963ac8",
+        "id_v1": "/scenes/oQ-UGkr8gxSKrpZ",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "931a97bf-2c0b-4e45-9e1f-d7a85d04b7cc",
+        "id_v1": "/scenes/rbpLll1jNiTft5Q",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "a26ffa99-064a-4881-b833-3018dc277e67",
+        "id_v1": "/scenes/zDFx3lU-Hb2oSBA",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "ded2cd62-da7d-4c7e-a4c1-b11d93a0ea41",
+        "id_v1": "/scenes/bIiR35pVrvNCgLH",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "e2c5c979-06df-4505-8d72-2191f9ab6459",
+        "id_v1": "/scenes/1tSancEcLQ9O8Xy",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "eaae33f1-0dfa-4bed-89aa-af13c6313f63",
+        "id_v1": "/scenes/4j-zh72Smjdpp-X",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "f99c613a-d227-474f-b456-934158cd544c",
+        "id_v1": "/scenes/2Aj44yxsapnJhG9",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "fbd99c4d-e6d6-4fd7-8c56-78ded652001b",
+        "id_v1": "/scenes/Zli0vW4rTzEURoJ",
+        "owner": {
+          "rid": "",
+          "rtype": ""
+        },
+        "type": "scene"
+      },
+      {
+        "id": "5606a921-4315-4d66-867a-552718df8cae",
+        "id_v1": "/sensors/3",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "temperature"
+      },
+      {
+        "id": "0f01e4a0-9694-489e-a081-eb16262fee5f",
+        "id_v1": "/lights/2",
+        "owner": {
+          "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "223e1cfe-8876-4998-9dce-53290bcbb15f",
+        "id_v1": "/lights/3",
+        "owner": {
+          "rid": "da699f9a-1098-484f-99af-8de24cb9b44f",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "2255d394-2d68-41f4-a51b-84f93d160303",
+        "id_v1": "/lights/9",
+        "owner": {
+          "rid": "549995d5-a934-4469-ba27-6d1391633ff8",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "35aa51eb-42d3-4040-92f3-6ce5a033dd87",
+        "id_v1": "/lights/7",
+        "owner": {
+          "rid": "4e16129d-464c-48fc-9193-6264e463e3df",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "733aeb83-0087-4b90-b33c-a4f130e745c9",
+        "id_v1": "/sensors/4",
+        "owner": {
+          "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "8aa96ebb-6f88-4a7a-bece-2ab0f0b1adeb",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "99210e09-5887-4740-8c4c-27a13fa8524c",
+        "id_v1": "/lights/8",
+        "owner": {
+          "rid": "5c8131ae-c187-4408-98d3-c362c5f777a3",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "b209ee8c-d232-4b73-90fb-42da5f3b2edf",
+        "id_v1": "/lights/12",
+        "owner": {
+          "rid": "9633d4eb-d7c7-4178-a4e0-98098a47419d",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "bb9e27ad-bd17-4775-86d2-2be300e79d5f",
+        "id_v1": "/lights/5",
+        "owner": {
+          "rid": "2d64a5dc-c19f-47c9-bb68-1e6391a17a69",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "df341305-fc87-43f4-908b-bc61a8cd1037",
+        "id_v1": "/lights/11",
+        "owner": {
+          "rid": "5527b2a3-c1b5-4eca-b2e3-94ed5ea9d292",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "efb41a90-8057-4cdd-8481-27f0e76e3ce6",
+        "id_v1": "/lights/4",
+        "owner": {
+          "rid": "86b46c71-ba47-4deb-99e2-6e5ae5815a8d",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "f20a90d0-3a8e-434b-8874-f1f51f5b5742",
+        "id_v1": "/lights/6",
+        "owner": {
+          "rid": "a58ff365-eba2-4411-8678-d5ac2c68512b",
+          "rtype": "device"
+        },
+        "type": "zigbee_connectivity"
+      },
+      {
+        "id": "00b5dd45-6744-48a2-b393-404939bbbf8d",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "type": "zigbee_device_discovery"
       }
     ],
     "errors": []
@@ -2093,7 +3169,7 @@
         "id_v1": "/groups/4",
         "metadata": {
           "archetype": "recreation",
-          "name": "Name#13"
+          "name": "Name#26"
         },
         "services": [
           {
@@ -2118,7 +3194,7 @@
         "id_v1": "/groups/2",
         "metadata": {
           "archetype": "bedroom",
-          "name": "Name#14"
+          "name": "Name#27"
         },
         "services": [
           {
@@ -2141,18 +3217,30 @@
           {
             "rid": "b9e3eca4-c718-4445-9833-aa5f349c8219",
             "rtype": "device"
+          },
+          {
+            "rid": "92cd53c4-abff-437c-bb21-1733e74c5df5",
+            "rtype": "device"
           }
         ],
         "id": "e8006e01-92a3-4bc7-9102-a768259187b0",
         "id_v1": "/groups/3",
         "metadata": {
           "archetype": "other",
-          "name": "Name#15"
+          "name": "Name#28"
         },
         "services": [
           {
             "rid": "e01af1c3-62a5-46cc-86bb-9b0b19bf25ee",
             "rtype": "grouped_light"
+          },
+          {
+            "rid": "537378f6-1a55-4274-8085-0eb504bb15a4",
+            "rtype": "grouped_motion"
+          },
+          {
+            "rid": "13fe64a6-8fa4-4d89-bc9e-9e93767e3b77",
+            "rtype": "grouped_light_level"
           }
         ],
         "type": "room"
@@ -2168,7 +3256,7 @@
         "id_v1": "/groups/1",
         "metadata": {
           "archetype": "living_room",
-          "name": "Name#16"
+          "name": "Name#29"
         },
         "services": [
           {
@@ -2241,7 +3329,11 @@
             "rid": "28bbfeff-1a0c-444e-bb4b-0b74b88e0c95",
             "rtype": "public_image"
           },
-          "name": "Name#17"
+          "name": "Name#30"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -2263,7 +3355,7 @@
                 "mirek": 367
               },
               "dimming": {
-                "brightness": 30.04
+                "brightness": 59.782608
               },
               "on": {
                 "on": true
@@ -2288,7 +3380,11 @@
             "rid": "8c74b9ba-6e89-4083-a2a7-b10a1e566fed",
             "rtype": "public_image"
           },
-          "name": "Name#18"
+          "name": "Name#31"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -2298,7 +3394,7 @@
                 "mirek": 367
               },
               "dimming": {
-                "brightness": 30.04
+                "brightness": 59.782608
               }
             }
           ],
@@ -2395,7 +3491,11 @@
             "rid": "1e42b2e8-d02e-40d2-9c8d-b1fd8216c686",
             "rtype": "public_image"
           },
-          "name": "Name#19"
+          "name": "Name#32"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -2558,7 +3658,11 @@
             "rid": "adfa9c3e-e9aa-4b65-b9d3-c5b2c0576715",
             "rtype": "public_image"
           },
-          "name": "Name#20"
+          "name": "Name#33"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -2721,7 +3825,11 @@
             "rid": "b90c8900-a6b7-422c-a5d3-e170187dbf8c",
             "rtype": "public_image"
           },
-          "name": "Name#21"
+          "name": "Name#34"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -2828,7 +3936,11 @@
             "rid": "7fd2ccc5-5749-4142-b7a5-66405a676f03",
             "rtype": "public_image"
           },
-          "name": "Name#22"
+          "name": "Name#35"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -2926,7 +4038,11 @@
             "rid": "8c74b9ba-6e89-4083-a2a7-b10a1e566fed",
             "rtype": "public_image"
           },
-          "name": "Name#18"
+          "name": "Name#31"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3033,7 +4149,11 @@
             "rid": "e101a77f-9984-4f61-aac8-15741983c656",
             "rtype": "public_image"
           },
-          "name": "Name#23"
+          "name": "Name#36"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3080,7 +4200,11 @@
             "rid": "732ff1d9-76a7-4630-aad0-c8acc499bb0b",
             "rtype": "public_image"
           },
-          "name": "Name#24"
+          "name": "Name#37"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3147,7 +4271,11 @@
             "rid": "28bbfeff-1a0c-444e-bb4b-0b74b88e0c95",
             "rtype": "public_image"
           },
-          "name": "Name#17"
+          "name": "Name#30"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -3270,7 +4398,11 @@
             "rid": "4f2ed241-5aea-4c9d-8028-55d2b111e06f",
             "rtype": "public_image"
           },
-          "name": "Name#25"
+          "name": "Name#38"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -3433,7 +4565,11 @@
             "rid": "732ff1d9-76a7-4630-aad0-c8acc499bb0b",
             "rtype": "public_image"
           },
-          "name": "Name#24"
+          "name": "Name#37"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3500,7 +4636,11 @@
             "rid": "732ff1d9-76a7-4630-aad0-c8acc499bb0b",
             "rtype": "public_image"
           },
-          "name": "Name#24"
+          "name": "Name#37"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3611,7 +4751,11 @@
             "rid": "a6a03e6a-fe6e-45bc-b686-878137f3ba91",
             "rtype": "public_image"
           },
-          "name": "Name#26"
+          "name": "Name#39"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -3774,7 +4918,11 @@
             "rid": "a1f7da49-d181-4328-abea-68c9dc4b5416",
             "rtype": "public_image"
           },
-          "name": "Name#27"
+          "name": "Name#40"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3855,7 +5003,11 @@
             "rid": "8c74b9ba-6e89-4083-a2a7-b10a1e566fed",
             "rtype": "public_image"
           },
-          "name": "Name#18"
+          "name": "Name#31"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -3940,7 +5092,11 @@
             "rid": "732ff1d9-76a7-4630-aad0-c8acc499bb0b",
             "rtype": "public_image"
           },
-          "name": "Name#24"
+          "name": "Name#37"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -4003,7 +5159,11 @@
             "rid": "28bbfeff-1a0c-444e-bb4b-0b74b88e0c95",
             "rtype": "public_image"
           },
-          "name": "Name#17"
+          "name": "Name#30"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -4082,7 +5242,11 @@
             "rid": "8c74b9ba-6e89-4083-a2a7-b10a1e566fed",
             "rtype": "public_image"
           },
-          "name": "Name#18"
+          "name": "Name#31"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [],
@@ -4193,7 +5357,11 @@
             "rid": "28bbfeff-1a0c-444e-bb4b-0b74b88e0c95",
             "rtype": "public_image"
           },
-          "name": "Name#17"
+          "name": "Name#30"
+        },
+        "owner": {
+          "rid": "",
+          "rtype": ""
         },
         "palette": {
           "color": [
@@ -4231,7 +5399,19 @@
     ],
     "errors": []
   },
+  "service_groups": {
+    "data": [],
+    "errors": []
+  },
   "smart_scenes": {
+    "data": [],
+    "errors": []
+  },
+  "speakers": {
+    "data": [],
+    "errors": []
+  },
+  "tampers": {
     "data": [],
     "errors": []
   },
@@ -4246,14 +5426,32 @@
           "rtype": "device"
         },
         "temperature": {
-          "temperature": 17.63,
+          "temperature": 18.9,
           "temperature_report": {
-            "changed": "2024-12-21T11:20:39.155Z",
-            "temperature": 17.63
+            "changed": "2026-03-07T07:18:50.698Z",
+            "temperature": 18.9
           },
           "temperature_valid": true
         },
         "type": "temperature"
+      }
+    ],
+    "errors": []
+  },
+  "zgp_connectivities": {
+    "data": [],
+    "errors": []
+  },
+  "zigbee_device_discoveries": {
+    "data": [
+      {
+        "id": "00b5dd45-6744-48a2-b393-404939bbbf8d",
+        "owner": {
+          "rid": "b090d566-2fd5-4fac-b12c-b23e4d82d349",
+          "rtype": "device"
+        },
+        "status": "ready",
+        "type": "zigbee_device_discovery"
       }
     ],
     "errors": []

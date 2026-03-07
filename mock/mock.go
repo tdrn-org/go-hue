@@ -518,7 +518,10 @@ func (mock *mockServer) GetResources(ctx context.Context, request api.GetResourc
 // List behavior instance.
 // (GET /clip/v2/resource/behavior_instance)
 func (mock *mockServer) GetBehaviorInstances(ctx context.Context, request api.GetBehaviorInstancesRequestObject) (api.GetBehaviorInstancesResponseObject, error) {
-	response := api.GetBehaviorInstances200JSONResponse{}
+	response := api.GetBehaviorInstances200JSONResponse{
+		Data:   mockData.GetBehaviorInstances.Data,
+		Errors: mockData.GetBehaviorInstances.Errors,
+	}
 	return response, nil
 }
 
@@ -539,7 +542,10 @@ func (mock *mockServer) UpdateBehaviorInstance(ctx context.Context, request api.
 // List behavior script.
 // (GET /clip/v2/resource/behavior_script)
 func (mock *mockServer) GetBehaviorScripts(ctx context.Context, request api.GetBehaviorScriptsRequestObject) (api.GetBehaviorScriptsResponseObject, error) {
-	response := api.GetBehaviorScripts200JSONResponse{}
+	response := api.GetBehaviorScripts200JSONResponse{
+		Data:   mockData.GetBehaviorScripts.Data,
+		Errors: mockData.GetBehaviorScripts.Errors,
+	}
 	return response, nil
 }
 
@@ -560,7 +566,10 @@ func (mock *mockServer) UpdateBehaviorScript(ctx context.Context, request api.Up
 // List bell buttons.
 // (GET /clip/v2/resource/bell_button)
 func (mock *mockServer) GetBellButtons(ctx context.Context, request api.GetBellButtonsRequestObject) (api.GetBellButtonsResponseObject, error) {
-	response := api.GetBellButtons200JSONResponse{}
+	response := api.GetBellButtons200JSONResponse{
+		Data:   mockData.GetBellButtons.Data,
+		Errors: mockData.GetBellButtons.Errors,
+	}
 	return response, nil
 }
 
@@ -622,7 +631,10 @@ func (mock *mockServer) GetBridgeHome(ctx context.Context, request api.GetBridge
 // List buttons.
 // (GET /clip/v2/resource/button)
 func (mock *mockServer) GetButtons(ctx context.Context, request api.GetButtonsRequestObject) (api.GetButtonsResponseObject, error) {
-	response := api.GetButtons200JSONResponse{}
+	response := api.GetButtons200JSONResponse{
+		Data:   mockData.GetButtons.Data,
+		Errors: mockData.GetButtons.Errors,
+	}
 	return response, nil
 }
 
@@ -643,7 +655,10 @@ func (mock *mockServer) UpdateButton(ctx context.Context, request api.UpdateButt
 // List camera motion sensors.
 // (GET /clip/v2/resource/camera_motion)
 func (mock *mockServer) GetCameraMotions(ctx context.Context, request api.GetCameraMotionsRequestObject) (api.GetCameraMotionsResponseObject, error) {
-	response := api.GetCameraMotions200JSONResponse{}
+	response := api.GetCameraMotions200JSONResponse{
+		Data:   mockData.GetCameraMotions.Data,
+		Errors: mockData.GetCameraMotions.Errors,
+	}
 	return response, nil
 }
 
@@ -664,7 +679,10 @@ func (mock *mockServer) UpdateCameraMotion(ctx context.Context, request api.Upda
 // List contact sensors.
 // (GET /clip/v2/resource/contact)
 func (mock *mockServer) GetContacts(ctx context.Context, request api.GetContactsRequestObject) (api.GetContactsResponseObject, error) {
-	response := api.GetContacts200JSONResponse{}
+	response := api.GetContacts200JSONResponse{
+		Data:   mockData.GetContacts.Data,
+		Errors: mockData.GetContacts.Errors,
+	}
 	return response, nil
 }
 
@@ -754,7 +772,10 @@ func (mock *mockServer) GetDevicePower(ctx context.Context, request api.GetDevic
 // List device software update.
 // (GET /clip/v2/resource/device_software_update)
 func (mock *mockServer) GetDeviceSoftwareUpdates(ctx context.Context, request api.GetDeviceSoftwareUpdatesRequestObject) (api.GetDeviceSoftwareUpdatesResponseObject, error) {
-	response := api.GetDeviceSoftwareUpdates200JSONResponse{}
+	response := api.GetDeviceSoftwareUpdates200JSONResponse{
+		Data:   mockData.GetDeviceSoftwareUpdates.Data,
+		Errors: mockData.GetDeviceSoftwareUpdates.Errors,
+	}
 	return response, nil
 }
 
@@ -775,7 +796,10 @@ func (mock *mockServer) UpdateDeviceSoftwareUpdate(ctx context.Context, request 
 // List entertainment.
 // (GET /clip/v2/resource/entertainment)
 func (mock *mockServer) GetEntertainments(ctx context.Context, request api.GetEntertainmentsRequestObject) (api.GetEntertainmentsResponseObject, error) {
-	response := api.GetEntertainments200JSONResponse{}
+	response := api.GetEntertainments200JSONResponse{
+		Data:   mockData.GetEntertainments.Data,
+		Errors: mockData.GetEntertainments.Errors,
+	}
 	return response, nil
 }
 
@@ -796,7 +820,10 @@ func (mock *mockServer) UpdateEntertainment(ctx context.Context, request api.Upd
 // List entertainment configuration.
 // (GET /clip/v2/resource/entertainment_configuration)
 func (mock *mockServer) GetEntertainmentConfigurations(ctx context.Context, request api.GetEntertainmentConfigurationsRequestObject) (api.GetEntertainmentConfigurationsResponseObject, error) {
-	response := api.GetEntertainmentConfigurations200JSONResponse{}
+	response := api.GetEntertainmentConfigurations200JSONResponse{
+		Data:   mockData.GetEntertainmentConfigurations.Data,
+		Errors: mockData.GetEntertainmentConfigurations.Errors,
+	}
 	return response, nil
 }
 
@@ -817,7 +844,10 @@ func (mock *mockServer) UpdateEntertainmentConfiguration(ctx context.Context, re
 // List geofence client.
 // (GET /clip/v2/resource/geofence_client)
 func (mock *mockServer) GetGeofenceClients(ctx context.Context, request api.GetGeofenceClientsRequestObject) (api.GetGeofenceClientsResponseObject, error) {
-	response := api.GetGeofenceClients200JSONResponse{}
+	response := api.GetGeofenceClients200JSONResponse{
+		Data:   mockData.GetGeofenceClients.Data,
+		Errors: mockData.GetGeofenceClients.Errors,
+	}
 	return response, nil
 }
 
@@ -838,7 +868,10 @@ func (mock *mockServer) UpdateGeofenceClient(ctx context.Context, request api.Up
 // List geolocation.
 // (GET /clip/v2/resource/geolocation)
 func (mock *mockServer) GetGeolocations(ctx context.Context, request api.GetGeolocationsRequestObject) (api.GetGeolocationsResponseObject, error) {
-	response := api.GetGeolocations200JSONResponse{}
+	response := api.GetGeolocations200JSONResponse{
+		Data:   mockData.GetGeolocations.Data,
+		Errors: mockData.GetGeolocations.Errors,
+	}
 	return response, nil
 }
 
@@ -883,7 +916,10 @@ func (mock *mockServer) UpdateGroupedLight(ctx context.Context, request api.Upda
 // List grouped light level sensors.
 // (GET /clip/v2/resource/grouped_light_level)
 func (mock *mockServer) GetGroupedLightLevels(ctx context.Context, request api.GetGroupedLightLevelsRequestObject) (api.GetGroupedLightLevelsResponseObject, error) {
-	response := api.GetGroupedLightLevels200JSONResponse{}
+	response := api.GetGroupedLightLevels200JSONResponse{
+		Data:   mockData.GetGroupedLightLevels.Data,
+		Errors: mockData.GetGroupedLightLevels.Errors,
+	}
 	return response, nil
 }
 
@@ -904,7 +940,10 @@ func (mock *mockServer) UpdateGroupedLightLevel(ctx context.Context, request api
 // List grouped motion sensors.
 // (GET /clip/v2/resource/grouped_motion)
 func (mock *mockServer) GetGroupedMotions(ctx context.Context, request api.GetGroupedMotionsRequestObject) (api.GetGroupedMotionsResponseObject, error) {
-	response := api.GetGroupedMotions200JSONResponse{}
+	response := api.GetGroupedMotions200JSONResponse{
+		Data:   mockData.GetGroupedMotions.Data,
+		Errors: mockData.GetGroupedMotions.Errors,
+	}
 	return response, nil
 }
 
@@ -925,7 +964,10 @@ func (mock *mockServer) UpdateGroupedMotion(ctx context.Context, request api.Upd
 // List HomeKit.
 // (GET /clip/v2/resource/homekit)
 func (mock *mockServer) GetHomekits(ctx context.Context, request api.GetHomekitsRequestObject) (api.GetHomekitsResponseObject, error) {
-	response := api.GetHomekits200JSONResponse{}
+	response := api.GetHomekits200JSONResponse{
+		Data:   mockData.GetHomekits.Data,
+		Errors: mockData.GetHomekits.Errors,
+	}
 	return response, nil
 }
 
@@ -994,7 +1036,10 @@ func (mock *mockServer) UpdateLightLevel(ctx context.Context, request api.Update
 // List Matter.
 // (GET /clip/v2/resource/matter)
 func (mock *mockServer) GetMatters(ctx context.Context, request api.GetMattersRequestObject) (api.GetMattersResponseObject, error) {
-	response := api.GetMatters200JSONResponse{}
+	response := api.GetMatters200JSONResponse{
+		Data:   mockData.GetMatters.Data,
+		Errors: mockData.GetMatters.Errors,
+	}
 	return response, nil
 }
 
@@ -1015,7 +1060,10 @@ func (mock *mockServer) UpdateMatter(ctx context.Context, request api.UpdateMatt
 // List Matter fabric.
 // (GET /clip/v2/resource/matter_fabric)
 func (mock *mockServer) GetMatterFabrics(ctx context.Context, request api.GetMatterFabricsRequestObject) (api.GetMatterFabricsResponseObject, error) {
-	response := api.GetMatterFabrics200JSONResponse{}
+	response := api.GetMatterFabrics200JSONResponse{
+		Data:   mockData.GetMatterFabrics.Data,
+		Errors: mockData.GetMatterFabrics.Errors,
+	}
 	return response, nil
 }
 
@@ -1060,7 +1108,10 @@ func (mock *mockServer) UpdateMotionSensor(ctx context.Context, request api.Upda
 // List motion area candidates.
 // (GET /clip/v2/resource/motion_area_candidate)
 func (mock *mockServer) GetMotionAreaCandidates(ctx context.Context, request api.GetMotionAreaCandidatesRequestObject) (api.GetMotionAreaCandidatesResponseObject, error) {
-	response := api.GetMotionAreaCandidates200JSONResponse{}
+	response := api.GetMotionAreaCandidates200JSONResponse{
+		Data:   mockData.GetMotionAreaCandidates.Data,
+		Errors: mockData.GetMotionAreaCandidates.Errors,
+	}
 	return response, nil
 }
 
@@ -1102,7 +1153,10 @@ func (mock *mockServer) UpdateMotionAreaConfiguration(ctx context.Context, reque
 // List relative rotary controls.
 // (GET /clip/v2/resource/relative_rotary)
 func (mock *mockServer) GetRelativeRotaries(ctx context.Context, request api.GetRelativeRotariesRequestObject) (api.GetRelativeRotariesResponseObject, error) {
-	response := api.GetRelativeRotaries200JSONResponse{}
+	response := api.GetRelativeRotaries200JSONResponse{
+		Data:   mockData.GetRelativeRotaries.Data,
+		Errors: mockData.GetRelativeRotaries.Errors,
+	}
 	return response, nil
 }
 
@@ -1220,7 +1274,10 @@ func (mock *mockServer) UpdateSecurityAreaMotion(ctx context.Context, request ap
 // List service group.
 // (GET /clip/v2/resource/service_group)
 func (mock *mockServer) GetServiceGroups(ctx context.Context, request api.GetServiceGroupsRequestObject) (api.GetServiceGroupsResponseObject, error) {
-	response := api.GetServiceGroups200JSONResponse{}
+	response := api.GetServiceGroups200JSONResponse{
+		Data:   mockData.GetServiceGroups.Data,
+		Errors: mockData.GetServiceGroups.Errors,
+	}
 	return response, nil
 }
 
@@ -1279,7 +1336,10 @@ func (mock *mockServer) UpdateSmartScene(ctx context.Context, request api.Update
 // List speaker.
 // (GET /clip/v2/resource/speaker)
 func (mock *mockServer) GetSpeakers(ctx context.Context, request api.GetSpeakersRequestObject) (api.GetSpeakersResponseObject, error) {
-	response := api.GetSpeakers200JSONResponse{}
+	response := api.GetSpeakers200JSONResponse{
+		Data:   mockData.GetSpeakers.Data,
+		Errors: mockData.GetSpeakers.Errors,
+	}
 	return response, nil
 }
 
@@ -1300,7 +1360,10 @@ func (mock *mockServer) UpdateSpeaker(ctx context.Context, request api.UpdateSpe
 // List tamper sensors.
 // (GET /clip/v2/resource/tamper)
 func (mock *mockServer) GetTampers(ctx context.Context, request api.GetTampersRequestObject) (api.GetTampersResponseObject, error) {
-	response := api.GetTampers200JSONResponse{}
+	response := api.GetTampers200JSONResponse{
+		Data:   mockData.GetTampers.Data,
+		Errors: mockData.GetTampers.Errors,
+	}
 	return response, nil
 }
 
@@ -1366,7 +1429,10 @@ func (mock *mockServer) UpdateWifiConnectivity(ctx context.Context, request api.
 // List ZGP connectivity.
 // (GET /clip/v2/resource/zgp_connectivity)
 func (mock *mockServer) GetZgpConnectivities(ctx context.Context, request api.GetZgpConnectivitiesRequestObject) (api.GetZgpConnectivitiesResponseObject, error) {
-	response := api.GetZgpConnectivities200JSONResponse{}
+	response := api.GetZgpConnectivities200JSONResponse{
+		Data:   mockData.GetZgpConnectivities.Data,
+		Errors: mockData.GetZgpConnectivities.Errors,
+	}
 	return response, nil
 }
 
@@ -1408,7 +1474,10 @@ func (mock *mockServer) UpdateZigbeeConnectivity(ctx context.Context, request ap
 // List zigbee device discovery.
 // (GET /clip/v2/resource/zigbee_device_discovery)
 func (mock *mockServer) GetZigbeeDeviceDiscoveries(ctx context.Context, request api.GetZigbeeDeviceDiscoveriesRequestObject) (api.GetZigbeeDeviceDiscoveriesResponseObject, error) {
-	response := api.GetZigbeeDeviceDiscoveries200JSONResponse{}
+	response := api.GetZigbeeDeviceDiscoveries200JSONResponse{
+		Data:   mockData.GetZigbeeDeviceDiscoveries.Data,
+		Errors: mockData.GetZigbeeDeviceDiscoveries.Errors,
+	}
 	return response, nil
 }
 

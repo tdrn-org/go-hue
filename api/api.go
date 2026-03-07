@@ -31,3 +31,11 @@ var OpenHueApiSpecYaml []byte
 
 // The Hue API authentication header key.
 const ApplicationKeyHeader = "hue-application-key"
+
+// ResponseObject interface common to all API response objects.
+type ResponseObject interface {
+	// Status gets response status message.
+	Status() string
+	// StatusCode gets response status code.
+	StatusCode() int
+}

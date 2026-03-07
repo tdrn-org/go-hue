@@ -30,6 +30,7 @@ import (
 	"strings"
 
 	"github.com/tdrn-org/go-hue"
+	"github.com/tdrn-org/go-hue/api"
 	"github.com/tdrn-org/go-hue/mock"
 )
 
@@ -56,20 +57,7 @@ func main() {
 		log.Fatal("client: ", err)
 	}
 	data := &mock.Data{}
-	dumpResources(client, data)
-	dumpBridges(client, data)
-	dumpBridgeHomes(client, data)
-	dumpDevices(client, data)
-	dumpDevicePowers(client, data)
-	dumpGroupedLights(client, data)
-	dumpLights(client, data)
-	dumpLightLevels(client, data)
-	dumpMotionSensors(client, data)
-	dumpRooms(client, data)
-	dumpScenes(client, data)
-	dumpSmartScenes(client, data)
-	dumpTemperatures(client, data)
-	dumpZones(client, data)
+	dumpAll(context.Background(), client, data)
 	masqueradeDump(data)
 	encoder := json.NewEncoder(os.Stdout)
 	encoder.SetIndent("", "  ")
@@ -79,158 +67,99 @@ func main() {
 	}
 }
 
-func dumpResources(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetResources(context.Background())
-	if err != nil {
-		log.Fatal("resources: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("resources: ", response.HTTPResponse.Status)
-	}
-	data.GetResources = response.JSON200
+func dumpAll(ctx context.Context, client hue.BridgeClient, data *mock.Data) {
+	// client.GetBehaviorInstances()
+	data.GetBehaviorInstances = dumpResponse(client.GetBehaviorInstances(ctx)).JSON200
+	// client.GetBehaviorScripts()
+	data.GetBehaviorScripts = dumpResponse(client.GetBehaviorScripts(ctx)).JSON200
+	// client.GetBellButtons()
+	data.GetBellButtons = dumpResponse(client.GetBellButtons(ctx)).JSON200
+	// client.GetBridgeHomes()
+	data.GetBridgeHomes = dumpResponse(client.GetBridgeHomes(ctx)).JSON200
+	// client.GetBridges()
+	data.GetBridges = dumpResponse(client.GetBridges(ctx)).JSON200
+	// client.GetButtons()
+	data.GetButtons = dumpResponse(client.GetButtons(ctx)).JSON200
+	// client.GetCameraMotions()
+	data.GetCameraMotions = dumpResponse(client.GetCameraMotions(ctx)).JSON200
+	// client.GetContacts()
+	data.GetContacts = dumpResponse(client.GetContacts(ctx)).JSON200
+	// client.GetConvenienceAreaMotions()
+	//data.GetConvenienceAreaMotions = dumpResponse(client.GetConvenienceAreaMotions(ctx)).JSON200
+	// client.GetDevicePowers()
+	data.GetDevicePowers = dumpResponse(client.GetDevicePowers(ctx)).JSON200
+	// client.GetDeviceSoftwareUpdates()
+	data.GetDeviceSoftwareUpdates = dumpResponse(client.GetDeviceSoftwareUpdates(ctx)).JSON200
+	// client.GetDevices()
+	data.GetDevices = dumpResponse(client.GetDevices(ctx)).JSON200
+	// client.GetEntertainmentConfigurations()
+	data.GetEntertainmentConfigurations = dumpResponse(client.GetEntertainmentConfigurations(ctx)).JSON200
+	// client.GetEntertainments()
+	data.GetEntertainments = dumpResponse(client.GetEntertainments(ctx)).JSON200
+	// client.GetGeofenceClients()
+	data.GetGeofenceClients = dumpResponse(client.GetGeofenceClients(ctx)).JSON200
+	// client.GetGeolocations()
+	data.GetGeolocations = dumpResponse(client.GetGeolocations(ctx)).JSON200
+	// client.GetGroupedLightLevels()
+	data.GetGroupedLightLevels = dumpResponse(client.GetGroupedLightLevels(ctx)).JSON200
+	// client.GetGroupedLights()
+	data.GetGroupedLights = dumpResponse(client.GetGroupedLights(ctx)).JSON200
+	// client.GetGroupedMotions()
+	data.GetGroupedMotions = dumpResponse(client.GetGroupedMotions(ctx)).JSON200
+	// client.GetHomekits()
+	data.GetHomekits = dumpResponse(client.GetHomekits(ctx)).JSON200
+	// client.GetLightLevels()
+	data.GetLightLevels = dumpResponse(client.GetLightLevels(ctx)).JSON200
+	// client.GetLights()
+	data.GetLights = dumpResponse(client.GetLights(ctx)).JSON200
+	// client.GetMatterFabrics()
+	data.GetMatterFabrics = dumpResponse(client.GetMatterFabrics(ctx)).JSON200
+	// client.GetMatters()
+	data.GetMatters = dumpResponse(client.GetMatters(ctx)).JSON200
+	// client.GetMotionAreaCandidates()
+	data.GetMotionAreaCandidates = dumpResponse(client.GetMotionAreaCandidates(ctx)).JSON200
+	// client.GetMotionAreaConfigurations()
+	//data.GetMotionAreaConfigurations = dumpResponse(client.GetMotionAreaConfigurations(ctx)).JSON200
+	// client.GetMotionSensors()
+	data.GetMotionSensors = dumpResponse(client.GetMotionSensors(ctx)).JSON200
+	// client.GetRelativeRotaries()
+	data.GetRelativeRotaries = dumpResponse(client.GetRelativeRotaries(ctx)).JSON200
+	// client.GetResources()
+	data.GetResources = dumpResponse(client.GetResources(ctx)).JSON200
+	// client.GetRooms()
+	data.GetRooms = dumpResponse(client.GetRooms(ctx)).JSON200
+	// client.GetScenes()
+	data.GetScenes = dumpResponse(client.GetScenes(ctx)).JSON200
+	// client.GetSecurityAreaMotions()
+	//data.GetSecurityAreaMotions = dumpResponse(client.GetSecurityAreaMotions(ctx)).JSON200
+	// client.GetServiceGroups()
+	data.GetServiceGroups = dumpResponse(client.GetServiceGroups(ctx)).JSON200
+	// client.GetSmartScenes()
+	data.GetSmartScenes = dumpResponse(client.GetSmartScenes(ctx)).JSON200
+	// client.GetSpeakers()
+	data.GetSpeakers = dumpResponse(client.GetSpeakers(ctx)).JSON200
+	// client.GetTampers()
+	data.GetTampers = dumpResponse(client.GetTampers(ctx)).JSON200
+	// client.GetTemperatures()
+	data.GetTemperatures = dumpResponse(client.GetTemperatures(ctx)).JSON200
+	// client.GetWifiConnectivities()
+	//data.GetWifiConnectivities = dumpResponse(client.GetWifiConnectivities(ctx)).JSON200
+	// client.GetZgpConnectivities()
+	data.GetZgpConnectivities = dumpResponse(client.GetZgpConnectivities(ctx)).JSON200
+	// client.GetZigbeeDeviceDiscoveries()
+	data.GetZigbeeDeviceDiscoveries = dumpResponse(client.GetZigbeeDeviceDiscoveries(ctx)).JSON200
+	// client.GetZones()
+	data.GetZones = dumpResponse(client.GetZones(ctx)).JSON200
 }
 
-func dumpBridges(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetBridges(context.Background())
+func dumpResponse[R api.ResponseObject](response R, err error) R {
 	if err != nil {
-		log.Fatal("bridges: ", err)
+		log.Fatal(reflect.TypeOf(response).Name()+":", err)
 	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("bridges: ", response.HTTPResponse.Status)
+	if response.StatusCode() != http.StatusOK {
+		log.Fatal(reflect.TypeOf(response).Name()+":", response.Status())
 	}
-	data.GetBridges = response.JSON200
-}
-
-func dumpBridgeHomes(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetBridgeHomes(context.Background())
-	if err != nil {
-		log.Fatal("bridge homes: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("bridge homes: ", response.HTTPResponse.Status)
-	}
-	data.GetBridgeHomes = response.JSON200
-}
-
-func dumpDevices(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetDevices(context.Background())
-	if err != nil {
-		log.Fatal("devices: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("devices: ", response.HTTPResponse.Status)
-	}
-	data.GetDevices = response.JSON200
-}
-
-func dumpDevicePowers(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetDevicePowers(context.Background())
-	if err != nil {
-		log.Fatal("device powers: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("device powers: ", response.HTTPResponse.Status)
-	}
-	data.GetDevicePowers = response.JSON200
-}
-
-func dumpGroupedLights(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetGroupedLights(context.Background())
-	if err != nil {
-		log.Fatal("grouped lights: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("grouped lights: ", response.HTTPResponse.Status)
-	}
-	data.GetGroupedLights = response.JSON200
-}
-
-func dumpLights(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetLights(context.Background())
-	if err != nil {
-		log.Fatal("lights: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("lights: ", response.HTTPResponse.Status)
-	}
-	data.GetLights = response.JSON200
-}
-
-func dumpLightLevels(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetLightLevels(context.Background())
-	if err != nil {
-		log.Fatal("light levels: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("light levels: ", response.HTTPResponse.Status)
-	}
-	data.GetLightLevels = response.JSON200
-}
-
-func dumpMotionSensors(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetMotionSensors(context.Background())
-	if err != nil {
-		log.Fatal("motion sensors: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("motion sensors: ", response.HTTPResponse.Status)
-	}
-	data.GetMotionSensors = response.JSON200
-}
-
-func dumpRooms(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetRooms(context.Background())
-	if err != nil {
-		log.Fatal("rooms: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("rooms: ", response.HTTPResponse.Status)
-	}
-	data.GetRooms = response.JSON200
-}
-
-func dumpScenes(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetScenes(context.Background())
-	if err != nil {
-		log.Fatal("scenes: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("scenes: ", response.HTTPResponse.Status)
-	}
-	data.GetScenes = response.JSON200
-}
-
-func dumpSmartScenes(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetSmartScenes(context.Background())
-	if err != nil {
-		log.Fatal("smart scenes: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("smart scenes: ", response.HTTPResponse.Status)
-	}
-	data.GetSmartScenes = response.JSON200
-}
-
-func dumpTemperatures(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetTemperatures(context.Background())
-	if err != nil {
-		log.Fatal("temperatures: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("temperatures: ", response.HTTPResponse.Status)
-	}
-	data.GetTemperatures = response.JSON200
-}
-
-func dumpZones(client hue.BridgeClient, data *mock.Data) {
-	response, err := client.GetZones(context.Background())
-	if err != nil {
-		log.Fatal("zones: ", err)
-	}
-	if response.HTTPResponse.StatusCode != http.StatusOK {
-		log.Fatal("zones: ", response.HTTPResponse.Status)
-	}
-	data.GetZones = response.JSON200
+	return response
 }
 
 func masqueradeDump(data *mock.Data) {
@@ -266,6 +195,8 @@ func (m *masquerader) maskStruct(s reflect.Value) {
 		value := s.Field(fieldIndex)
 		if value.Kind() == reflect.Pointer && value.Elem().Kind() == reflect.String {
 			m.maskField(name, value.Elem())
+		} else if value.Kind() == reflect.String {
+			m.maskField(name, value)
 		} else {
 			m.mask(value)
 		}
