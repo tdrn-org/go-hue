@@ -320,7 +320,7 @@ func (locator *RemoteBridgeLocator) oauth2Context(ctx context.Context) context.C
 			TLSClientConfig: locator.TlsConfig.Clone(),
 		},
 	}
-	return context.WithValue(context.Background(), oauth2.HTTPClient, client)
+	return context.WithValue(ctx, oauth2.HTTPClient, client)
 }
 
 // NewRemoteBridgeAuthenticator creates a new [RemoteBridgeAuthenticator] suitable for authenticating towards a remote bridge.
