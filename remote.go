@@ -160,12 +160,11 @@ type RemoteBridgeLocator struct {
 	ClientSecret string
 	// ReferrerUrl defines the URL to redirect to after an authorization workflow has been completed. The default value nil
 	// disables the redirect.
-	ReferrerUrl         *url.URL
-	oauth2Callback      *remoteOauth2Callback
-	oauth2TokenSource   *cachedTokenSource
-	cachedOauthConfig   *oauth2.Config
-	cachedOauth2Context context.Context
-	logger              *slog.Logger
+	ReferrerUrl       *url.URL
+	oauth2Callback    *remoteOauth2Callback
+	oauth2TokenSource *cachedTokenSource
+	cachedOauthConfig *oauth2.Config
+	logger            *slog.Logger
 }
 
 func (locator *RemoteBridgeLocator) Name() string {
@@ -258,6 +257,7 @@ func (locator *RemoteBridgeLocator) setAuthHeader(req *http.Request) error {
 }
 
 func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.Client {
+	oauth2Context := locator.oauth2Context(context.Background())
 	var transport http.RoundTripper
 	transport = &http.Transport{
 		ResponseHeaderTimeout: timeout,
@@ -266,8 +266,7 @@ func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.
 	token, _ := locator.oauth2TokenSource.Token()
 	if token.Valid() {
 		config := locator.oauth2Config()
-		ctx := locator.oauth2Context()
-		locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
+		locator.oauth2TokenSource.Reset(config.TokenSource(oauth2Context, token))
 		transport = &oauth2.Transport{
 			Source: locator.oauth2TokenSource,
 			Base:   transport,
@@ -279,16 +278,16 @@ func (locator *RemoteBridgeLocator) authHttpClient(timeout time.Duration) *http.
 }
 
 func (locator *RemoteBridgeLocator) handleOauth2Authorized(w http.ResponseWriter, req *http.Request, code string) {
+	oauth2Context := locator.oauth2Context(req.Context())
 	if code != "" {
 		config := locator.oauth2Config()
-		ctx := locator.oauth2Context()
-		token, err := config.Exchange(ctx, code)
+		token, err := config.Exchange(oauth2Context, code)
 		if err != nil {
 			locator.logger.Error("failed to retrieve token", slog.Any("err", err))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
-		locator.oauth2TokenSource.Reset(config.TokenSource(ctx, token))
+		locator.oauth2TokenSource.Reset(config.TokenSource(oauth2Context, token))
 	}
 	if locator.ReferrerUrl != nil {
 		http.Redirect(w, req, locator.ReferrerUrl.String(), http.StatusSeeOther)
@@ -311,16 +310,17 @@ func (locator *RemoteBridgeLocator) oauth2Config() *oauth2.Config {
 	return locator.cachedOauthConfig
 }
 
-func (locator *RemoteBridgeLocator) oauth2Context() context.Context {
-	if locator.cachedOauth2Context == nil {
-		client := &http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: locator.TlsConfig.Clone(),
-			},
-		}
-		locator.cachedOauth2Context = context.WithValue(context.Background(), oauth2.HTTPClient, client)
+func (locator *RemoteBridgeLocator) oauth2Context(ctx context.Context) context.Context {
+	client := ctx.Value(oauth2.HTTPClient)
+	if client != nil {
+		return ctx
 	}
-	return locator.cachedOauth2Context
+	client = &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: locator.TlsConfig.Clone(),
+		},
+	}
+	return context.WithValue(context.Background(), oauth2.HTTPClient, client)
 }
 
 // NewRemoteBridgeAuthenticator creates a new [RemoteBridgeAuthenticator] suitable for authenticating towards a remote bridge.
