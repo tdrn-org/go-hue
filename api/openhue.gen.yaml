@@ -7227,6 +7227,63 @@ components:
         - cosmos
         - sunbeam
         - enchant
+    Mirek:
+      type: integer
+      minimum: 153
+      maximum: 500
+      description: color temperature in mirek or null when the light color is not in the ct spectrum
+    EffectsV2Parameters:
+      type: object
+      description: Parameters for controlling the appearance of an active effect.
+      properties:
+        color:
+          $ref: '#/components/schemas/Color'
+        color_temperature:
+          type: object
+          properties:
+            mirek:
+              $ref: '#/components/schemas/Mirek'
+            mirek_valid:
+              type: boolean
+              readOnly: true
+              description: Indication whether the mirek value is valid for this effect
+        speed:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Speed of the effect animation. 0.0 is slowest, 1.0 is fastest.
+    EffectsV2:
+      type: object
+      description: |
+        Extended effect control with support for custom color, color temperature, and speed parameters.
+        This property is present on lights that support the newer effects engine and allows fine-grained
+        control over effect appearance beyond what the basic `effects` property provides.
+      properties:
+        action:
+          type: object
+          writeOnly: true
+          description: Set effect with optional parameters.
+          properties:
+            effect:
+              $ref: '#/components/schemas/SupportedEffects'
+            parameters:
+              $ref: '#/components/schemas/EffectsV2Parameters'
+        status:
+          type: object
+          readOnly: true
+          description: Current effect status and active parameters.
+          properties:
+            effect:
+              readOnly: true
+              $ref: '#/components/schemas/SupportedEffects'
+            effect_values:
+              readOnly: true
+              type: array
+              description: Possible effect values supported by this light.
+              items:
+                $ref: '#/components/schemas/SupportedEffects'
+            parameters:
+              $ref: '#/components/schemas/EffectsV2Parameters'
     SupportedTimedEffects:
       type: string
       description: Current status values the light is in regarding timed effects
@@ -7241,11 +7298,6 @@ components:
       properties:
         brightness:
           $ref: '#/components/schemas/Brightness'
-    Mirek:
-      type: integer
-      minimum: 153
-      maximum: 500
-      description: color temperature in mirek or null when the light color is not in the ct spectrum
     LightGet:
       type: object
       allOf:
@@ -7363,14 +7415,21 @@ components:
                 speed:
                   type: number
                   minimum: 0
-                  maximum: 0
+                  maximum: 1
                   description: speed of dynamic palette or effect. The speed is valid for the dynamic palette if the status is dynamic_palette or for the corresponding effect listed in status. In case of status none, the speed is not valid
                 speed_valid:
                   type: boolean
                   description: Indicates whether the value presented in speed is valid
             alert:
               type: object
-              description: TODO
+              description: Joined alert control
+              properties:
+                action_values:
+                  type: array
+                  description: Supported alert actions for this light.
+                  items:
+                    type: string
+                    example: breathe
             signaling:
               type: object
               description: Feature containing signaling properties.
@@ -7427,6 +7486,8 @@ components:
                   description: Possible status values in which a light could be when playing an effect.
                   items:
                     $ref: '#/components/schemas/SupportedEffects'
+            effects_v2:
+              $ref: '#/components/schemas/EffectsV2'
             timed_effects:
               type: object
               description: Basic feature containing timed effect properties.
@@ -7511,6 +7572,34 @@ components:
                               $ref: '#/components/schemas/Mirek'
                             color:
                               $ref: '#/components/schemas/Color'
+            product_data:
+              type: object
+              description: Product data about the light.
+              properties:
+                function:
+                  type: string
+                  description: Function of the light source.
+                  enum:
+                    - functional
+                    - decorative
+                    - mixed
+                    - unknown
+            geometry:
+              type: object
+              description: Geometry information for pixel-addressable lights such as gradient strips.
+              properties:
+                pixel_positions:
+                  type: array
+                  description: Ordered list of pixel positions for this light. Empty for non-gradient lights.
+                  items:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      'y':
+                        type: number
+                      z:
+                        type: number
     DimmingDelta:
       type: object
       properties:
@@ -7699,6 +7788,8 @@ components:
           $ref: '#/components/schemas/Gradient'
         effects:
           $ref: '#/components/schemas/Effects'
+        effects_v2:
+          $ref: '#/components/schemas/EffectsV2'
         timed_effects:
           type: object
           description: Basic feature containing timed effect properties.

@@ -783,22 +783,22 @@ func (e LightGetColorGamutType) Valid() bool {
 
 // Defines values for LightGetMetadataFunction.
 const (
-	Decorative LightGetMetadataFunction = "decorative"
-	Functional LightGetMetadataFunction = "functional"
-	Mixed      LightGetMetadataFunction = "mixed"
-	Unknown    LightGetMetadataFunction = "unknown"
+	LightGetMetadataFunctionDecorative LightGetMetadataFunction = "decorative"
+	LightGetMetadataFunctionFunctional LightGetMetadataFunction = "functional"
+	LightGetMetadataFunctionMixed      LightGetMetadataFunction = "mixed"
+	LightGetMetadataFunctionUnknown    LightGetMetadataFunction = "unknown"
 )
 
 // Valid indicates whether the value is a known member of the LightGetMetadataFunction enum.
 func (e LightGetMetadataFunction) Valid() bool {
 	switch e {
-	case Decorative:
+	case LightGetMetadataFunctionDecorative:
 		return true
-	case Functional:
+	case LightGetMetadataFunctionFunctional:
 		return true
-	case Mixed:
+	case LightGetMetadataFunctionMixed:
 		return true
-	case Unknown:
+	case LightGetMetadataFunctionUnknown:
 		return true
 	default:
 		return false
@@ -901,6 +901,30 @@ func (e LightGetPowerupPreset) Valid() bool {
 	case LightGetPowerupPresetPowerfail:
 		return true
 	case LightGetPowerupPresetSafety:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LightGetProductDataFunction.
+const (
+	LightGetProductDataFunctionDecorative LightGetProductDataFunction = "decorative"
+	LightGetProductDataFunctionFunctional LightGetProductDataFunction = "functional"
+	LightGetProductDataFunctionMixed      LightGetProductDataFunction = "mixed"
+	LightGetProductDataFunctionUnknown    LightGetProductDataFunction = "unknown"
+)
+
+// Valid indicates whether the value is a known member of the LightGetProductDataFunction enum.
+func (e LightGetProductDataFunction) Valid() bool {
+	switch e {
+	case LightGetProductDataFunctionDecorative:
+		return true
+	case LightGetProductDataFunctionFunctional:
+		return true
+	case LightGetProductDataFunctionMixed:
+		return true
+	case LightGetProductDataFunctionUnknown:
 		return true
 	default:
 		return false
@@ -2898,6 +2922,45 @@ type Effects struct {
 	Effect *SupportedEffects `json:"effect,omitempty"`
 }
 
+// EffectsV2 Extended effect control with support for custom color, color temperature, and speed parameters.
+// This property is present on lights that support the newer effects engine and allows fine-grained
+// control over effect appearance beyond what the basic `effects` property provides.
+type EffectsV2 struct {
+	// Action Set effect with optional parameters.
+	Action *struct {
+		Effect *SupportedEffects `json:"effect,omitempty"`
+
+		// Parameters Parameters for controlling the appearance of an active effect.
+		Parameters *EffectsV2Parameters `json:"parameters,omitempty"`
+	} `json:"action,omitempty"`
+
+	// Status Current effect status and active parameters.
+	Status *struct {
+		Effect *SupportedEffects `json:"effect,omitempty"`
+
+		// EffectValues Possible effect values supported by this light.
+		EffectValues *[]SupportedEffects `json:"effect_values,omitempty"`
+
+		// Parameters Parameters for controlling the appearance of an active effect.
+		Parameters *EffectsV2Parameters `json:"parameters,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// EffectsV2Parameters Parameters for controlling the appearance of an active effect.
+type EffectsV2Parameters struct {
+	Color            *Color `json:"color,omitempty"`
+	ColorTemperature *struct {
+		// Mirek color temperature in mirek or null when the light color is not in the ct spectrum
+		Mirek *Mirek `json:"mirek,omitempty"`
+
+		// MirekValid Indication whether the mirek value is valid for this effect
+		MirekValid *bool `json:"mirek_valid,omitempty"`
+	} `json:"color_temperature,omitempty"`
+
+	// Speed Speed of the effect animation. 0.0 is slowest, 1.0 is fastest.
+	Speed *float32 `json:"speed,omitempty"`
+}
+
 // EntertainmentConfigurationGet defines model for EntertainmentConfigurationGet.
 type EntertainmentConfigurationGet struct {
 	Channels *[]struct {
@@ -3275,8 +3338,11 @@ type LightDynamics struct {
 
 // LightGet defines model for LightGet.
 type LightGet struct {
-	// Alert TODO
-	Alert *map[string]interface{} `json:"alert,omitempty"`
+	// Alert Joined alert control
+	Alert *struct {
+		// ActionValues Supported alert actions for this light.
+		ActionValues *[]string `json:"action_values,omitempty"`
+	} `json:"alert,omitempty"`
 	Color *struct {
 		// Gamut Color gamut of color bulb. Some bulbs do not properly return the Gamut information. In this case this is not present.
 		Gamut *struct {
@@ -3342,6 +3408,21 @@ type LightGet struct {
 		// StatusValues Possible status values in which a light could be when playing an effect.
 		StatusValues *[]SupportedEffects `json:"status_values,omitempty"`
 	} `json:"effects,omitempty"`
+
+	// EffectsV2 Extended effect control with support for custom color, color temperature, and speed parameters.
+	// This property is present on lights that support the newer effects engine and allows fine-grained
+	// control over effect appearance beyond what the basic `effects` property provides.
+	EffectsV2 *EffectsV2 `json:"effects_v2,omitempty"`
+
+	// Geometry Geometry information for pixel-addressable lights such as gradient strips.
+	Geometry *struct {
+		// PixelPositions Ordered list of pixel positions for this light. Empty for non-gradient lights.
+		PixelPositions *[]struct {
+			X *float32 `json:"x,omitempty"`
+			Y *float32 `json:"y,omitempty"`
+			Z *float32 `json:"z,omitempty"`
+		} `json:"pixel_positions,omitempty"`
+	} `json:"geometry,omitempty"`
 	Gradient *struct {
 		// Mode Mode in which the points are currently being deployed. If not provided during PUT/POST it will be defaulted to interpolated_palette
 		Mode *SupportedGradientMode `json:"mode,omitempty"`
@@ -3423,6 +3504,12 @@ type LightGet struct {
 		Preset *LightGetPowerupPreset `json:"preset,omitempty"`
 	} `json:"powerup,omitempty"`
 
+	// ProductData Product data about the light.
+	ProductData *struct {
+		// Function Function of the light source.
+		Function *LightGetProductDataFunction `json:"function,omitempty"`
+	} `json:"product_data,omitempty"`
+
 	// ServiceId Service identification number. 0 indicates service of a single instance
 	ServiceId int `json:"service_id"`
 
@@ -3485,6 +3572,9 @@ type LightGetPowerupOnMode string
 // LightGetPowerupPreset When setting the custom preset the additional properties can be set. For all other presets, no other properties can be included.
 type LightGetPowerupPreset string
 
+// LightGetProductDataFunction Function of the light source.
+type LightGetProductDataFunction string
+
 // LightLevelGet defines model for LightLevelGet.
 type LightLevelGet struct {
 	// Enabled true when sensor is activated, false when deactivated
@@ -3540,6 +3630,11 @@ type LightPut struct {
 
 	// Effects Basic feature containing effect properties.
 	Effects *Effects `json:"effects,omitempty"`
+
+	// EffectsV2 Extended effect control with support for custom color, color temperature, and speed parameters.
+	// This property is present on lights that support the newer effects engine and allows fine-grained
+	// control over effect appearance beyond what the basic `effects` property provides.
+	EffectsV2 *EffectsV2 `json:"effects_v2,omitempty"`
 
 	// Gradient Basic feature containing gradient properties.
 	Gradient *Gradient     `json:"gradient,omitempty"`
